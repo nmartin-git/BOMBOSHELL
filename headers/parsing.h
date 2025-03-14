@@ -1,20 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_abs.c                                           :+:      :+:    :+:   */
+/*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/09 16:51:55 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/14 13:57:56 by nmartin          ###   ########.fr       */
+/*   Created: 2025/03/14 11:27:48 by nmartin           #+#    #+#             */
+/*   Updated: 2025/03/14 13:55:30 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#ifndef PARSING_H
+# define PARSING_H
 
-int	ft_abs(int nbr)
-{
-	if (nbr < 0)
-		nbr = -nbr;
-	return (nbr);
-}
+# define WORD 1
+# define REDIR 2
+# define PIPE 3
+
+typedef struct s_token {
+	int				token;
+	struct s_token	*next;
+}	t_token;
+
+int		parsing(char *input);
+
+#endif

@@ -6,7 +6,7 @@
 #    By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/05 15:41:03 by nmartin           #+#    #+#              #
-#    Updated: 2025/02/18 15:35:36 by nmartin          ###   ########.fr        #
+#    Updated: 2025/03/14 13:30:09 by nmartin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,11 +21,14 @@ NAME = bomboshell
 SRC_PATH = ./srcs/
 SRC_FILES = bomboshell.c
 SRC := $(addprefix $(SRC_PATH), $(SRC_FILES))
+PARSING_PATH = ./parsing/
+PARSING_FILES = parsing.c
+PARSING := $(addprefix $(PARSING_PATH), $(PARSING_FILES))
 OBJ_PATH = ./objs/
-OBJ := $(addprefix $(OBJ_PATH), $(SRC_FILES:.c=.o))
+OBJ := $(addprefix $(OBJ_PATH), $(SRC_FILES:.c=.o)) $(addprefix $(OBJ_PATH), $(PARSING_FILES:.c=.o))
 SRC_BNS_PATH = ./srcs_bonus/
 SRC_BNS_FILES = 
-SRC_BNS := $(addprefix $(SRC_PATH), $(SRC_FILES))
+SRC_BNS := $(addprefix $(SRC_PATH), $(SRC_BNS_FILES))
 OBJ_BNS := $(addprefix $(OBJ_PATH), $(SRC_BNS_FILES:.c=.o))
 LIBFT_PATH = libft
 LIBFT = $(LIBFT_PATH)/libft.a
@@ -42,7 +45,7 @@ bonus : $(LIBFT) $(OBJ_BNS)
 
 $(NAME) : $(LIBFT) $(OBJ)
 	@printf "$(PUPLE)Creating $(NAME)...$(RESET)"
-	@$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME) -lreadline
 	@printf "\r\033[K"
 	@printf "$(GREEN)$(NAME) created successfully\n$(RESET)"
 
@@ -52,9 +55,15 @@ $(OBJ_PATH)%.o : $(SRC_PATH)%.c
 	@$(CC) $(CFLAGS) $(HEADERS) -c $< -o $@
 	@printf "\r\033[K"
 
-$(OBJ_PATH)%.o : $(SRC_BNS_PATH)%.c
-	@printf "Compiling $(NAME) bonus: [$<] $(RESET)"
+$(OBJ_PATH)%.o : $(PARSING_PATH)%.c
+	@printf "Compiling $(NAME) parsing: [$<] $(RESET)"
 	@mkdir -p $(OBJ_PATH)
+	@$(CC) $(CFLAGS) $(HEADERS) -c $< -o $@
+	@printf "\r\033[K"
+
+$(OBJ_BNS_PATH)%.o : $(SRC_BNS_PATH)%.c
+	@printf "Compiling $(NAME) bonus: [$<] $(RESET)"
+	@mkdir -p $(OBJ_BNS_PATH)
 	@$(CC) $(CFLAGS) $(HEADERS) -c $< -o $@
 	@printf "\r\033[K"
 

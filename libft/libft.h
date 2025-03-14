@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 18:00:14 by nmartin           #+#    #+#             */
-/*   Updated: 2025/02/09 16:53:27 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/14 13:56:49 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,6 @@ int		gnl_str_lst_len(t_list *lst);
 void	ft_free_tab(char **tab);
 int		ft_printf_fd(int fd, const char *str, ...);
 int		ft_size_tab(char **tab);
-int		ft_abs(int	nbr);
+int		ft_abs(int nbr);
 
 #endif

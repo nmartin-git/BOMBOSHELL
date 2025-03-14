@@ -1,20 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_abs.c                                           :+:      :+:    :+:   */
+/*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/09 16:51:55 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/14 13:57:56 by nmartin          ###   ########.fr       */
+/*   Created: 2025/03/14 11:39:48 by nmartin           #+#    #+#             */
+/*   Updated: 2025/03/14 13:56:15 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "parsing.h"
+#include <stdio.h>
 
-int	ft_abs(int nbr)
+int	parsing(char *input)
 {
-	if (nbr < 0)
-		nbr = -nbr;
-	return (nbr);
+	(void)input;
+	printf("aaA");
+	return (0);
 }
