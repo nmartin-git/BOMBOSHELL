@@ -6,7 +6,7 @@
 #    By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/05 15:41:03 by nmartin           #+#    #+#              #
-#    Updated: 2025/03/15 13:06:37 by nmartin          ###   ########.fr        #
+#    Updated: 2025/03/15 15:33:15 by nmartin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,8 +24,12 @@ MINISHELL := $(addprefix $(MINISHELL_PATH), $(MINISHELL_FILES))
 PARSING_PATH = ./parsing/
 PARSING_FILES = parsing.c
 PARSING := $(addprefix $(PARSING_PATH), $(PARSING_FILES))
+BUILT-INS_PATH = ./built-ins/
+BUILT-INS_FILES = builts-ins.c
+BUILT-INS := $(addprefix $(BUILT-INS_PATH), $(BUILT-INS_FILES))
 OBJ_PATH = ./objs/
 OBJ := $(addprefix $(OBJ_PATH), $(MINISHELL_FILES:.c=.o)) $(addprefix $(OBJ_PATH), $(PARSING_FILES:.c=.o))
+		$(addprefix $(OBJ_PATH), $(BUIL-INS_FILES:.c=.o))
 SRC_BNS_PATH = ./srcs_bonus/
 SRC_BNS_FILES = 
 SRC_BNS := $(addprefix $(SRC_BNS_PATH), $(SRC_BNS_FILES))
@@ -50,13 +54,19 @@ $(NAME) : $(LIBFT) $(OBJ)
 	@printf "$(GREEN)$(NAME) created successfully\n$(RESET)"
 
 $(OBJ_PATH)%.o : $(MINISHELL_PATH)%.c
-	@printf "Compiling $(NAME): [$<] $(RESET)"
+	@printf "Compiling $(NAME) minishell: [$<] $(RESET)"
 	@mkdir -p $(OBJ_PATH)
 	@$(CC) $(CFLAGS) $(HEADERS) -c $< -o $@
 	@printf "\r\033[K"
 
 $(OBJ_PATH)%.o : $(PARSING_PATH)%.c
 	@printf "Compiling $(NAME) parsing: [$<] $(RESET)"
+	@mkdir -p $(OBJ_PATH)
+	@$(CC) $(CFLAGS) $(HEADERS) -c $< -o $@
+	@printf "\r\033[K"
+
+$(OBJ_PATH)%.o : $(BUILT-INS_PATH)%.c
+	@printf "Compiling $(NAME) built-ins: [$<] $(RESET)"
 	@mkdir -p $(OBJ_PATH)
 	@$(CC) $(CFLAGS) $(HEADERS) -c $< -o $@
 	@printf "\r\033[K"
