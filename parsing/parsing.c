@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 11:39:48 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/15 15:02:50 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/15 15:25:56 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,5 +16,6 @@
 int	parsing(char *input)
 {
 	(void)input;
+	//test;
 	return (0);
 }
