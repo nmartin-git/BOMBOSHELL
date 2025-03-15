@@ -6,7 +6,7 @@
 #    By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/05 15:41:03 by nmartin           #+#    #+#              #
-#    Updated: 2025/03/14 13:30:09 by nmartin          ###   ########.fr        #
+#    Updated: 2025/03/15 13:06:37 by nmartin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,17 +18,17 @@ RESET = \033[0m
 CC = cc
 CFLAGS = -Wall -Werror -Wextra -MMD -MP
 NAME = bomboshell
-SRC_PATH = ./srcs/
-SRC_FILES = bomboshell.c
-SRC := $(addprefix $(SRC_PATH), $(SRC_FILES))
+MINISHELL_PATH = ./minishell/
+MINISHELL_FILES = bomboshell.c
+MINISHELL := $(addprefix $(MINISHELL_PATH), $(MINISHELL_FILES))
 PARSING_PATH = ./parsing/
 PARSING_FILES = parsing.c
 PARSING := $(addprefix $(PARSING_PATH), $(PARSING_FILES))
 OBJ_PATH = ./objs/
-OBJ := $(addprefix $(OBJ_PATH), $(SRC_FILES:.c=.o)) $(addprefix $(OBJ_PATH), $(PARSING_FILES:.c=.o))
+OBJ := $(addprefix $(OBJ_PATH), $(MINISHELL_FILES:.c=.o)) $(addprefix $(OBJ_PATH), $(PARSING_FILES:.c=.o))
 SRC_BNS_PATH = ./srcs_bonus/
 SRC_BNS_FILES = 
-SRC_BNS := $(addprefix $(SRC_PATH), $(SRC_BNS_FILES))
+SRC_BNS := $(addprefix $(SRC_BNS_PATH), $(SRC_BNS_FILES))
 OBJ_BNS := $(addprefix $(OBJ_PATH), $(SRC_BNS_FILES:.c=.o))
 LIBFT_PATH = libft
 LIBFT = $(LIBFT_PATH)/libft.a
@@ -49,7 +49,7 @@ $(NAME) : $(LIBFT) $(OBJ)
 	@printf "\r\033[K"
 	@printf "$(GREEN)$(NAME) created successfully\n$(RESET)"
 
-$(OBJ_PATH)%.o : $(SRC_PATH)%.c
+$(OBJ_PATH)%.o : $(MINISHELL_PATH)%.c
 	@printf "Compiling $(NAME): [$<] $(RESET)"
 	@mkdir -p $(OBJ_PATH)
 	@$(CC) $(CFLAGS) $(HEADERS) -c $< -o $@
