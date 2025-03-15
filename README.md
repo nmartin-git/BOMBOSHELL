@@ -5,7 +5,6 @@ NOE:
 parsing
 exec les cmd (gerer redirections)
 
-
 ANAS:
 
 built-in
