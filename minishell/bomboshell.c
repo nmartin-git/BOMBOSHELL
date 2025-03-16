@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 11:45:55 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/15 15:14:18 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/16 15:07:34 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	main(void)
 
 	while (1)
 	{
-		input = readline("🍑😱💣>");
+		input = readline("🍑😱💣> ");
 		if (!input)
 			break ;
 		parsing(input);

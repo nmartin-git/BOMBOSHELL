@@ -6,7 +6,7 @@
 #    By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/05 15:41:03 by nmartin           #+#    #+#              #
-#    Updated: 2025/03/15 13:06:37 by nmartin          ###   ########.fr        #
+#    Updated: 2025/03/16 18:40:17 by nmartin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ MINISHELL_PATH = ./minishell/
 MINISHELL_FILES = bomboshell.c
 MINISHELL := $(addprefix $(MINISHELL_PATH), $(MINISHELL_FILES))
 PARSING_PATH = ./parsing/
-PARSING_FILES = parsing.c
+PARSING_FILES = parsing.c tokenisation.c input_set.c
 PARSING := $(addprefix $(PARSING_PATH), $(PARSING_FILES))
 OBJ_PATH = ./objs/
 OBJ := $(addprefix $(OBJ_PATH), $(MINISHELL_FILES:.c=.o)) $(addprefix $(OBJ_PATH), $(PARSING_FILES:.c=.o))
@@ -73,10 +73,11 @@ $(LIBFT) :
 clean :
 	@make -C $(LIBFT_PATH) fclean --no-print-directory
 	@rm -rf $(OBJ_PATH)
-	@printf "$(YELLOW)Cleaned successfully$(RESET)"
+	@printf "$(YELLOW)Cleaned successfully\n$(RESET)"
 
-fclean : clean
+fclean :
 	@make -C $(LIBFT_PATH) fclean --no-print-directory
+	@rm -rf $(OBJ_PATH)
 	@rm -rf $(NAME)
 	@printf "\r\033[K$(YELLOW)Full cleaned successfully\n$(RESET)"
 
