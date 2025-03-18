@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 16:04:10 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/16 18:36:51 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/18 18:42:16 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,14 +58,14 @@ int	token_get(char *input, int *i)
 	else if (input[0] == ' ' || input[0] == '\t' || input[0] == '\n'
 			|| input[0] == '\v' || input[0] == '\f' || input[0] == '\r')
 		return (SPACES);
+	else if (input[0] == '\'' || input[0] == '"')
+		return (QUOTE);
 	else
 		return (WORD);
 }
 
-#include <stdio.h>
 void	token_print(t_token *token_lst)
 {
-	printf("A");
 	while (token_lst)
 	{
 		if (token_lst->token == SPACES)
@@ -80,17 +80,13 @@ void	token_print(t_token *token_lst)
 			printf("BOOL -> ");
 		else if (token_lst->token == PARANTHESIS)
 			printf("PARANTHESIS -> ");
+		else if (token_lst->token == QUOTE)
+			printf("QUOTE -> ");
 		token_lst = token_lst->next;
 	}
-	printf("B");
 	printf("null\n");
-	printf("C");
 }
 
-void	token_parse(t_token *token_lst)
-{
-	token_lst = NULL;
-}
 
 t_token	*tokenisation(char *input)
 {
@@ -116,7 +112,5 @@ t_token	*tokenisation(char *input)
 		i++;
 	}
 	token_print(token_lst); //a supprimer (la fonction aussi)
-	printf("A");
-	token_parse(token_lst);//faire la fonction
 	return (token_lst);
 }
