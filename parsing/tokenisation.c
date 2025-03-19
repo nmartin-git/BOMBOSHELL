@@ -6,24 +6,25 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 16:04:10 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/18 18:42:16 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/19 16:32:44 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-void	token_add(t_token **token_lst, int token)
+void	token_add(t_input **token_lst, int token)
 {
-	t_token	*new_token;
-	t_token	*tmp;
+	t_input	*new_token;
+	t_input	*tmp;
 
 	tmp = NULL;
 	if (token_lst)
 		tmp = *token_lst;
-	new_token = malloc(sizeof(t_token));
+	new_token = malloc(sizeof(t_input));
 	if (!new_token)
 		exit (127);//mieux gerer l'erreur
 	new_token->token = token;
+	new_token->arg = NULL;
 	new_token->next = NULL;
 	if (tmp)
 	{
@@ -64,7 +65,7 @@ int	token_get(char *input, int *i)
 		return (WORD);
 }
 
-void	token_print(t_token *token_lst)
+void	token_print(t_input *token_lst)
 {
 	while (token_lst)
 	{
@@ -88,11 +89,11 @@ void	token_print(t_token *token_lst)
 }
 
 
-t_token	*tokenisation(char *input)
+t_input	*tokenisation(char *input)
 {
 	int		i;
 	int		token;
-	t_token	*token_lst;
+	t_input	*token_lst;
 
 	i = 0;
 	token_lst = NULL;
@@ -103,7 +104,7 @@ t_token	*tokenisation(char *input)
 		{
 			ignore_spaces(input, &i);
 			if (!input[i])
-				break;//return (token_lst); //remettre quand plus besoin de print
+				break;//return (arg_lst); //remettre quand plus besoin de print
 			token = token_get(&input[i], &i);
 		}
 		token_add(&token_lst, token);

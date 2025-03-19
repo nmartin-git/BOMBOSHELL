@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 11:27:48 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/18 19:54:25 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/19 16:37:08 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,31 +25,26 @@
 # define PARANTHESIS 5
 # define QUOTE 6
 
-typedef struct s_token {
-	int				token;
-	struct s_token	*next;
-}	t_token;
-
 typedef struct s_input {
+	int				token;
 	char			*arg;
 	struct s_input	*next;
 }	t_input;
 
-void	token_add(t_token **token_lst, int token);
+void	token_add(t_input **token_lst, int token);
 int		token_get(char *input, int *i);
-t_token	*tokenisation(char *input);
+t_input	*tokenisation(char *input);
 
 int		arg_len(char *input);
 char	*arg_get(char *input, int *i);
-void	arg_add(t_input **arg_lst, char *arg);
 t_input	*input_set(char *input);
 
 void	ignore_spaces(char *str, int *i);
-void	lsts_free(t_token *token_lst, t_input *arg_lst);
-void	parsing_error(char *arg);
+void	lsts_free(t_input *arg_lst);
 
-int		lsts_simplify(t_token **token_lst, t_input **arg_lst);
-int		token_parse(t_token *token_lst, t_input *arg_lst);
+void	del_last_quote(char quote, t_input **arg_lst);
+int		lsts_simplify(t_input **arg_lst);
+int		token_parse(t_input *arg_lst);
 int		parsing(char *input);
 
 
