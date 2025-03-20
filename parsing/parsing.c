@@ -6,67 +6,13 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 11:39:48 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/20 15:05:46 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/20 16:53:20 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-void	del_last_quote(int del, t_input **arg_lst)
-{
-	t_input	*tmp;
 
-	if (del == 1)
-	{
-		free((*arg_lst)->arg);
-		free(*arg_lst);
-		*arg_lst = NULL;
-	}
-	else
-	{
-		tmp = *arg_lst;
-		while (--del)
-			tmp = tmp->next;
-	}
-}
-
-void	get_last_quote(char quote, t_input **arg_lst)
-{
-	int		arg_nbr;
-	int		del;
-	t_input	*arg_tmp;
-	t_input	*tmp;
-
-	arg_nbr = 0;
-	arg_tmp = *arg_lst;
-	while (arg_tmp)
-	{
-		arg_nbr++;
-		if (arg_tmp->arg[0] == quote)
-			del = arg_nbr;
-		arg_tmp = arg_tmp->next;
-	}
-	arg_nbr = 1;
-	arg_tmp = *arg_lst;
-	while (++arg_nbr != del)
-		arg_tmp = arg_tmp->next;
-	if (arg_tmp->next)
-	{
-		tmp = arg_tmp->next->next;
-		free(arg_tmp->next->arg);
-		free(arg_tmp->next);
-	}
-	else
-		tmp = NULL;
-	if (arg_tmp)
-		arg_tmp->next = tmp;
-	tmp = *arg_lst;
-	while (tmp)
-	{
-		printf("%s\n", tmp->arg);
-		tmp = tmp->next;
-	}
-}
 
 int	lsts_simplify(t_input **arg_lst)
 {
@@ -76,24 +22,7 @@ int	lsts_simplify(t_input **arg_lst)
 
 	quotes = 0;
 	tmp = *arg_lst;
-	while (tmp)
-	{
-		if (tmp->arg[0] == '\'')
-			quotes++;
-		tmp = tmp->next;
-	}
-	if (quotes % 2)
-		get_last_quote('\'', arg_lst);
-	quotes = 0;
-	tmp = *arg_lst;
-	while (tmp)
-	{
-		if (tmp->arg[0] == '"')
-			quotes++;
-		tmp = tmp->next;
-	}
-	if (quotes % 2)
-		get_last_quote('"', arg_lst);
+	unclosed_check(arg_lst);
 	return (1);
 	//supprimer les quotes unclosed
 	//parse les parantheses unclosed
@@ -127,6 +56,11 @@ int	parsing(char *input)
 	{
 		lsts_free(arg_lst);
 		return(-1);
+	}
+	if (!arg_lst)
+	{
+		lsts_free(arg_lst);
+		return(0);
 	}
 	//token_parse(arg_lst);//supp qd exec fonction faite
 	if (token_parse(arg_lst))

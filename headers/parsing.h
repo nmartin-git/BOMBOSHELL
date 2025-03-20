@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 11:27:48 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/20 14:53:01 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/20 16:55:07 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,14 @@ int		arg_len(char *input);
 char	*arg_get(char *input, int *i);
 t_input	*input_set(char *input);
 
+void	del_last_quote(int del, t_input **arg_lst);
+void	get_last_quote(char quote, t_input **arg_lst);
+void	unclosed_check(t_input **arg_lst);
 void	ignore_spaces(char *str, int *i);
 void	lsts_free(t_input *arg_lst);
 
-void	del_last_quote(int del, t_input **arg_lst);
-void	get_last_quote(char quote, t_input **arg_lst);
 int		lsts_simplify(t_input **arg_lst);
 int		token_parse(t_input *arg_lst);
 int		parsing(char *input);
-
 
 #endif
