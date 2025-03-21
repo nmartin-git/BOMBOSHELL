@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 17:05:39 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/19 16:37:03 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/21 15:38:19 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,9 +81,10 @@ t_input	*input_set(char *input)
 	tmp = arg_lst;
 	while (tmp)
 	{
-		printf("%s\n", tmp->arg);
+		printf("%s -> ", tmp->arg);
 		tmp = tmp->next;
 	}
+	printf("null\n");
 	//supp ^^^^^^^^^^^^^^^^
 	return (arg_lst);
 }

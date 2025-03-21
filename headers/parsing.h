@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 11:27:48 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/20 16:55:07 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/21 15:30:49 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ typedef struct s_input {
 	struct s_input	*next;
 }	t_input;
 
+void	token_print(t_input *token_lst);//supp
+
 void	token_add(t_input **token_lst, int token);
 int		token_get(char *input, int *i);
 t_input	*tokenisation(char *input);
@@ -45,6 +47,8 @@ void	unclosed_check(t_input **arg_lst);
 void	ignore_spaces(char *str, int *i);
 void	lsts_free(t_input *arg_lst);
 
+void	unify(char quote, t_input *tmp);
+void	quotes_unify(t_input *tmp);
 int		lsts_simplify(t_input **arg_lst);
 int		token_parse(t_input *arg_lst);
 int		parsing(char *input);

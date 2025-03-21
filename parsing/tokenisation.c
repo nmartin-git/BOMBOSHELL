@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 16:04:10 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/19 16:32:44 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/21 15:30:35 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	token_get(char *input, int *i)
 		return (WORD);
 }
 
-void	token_print(t_input *token_lst)
+void	token_print(t_input *token_lst)//supp
 {
 	while (token_lst)
 	{
