@@ -6,7 +6,7 @@
 #    By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/05 15:41:03 by nmartin           #+#    #+#              #
-#    Updated: 2025/03/18 19:23:30 by nmartin          ###   ########.fr        #
+#    Updated: 2025/03/22 18:31:11 by nmartin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,13 +16,13 @@ PURPLE = \033[35m
 RESET = \033[0m
 
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -MMD -MP
+CFLAGS = -g -Wall -Werror -Wextra -MMD -MP
 NAME = bomboshell
 MINISHELL_PATH = ./minishell/
 MINISHELL_FILES = bomboshell.c
 MINISHELL := $(addprefix $(MINISHELL_PATH), $(MINISHELL_FILES))
 PARSING_PATH = ./parsing/
-PARSING_FILES = parsing.c tokenisation.c input_set.c parsing_utils.c
+PARSING_FILES = parsing.c tokenisation.c input_set.c parsing_utils.c quotes_utils.c
 PARSING := $(addprefix $(PARSING_PATH), $(PARSING_FILES))
 OBJ_PATH = ./objs/
 OBJ := $(addprefix $(OBJ_PATH), $(MINISHELL_FILES:.c=.o)) $(addprefix $(OBJ_PATH), $(PARSING_FILES:.c=.o))

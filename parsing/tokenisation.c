@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 16:04:10 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/21 15:30:35 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/22 18:45:34 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	token_add(t_input **token_lst, int token)
 		tmp = *token_lst;
 	new_token = malloc(sizeof(t_input));
 	if (!new_token)
-		exit (127);//mieux gerer l'erreur
+		exit (127);//TODO mieux gerer l'erreur
 	new_token->token = token;
 	new_token->arg = NULL;
 	new_token->next = NULL;
@@ -65,7 +65,7 @@ int	token_get(char *input, int *i)
 		return (WORD);
 }
 
-void	token_print(t_input *token_lst)//supp
+void	token_print(t_input *token_lst)//TODO supp
 {
 	while (token_lst)
 	{
@@ -88,7 +88,6 @@ void	token_print(t_input *token_lst)//supp
 	printf("null\n");
 }
 
-
 t_input	*tokenisation(char *input)
 {
 	int		i;
@@ -100,18 +99,11 @@ t_input	*tokenisation(char *input)
 	while (input[i])
 	{
 		token = token_get(&input[i], &i);
-		if (token == SPACES)
-		{
-			ignore_spaces(input, &i);
-			if (!input[i])
-				break;//return (arg_lst); //remettre quand plus besoin de print
-			token = token_get(&input[i], &i);
-		}
 		token_add(&token_lst, token);
 		while (token == WORD && token_get(&input[i + 1], NULL) == WORD)
 			i++;
 		i++;
 	}
-	token_print(token_lst); //a supprimer (la fonction aussi)
+	token_print(token_lst); //TODO a supprimer (la fonction aussi)
 	return (token_lst);
 }

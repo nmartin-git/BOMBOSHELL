@@ -6,48 +6,57 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 11:39:48 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/21 15:43:42 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/22 18:54:14 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-void	unify(char quote, t_input *tmp)
+void	unify(char quote, t_input *tmp, t_input *prev, t_input **arg_lst)
 {
 	t_input	*unified;
 	t_input	*next;
 
 	next = tmp;
 	tmp = tmp->next;
-	unified = tmp;
-	while (tmp && tmp->token == QUOTE && tmp->arg[0] != quote)
+	if (tmp && tmp->token == QUOTE && tmp->arg[0] == quote)
+		unified = NULL;
+	else
+		unified = tmp;
+	while (tmp && !(tmp->token == QUOTE && tmp->arg[0] == quote))
 	{
 		if (tmp != unified)
 		{
 			tmp->arg = ft_strjoin_free(unified->arg, tmp->arg);
-			tmp->token = WORD;
+			if (quote == '\'')
+				tmp->token = WORD_S_QUOTE;
+			else
+				tmp->token = WORD_D_QUOTE;
 			free(unified);
 			unified = tmp;
 		}
 		next->next = unified;
 		tmp = tmp->next;
 	}
+	del_quotes(prev, unified, arg_lst);
 }
 
-void	quotes_unify(t_input *tmp)
+void	quotes_unify(t_input *tmp, t_input *prev, t_input **arg_lst)
 {
 	t_input	*is_closed;
 
 	is_closed = tmp;
 	if (tmp->token == QUOTE && tmp->arg[0] == '\'')
 	{
-		while (is_closed && !(is_closed->token == QUOTE && is_closed->arg[0] == '\''))
+		while (is_closed
+			&& !(is_closed->token == QUOTE && is_closed->arg[0] == '\''))
 		{
 			if (!is_closed->next)
 				return;
 			is_closed = is_closed->next;
 		}
-		unify('\'', tmp);
+		printf("a");
+		unify('\'', tmp, prev, arg_lst);
 	}
 	else if (tmp->token == QUOTE && tmp->arg[0] == '"')
 	{
@@ -57,18 +66,21 @@ void	quotes_unify(t_input *tmp)
 				return;
 			is_closed = is_closed->next;
 		}
-		unify('"', tmp);
+		unify('"', tmp, prev, arg_lst);
 	}
 }
 
 int	lsts_simplify(t_input **arg_lst)
 {
 	t_input	*tmp;
+	t_input	*prev;
 
 	tmp = *arg_lst;
+	prev = NULL;
 	while (tmp)
 	{
-		quotes_unify(tmp);
+		quotes_unify(tmp, prev, arg_lst);
+		prev = tmp;
 		tmp = tmp->next;
 	}
 	tmp = *arg_lst;
@@ -120,22 +132,22 @@ int	parsing(char *input)
 	if (!lsts_simplify(&arg_lst))
 	{
 		lsts_free(arg_lst);
-		return(-1);
+		return (-1);
 	}
 	if (!arg_lst)
 	{
 		lsts_free(arg_lst);
-		return(0);
+		return (0);
 	}
-	//token_parse(arg_lst);//supp qd exec fonction faite
 	if (token_parse(arg_lst))
 	{
 		lsts_free(arg_lst);
-		return(0);
+		//TODO exec
+		return (0);
 	}
 	else
 	{
 		lsts_free(arg_lst);
-		return(-1);
+		return (-1);
 	}
 }
