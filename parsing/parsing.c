@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 11:39:48 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/22 18:54:14 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/23 18:27:34 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,55 +19,52 @@ void	unify(char quote, t_input *tmp, t_input *prev, t_input **arg_lst)
 
 	next = tmp;
 	tmp = tmp->next;
-	if (tmp && tmp->token == QUOTE && tmp->arg[0] == quote)
-		unified = NULL;
-	else
-		unified = tmp;
+	unified = tmp;
 	while (tmp && !(tmp->token == QUOTE && tmp->arg[0] == quote))
 	{
 		if (tmp != unified)
 		{
 			tmp->arg = ft_strjoin_free(unified->arg, tmp->arg);
-			if (quote == '\'')
-				tmp->token = WORD_S_QUOTE;
-			else
-				tmp->token = WORD_D_QUOTE;
 			free(unified);
 			unified = tmp;
 		}
+		if (quote == '\'')
+			unified->token = WORD_S_QUOTE;
+		else
+			unified->token = WORD_D_QUOTE;
 		next->next = unified;
 		tmp = tmp->next;
 	}
 	del_quotes(prev, unified, arg_lst);
 }
 
-void	quotes_unify(t_input *tmp, t_input *prev, t_input **arg_lst)
+int	quotes_unify(t_input *tmp, t_input *prev, t_input **arg_lst)
 {
-	t_input	*is_closed;
+	t_input	*is_open;
 
-	is_closed = tmp;
-	if (tmp->token == QUOTE && tmp->arg[0] == '\'')
+	is_open = tmp->next;
+	if (is_open && tmp->token == QUOTE && tmp->arg[0] == '\'')
 	{
-		while (is_closed
-			&& !(is_closed->token == QUOTE && is_closed->arg[0] == '\''))
+		while (is_open
+			&& !(is_open->token == QUOTE && is_open->arg[0] == '\''))
 		{
-			if (!is_closed->next)
-				return;
-			is_closed = is_closed->next;
+			if (!is_open->next)
+				return (0);
+			is_open = is_open->next;
 		}
-		printf("a");
-		unify('\'', tmp, prev, arg_lst);
+		return (unify('\'', tmp, prev, arg_lst), 1);
 	}
-	else if (tmp->token == QUOTE && tmp->arg[0] == '"')
+	else if (is_open && tmp->token == QUOTE && tmp->arg[0] == '"')
 	{
-		while (is_closed && !(is_closed->token == QUOTE && is_closed->arg[0] == '"'))
+		while (is_open && !(is_open->token == QUOTE && is_open->arg[0] == '"'))
 		{
-			if (!is_closed->next)
-				return;
-			is_closed = is_closed->next;
+			if (!is_open->next)
+				return(0);
+			is_open = is_open->next;
 		}
-		unify('"', tmp, prev, arg_lst);
+		return (unify('"', tmp, prev, arg_lst), 1);
 	}
+	return (0);
 }
 
 int	lsts_simplify(t_input **arg_lst)
@@ -77,11 +74,16 @@ int	lsts_simplify(t_input **arg_lst)
 
 	tmp = *arg_lst;
 	prev = NULL;
-	while (tmp)
+	while (tmp && tmp->next)
 	{
-		quotes_unify(tmp, prev, arg_lst);
-		prev = tmp;
-		tmp = tmp->next;
+		if (!quotes_unify(tmp, prev, arg_lst))
+			unclosed_check(arg_lst);
+		tmp = *arg_lst;
+		while (tmp && tmp->token != QUOTE)
+		{
+			prev = tmp;
+			tmp = tmp->next;
+		}
 	}
 	tmp = *arg_lst;
 	token_print(tmp);

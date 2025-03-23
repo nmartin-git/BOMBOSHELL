@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 16:40:33 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/22 18:45:50 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/23 17:58:46 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	unclosed_check(t_input **arg_lst)
 	quotes = 0;
 	while (tmp)
 	{
-		if (tmp->arg[0] == '"')
+		if (tmp->token == QUOTE && tmp->arg[0] == '"')
 			quotes++;
 		tmp = tmp->next;
 	}
@@ -84,7 +84,7 @@ void	unclosed_check(t_input **arg_lst)
 	quotes = 0;
 	while (tmp)
 	{
-		if (tmp->arg[0] == '\'')
+		if (tmp->token == QUOTE && tmp->arg[0] == '\'')
 			quotes++;
 		tmp = tmp->next;
 	}
@@ -98,22 +98,27 @@ void	del_quotes(t_input *prev, t_input *unified, t_input **arg_lst)
 
 	if (prev)
 	{
-		free(prev->next->arg);
-		free(prev->next);
+		free_arg(prev->next);
 		prev->next = unified;
-		if (unified && unified->next)
-		{
-			tmp = unified->next->next;
-			free(unified->next->arg);
-			free(unified->next);
-			unified->next = tmp;
-		}
 	}
 	else
 	{
-		tmp = (*arg_lst)->next;
-		free((*arg_lst)->arg);
-		free(*arg_lst);
+		free_arg(*arg_lst);
 		*arg_lst = unified;
+	}
+	if (unified->token == WORD_D_QUOTE || unified->token == WORD_S_QUOTE)
+	{
+		tmp = unified->next->next;
+		free_arg(unified->next);
+		unified->next = tmp;
+	}
+	else
+	{
+		tmp = unified->next;
+		free_arg(unified);
+		if (prev)
+			prev->next = tmp;
+		else
+			*arg_lst = tmp;
 	}
 }

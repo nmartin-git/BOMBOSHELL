@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 16:04:10 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/22 18:45:34 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/23 14:44:41 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,10 @@ void	token_print(t_input *token_lst)//TODO supp
 			printf("PARANTHESIS -> ");
 		else if (token_lst->token == QUOTE)
 			printf("QUOTE -> ");
+		else if (token_lst->token == WORD_S_QUOTE)
+			printf("WORD_S_QUOTE -> ");
+		else if (token_lst->token == WORD_D_QUOTE)
+			printf("WORD_D_QUOTE -> ");
 		token_lst = token_lst->next;
 	}
 	printf("null\n");

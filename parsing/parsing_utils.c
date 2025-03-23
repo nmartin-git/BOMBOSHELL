@@ -6,11 +6,17 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 19:11:00 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/22 18:54:53 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/23 15:45:35 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
+
+void	free_arg(t_input *arg)
+{
+	free(arg->arg);
+	free(arg);
+}
 
 int	ignore_spaces(char *str)
 {
