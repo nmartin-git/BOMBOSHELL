@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 16:40:33 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/23 17:58:46 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/24 14:04:49 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	get_last_quote(char quote, t_input **arg_lst)
 	arg_tmp = *arg_lst;
 	while (arg_tmp)
 	{
-		printf("%s\n", arg_tmp->arg);
+		printf("%s -> ", arg_tmp->arg);
 		arg_tmp = arg_tmp->next;
 	}
 	if (!arg_tmp)
@@ -97,15 +97,9 @@ void	del_quotes(t_input *prev, t_input *unified, t_input **arg_lst)
 	t_input	*tmp;
 
 	if (prev)
-	{
-		free_arg(prev->next);
-		prev->next = unified;
-	}
+		(free_arg(prev->next), prev->next = unified);
 	else
-	{
-		free_arg(*arg_lst);
-		*arg_lst = unified;
-	}
+		(free_arg(*arg_lst), *arg_lst = unified);
 	if (unified->token == WORD_D_QUOTE || unified->token == WORD_S_QUOTE)
 	{
 		tmp = unified->next->next;
@@ -121,4 +115,30 @@ void	del_quotes(t_input *prev, t_input *unified, t_input **arg_lst)
 		else
 			*arg_lst = tmp;
 	}
+}
+
+void	unify(char quote, t_input *tmp, t_input *prev, t_input **arg_lst)
+{
+	t_input	*unified;
+	t_input	*next;
+
+	next = tmp;
+	tmp = tmp->next;
+	unified = tmp;
+	while (tmp && !(tmp->token == QUOTE && tmp->arg[0] == quote))
+	{
+		if (tmp != unified)
+		{
+			tmp->arg = ft_strjoin_free(unified->arg, tmp->arg);
+			free(unified);
+			unified = tmp;
+		}
+		if (quote == '\'')
+			unified->token = WORD_S_QUOTE;
+		else
+			unified->token = WORD_D_QUOTE;
+		next->next = unified;
+		tmp = tmp->next;
+	}
+	del_quotes(prev, unified, arg_lst);
 }

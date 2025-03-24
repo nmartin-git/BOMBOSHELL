@@ -6,36 +6,30 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 11:39:48 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/23 18:27:34 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/24 14:25:10 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-void	unify(char quote, t_input *tmp, t_input *prev, t_input **arg_lst)
+int	paranthesis_check(t_input *arg_lst)
 {
-	t_input	*unified;
-	t_input	*next;
-
-	next = tmp;
-	tmp = tmp->next;
-	unified = tmp;
-	while (tmp && !(tmp->token == QUOTE && tmp->arg[0] == quote))
+	while (arg_lst)
 	{
-		if (tmp != unified)
+		if (arg_lst->token == PARANTHESIS && arg_lst->arg[0] == '(')
 		{
-			tmp->arg = ft_strjoin_free(unified->arg, tmp->arg);
-			free(unified);
-			unified = tmp;
+			while (!(arg_lst->token == PARANTHESIS && arg_lst->arg[0] == ')'))
+			{
+				if (!arg_lst->next)
+					return (0);
+				arg_lst = arg_lst->next;
+			}
 		}
-		if (quote == '\'')
-			unified->token = WORD_S_QUOTE;
-		else
-			unified->token = WORD_D_QUOTE;
-		next->next = unified;
-		tmp = tmp->next;
+		else if (arg_lst->token == PARANTHESIS && arg_lst->arg[0] == ')')
+			return (0);
+		arg_lst = arg_lst->next;
 	}
-	del_quotes(prev, unified, arg_lst);
+	return (1);
 }
 
 int	quotes_unify(t_input *tmp, t_input *prev, t_input **arg_lst)
@@ -85,26 +79,18 @@ int	lsts_simplify(t_input **arg_lst)
 			tmp = tmp->next;
 		}
 	}
-	tmp = *arg_lst;
-	token_print(tmp);
-	while (tmp)
-	{
-		printf("%s -> ", tmp->arg);
-		tmp = tmp->next;
-	}
-	printf("null\n");
 	unclosed_check(arg_lst);
+	if (!paranthesis_check(*arg_lst))
+		printf("KO");//TODO gerer l'erreur
 	tmp = *arg_lst;
-	token_print(tmp);
 	while (tmp)
 	{
 		printf("%s -> ", tmp->arg);
 		tmp = tmp->next;
 	}
-	printf("null\n");
+	if (!tmp)
+		printf("null\n");
 	return (1);
-	//supprimer les quotes unclosed
-	//parse les parantheses unclosed
 }
 
 int	token_parse(t_input *arg_lst)

@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 11:27:48 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/23 18:24:47 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/24 13:53:22 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,9 @@ void	del_last_quote(int del, t_input **arg_lst);
 void	get_last_quote(char quote, t_input **arg_lst);
 void	unclosed_check(t_input **arg_lst);
 void	del_quotes(t_input *prev, t_input *unified, t_input **arg_lst);
-
 void	unify(char quote, t_input *tmp, t_input *prev, t_input **arg_lst);
+
+int		paranthesis_check(t_input *arg_lst);
 int		quotes_unify(t_input *tmp, t_input *prev, t_input **arg_lst);
 int		lsts_simplify(t_input **arg_lst);
 int		token_parse(t_input *arg_lst);
