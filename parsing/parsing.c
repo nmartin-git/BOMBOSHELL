@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 11:39:48 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/24 14:25:10 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/24 16:58:49 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,21 @@
 
 int	paranthesis_check(t_input *arg_lst)
 {
+	int	paranthesis_count;
+
+	paranthesis_count = 0;
 	while (arg_lst)
 	{
 		if (arg_lst->token == PARANTHESIS && arg_lst->arg[0] == '(')
-		{
-			while (!(arg_lst->token == PARANTHESIS && arg_lst->arg[0] == ')'))
-			{
-				if (!arg_lst->next)
-					return (0);
-				arg_lst = arg_lst->next;
-			}
-		}
+			paranthesis_count++;
 		else if (arg_lst->token == PARANTHESIS && arg_lst->arg[0] == ')')
+			paranthesis_count--;
+		if (paranthesis_count < 0)
 			return (0);
 		arg_lst = arg_lst->next;
 	}
+	if (paranthesis_count != 0)
+		return (0);
 	return (1);
 }
 

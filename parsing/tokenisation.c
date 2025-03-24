@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 16:04:10 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/23 14:44:41 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/24 17:10:13 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,8 @@ t_input	*tokenisation(char *input)
 	while (input[i])
 	{
 		token = token_get(&input[i], &i);
+		if (token == SPACES)
+			i += ignore_spaces(&input[i]) - 1;
 		token_add(&token_lst, token);
 		while (token == WORD && token_get(&input[i + 1], NULL) == WORD)
 			i++;
