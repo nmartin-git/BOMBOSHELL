@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 11:39:48 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/24 16:58:49 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/25 12:48:06 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,13 @@ int	paranthesis_check(t_input *arg_lst)
 		else if (arg_lst->token == PARANTHESIS && arg_lst->arg[0] == ')')
 			paranthesis_count--;
 		if (paranthesis_count < 0)
-			return (0);
+			break ;
 		arg_lst = arg_lst->next;
 	}
-	if (paranthesis_count != 0)
-		return (0);
+	if (paranthesis_count > 0)
+		return (ft_printf_fd(2, "bomboshell: parse error near '('\n", 0), 0);
+	else if (paranthesis_count < 0)
+		return (ft_printf_fd(2, "bomboshell: parse error near ')'\n", 0), 0);
 	return (1);
 }
 
@@ -81,15 +83,15 @@ int	lsts_simplify(t_input **arg_lst)
 	}
 	unclosed_check(arg_lst);
 	if (!paranthesis_check(*arg_lst))
-		printf("KO");//TODO gerer l'erreur
-	tmp = *arg_lst;
+		return(0);//TODO gerer l'erreur
+	tmp = *arg_lst;//TODO supp
 	while (tmp)
 	{
 		printf("%s -> ", tmp->arg);
 		tmp = tmp->next;
 	}
 	if (!tmp)
-		printf("null\n");
+		printf("null\n");//TODO supp ^^^^^
 	return (1);
 }
 
@@ -98,17 +100,20 @@ int	token_parse(t_input *arg_lst)
 	int	prev;
 
 	if (arg_lst->token == PIPE || arg_lst->token == BOOL
-		|| arg_lst->arg[0] == '>' || arg_lst->arg[0] == ')')
+		|| arg_lst->arg[0] == '>')
 		return (ft_printf_fd(2, "bomboshell: parse error near '%s'\n",
 			arg_lst->arg), 0);
 	prev = arg_lst->token;
-	arg_lst = arg_lst->next;
-	while (arg_lst)
-	{
-		if (prev)
-			prev = arg_lst->token;
-		arg_lst = arg_lst->next;
-	}
+	// arg_lst = arg_lst->next;
+	// while (arg_lst->next)
+	// {
+	// 	prev = arg_lst->token;
+	// 	arg_lst = arg_lst->next;
+	// }
+	// if (arg_lst->token == PIPE || arg_lst->token == BOOL
+	// 	|| arg_lst->arg[0] == '>')
+	// 	return (ft_printf_fd(2, "bomboshell: parse error near '%s'\n",
+	// 		arg_lst->arg), 0);
 	return (1);
 }
 
