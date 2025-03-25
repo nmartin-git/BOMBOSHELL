@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 11:27:48 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/24 13:53:22 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/25 20:16:35 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ int		arg_len(char *input);
 char	*arg_get(char *input, int *i);
 t_input	*input_set(char *input);
 
+int		parse_check(int prev, int next, t_input *arg_lst);
 void	free_arg(t_input *arg);
 int		ignore_spaces(char *str);
 void	lsts_free(t_input *arg_lst);

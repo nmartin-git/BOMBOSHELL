@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 11:39:48 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/25 17:29:27 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/25 20:15:35 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ int	lsts_simplify(t_input **arg_lst)
 int	token_parse(t_input *arg_lst)
 {
 	int	prev;
+	int	next;
 
 	prev = -1;
 	while (arg_lst)
@@ -109,7 +110,13 @@ int	token_parse(t_input *arg_lst)
 			prev = arg_lst->token;
 			arg_lst = arg_lst->next;
 		}
-		if (!parse_check(prev, arg_lst))
+		if (!arg_lst)
+			break;
+		if (arg_lst->next)
+			next = arg_lst->next->token;
+		else
+			next = -1;
+		if (!parse_check(prev, next, arg_lst))
 			return (ft_printf_fd(2, "bomboshell: parse error near '%s'\n",
 				arg_lst->arg), 0);
 		prev = arg_lst->token;

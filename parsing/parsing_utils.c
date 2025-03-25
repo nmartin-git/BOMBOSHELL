@@ -6,11 +6,20 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 19:11:00 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/23 15:45:35 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/25 20:20:16 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
+
+int	parse_check(int prev, int next, t_input *arg_lst)
+{
+	if (arg_lst->token == PIPE && (prev == -1  || next == -1 
+		|| (prev != WORD && prev != WORD_D_QUOTE && prev != WORD_S_QUOTE)
+		|| (next != WORD && next != WORD_D_QUOTE && next != WORD_S_QUOTE)))
+			return (0);
+	return (1);
+}
 
 void	free_arg(t_input *arg)
 {
