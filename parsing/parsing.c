@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 11:39:48 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/25 20:15:35 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/26 15:40:27 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,43 +83,29 @@ int	lsts_simplify(t_input **arg_lst)
 	}
 	unclosed_check(arg_lst);
 	if (!paranthesis_check(*arg_lst))
-		return(0);//TODO gerer l'erreur
-	tmp = *arg_lst;//TODO supp
-	while (tmp)
-	{
-		printf("%s -> ", tmp->arg);
-		tmp = tmp->next;
-	}
-	if (!tmp)
-		printf("null\n");//TODO supp ^^^^^
-	token_print(*arg_lst);
+		return(0);
 	return (1);
 }
 
 int	token_parse(t_input *arg_lst)
 {
-	int	prev;
-	int	next;
+	t_input	*first;
+	int		prev;
+	int		next;
 
-	prev = -1;
+	first = arg_lst;
 	while (arg_lst)
 	{
 		while (arg_lst
 			&& (arg_lst->token == SPACES || arg_lst->token == PARANTHESIS))
-		{
-			prev = arg_lst->token;
 			arg_lst = arg_lst->next;
-		}
 		if (!arg_lst)
 			break;
-		if (arg_lst->next)
-			next = arg_lst->next->token;
-		else
-			next = -1;
+		prev = get_prev_token(first, arg_lst);
+		next = get_next_token(arg_lst);
 		if (!parse_check(prev, next, arg_lst))
 			return (ft_printf_fd(2, "bomboshell: parse error near '%s'\n",
 				arg_lst->arg), 0);
-		prev = arg_lst->token;
 		arg_lst = arg_lst->next;
 	}
 	return (1);

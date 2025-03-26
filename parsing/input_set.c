@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 17:05:39 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/22 18:44:25 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/26 15:48:24 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ char	*arg_get(char *input, int *i)
 	y = 0;
 	arg = malloc(sizeof(char) * (len + 1));
 	if (!arg)
-		exit (127);//TODO mieux gerer l'erreur
+		return (NULL);
 	while (y < len)
 	{
 		arg[y] = input[y];
@@ -63,7 +63,7 @@ char	*arg_get(char *input, int *i)
 t_input	*input_set(char *input)
 {
 	t_input	*arg_lst;
-	t_input *tmp;//TODO supp
+	t_input *tmp;
 	int		i;
 
 	arg_lst = tokenisation(input);
@@ -72,16 +72,9 @@ t_input	*input_set(char *input)
 	while (input[i])
 	{
 		tmp->arg = arg_get(&input[i], &i);
+		if (!tmp->arg)
+			parsing_exit(arg_lst);
 		tmp = tmp->next;
 	}
-	//TODO supp 
-	tmp = arg_lst;
-	while (tmp)
-	{
-		printf("%s -> ", tmp->arg);
-		tmp = tmp->next;
-	}
-	printf("null\n");
-	//TODO supp ^^^^^^^^^^^^^^^^
 	return (arg_lst);
 }
