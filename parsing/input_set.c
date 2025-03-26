@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 17:05:39 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/26 15:48:24 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/26 16:48:37 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	arg_len(char *input)
 	if (!input[0])
 		return (0);
 	if ((input[0] == '|' && input[1] == '|') || (input[0] == '&'
-		&& input[1] == '&') || (input[0] == '>' && input[1] == '>')
+			&& input[1] == '&') || (input[0] == '>' && input[1] == '>')
 		|| (input[0] == '<' && input[1] == '<'))
 		return (2);
 	else if (input[0] == '|' || input[0] == '>' || input[0] == '<'
@@ -60,21 +60,20 @@ char	*arg_get(char *input, int *i)
 	return (arg);
 }
 
-t_input	*input_set(char *input)
+t_input	*input_set(char *input, t_input **arg_lst)
 {
-	t_input	*arg_lst;
-	t_input *tmp;
+	t_input	*tmp;
 	int		i;
 
-	arg_lst = tokenisation(input);
+	*arg_lst = tokenisation(input);
 	i = 0;
-	tmp = arg_lst;
+	tmp = *arg_lst;
 	while (input[i])
 	{
 		tmp->arg = arg_get(&input[i], &i);
 		if (!tmp->arg)
-			parsing_exit(arg_lst);
+			parsing_exit(*arg_lst);
 		tmp = tmp->next;
 	}
-	return (arg_lst);
+	return (*arg_lst);
 }

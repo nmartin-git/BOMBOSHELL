@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 11:27:48 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/26 15:46:48 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/26 16:50:17 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ t_input	*tokenisation(char *input);
 
 int		arg_len(char *input);
 char	*arg_get(char *input, int *i);
-t_input	*input_set(char *input);
+t_input	*input_set(char *input, t_input **arg_lst);
 
 int		parse_check(int prev, int next, t_input *arg_lst);
 void	free_arg(t_input *arg);
@@ -59,6 +59,6 @@ int		paranthesis_check(t_input *arg_lst);
 int		quotes_unify(t_input *tmp, t_input *prev, t_input **arg_lst);
 int		lsts_simplify(t_input **arg_lst);
 int		token_parse(t_input *arg_lst);
-int		parsing(char *input);
+int		parsing(char *input, t_input **arg_lst);
 
 #endif

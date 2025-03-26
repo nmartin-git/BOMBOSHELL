@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 19:11:00 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/26 15:49:46 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/26 16:38:32 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,20 @@
 
 int	parse_check(int prev, int next, t_input *arg_lst)
 {
-	if (arg_lst->token == PIPE && (prev == -1  || next == -1  || next == BOOL
-		|| (prev != WORD && prev != WORD_D_QUOTE && prev != WORD_S_QUOTE)))
-			return (0);
-	else if (arg_lst->token == BOOL && (prev == -1  || next == -1 
-		|| (prev != WORD && prev != WORD_D_QUOTE && prev != WORD_S_QUOTE)))
-			return (0);
+	if (arg_lst->token == PIPE && (prev == -1 || next == -1 || next == BOOL
+			|| (prev != WORD && prev != WORD_D_QUOTE && prev != WORD_S_QUOTE)))
+		return (0);
+	else if (arg_lst->token == BOOL && (prev == -1 || next == -1
+			|| (prev != WORD && prev != WORD_D_QUOTE && prev != WORD_S_QUOTE)))
+		return (0);
 	else if (arg_lst->token == REDIR && arg_lst->arg[0] == '>'
 		&& (next == -1 || (prev == -1 && next == -1)
-		|| (next != WORD && next != WORD_D_QUOTE && next != WORD_S_QUOTE)))
-			return (0);
+			|| (next != WORD && next != WORD_D_QUOTE && next != WORD_S_QUOTE)))
+		return (0);
 	else if (arg_lst->token == REDIR && arg_lst->arg[0] == '<'
 		&& (next == -1 || (prev == -1 && next == -1)
-		|| (next != WORD && next != WORD_D_QUOTE && next != WORD_S_QUOTE)))
-			return (0);
+			|| (next != WORD && next != WORD_D_QUOTE && next != WORD_S_QUOTE)))
+		return (0);
 	return (1);
 }
 

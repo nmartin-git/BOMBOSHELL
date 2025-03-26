@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 11:39:48 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/26 15:40:27 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/26 16:49:05 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	quotes_unify(t_input *tmp, t_input *prev, t_input **arg_lst)
 		while (is_open && !(is_open->token == QUOTE && is_open->arg[0] == '"'))
 		{
 			if (!is_open->next)
-				return(0);
+				return (0);
 			is_open = is_open->next;
 		}
 		return (unify('"', tmp, prev, arg_lst), 1);
@@ -83,7 +83,7 @@ int	lsts_simplify(t_input **arg_lst)
 	}
 	unclosed_check(arg_lst);
 	if (!paranthesis_check(*arg_lst))
-		return(0);
+		return (0);
 	return (1);
 }
 
@@ -100,41 +100,26 @@ int	token_parse(t_input *arg_lst)
 			&& (arg_lst->token == SPACES || arg_lst->token == PARANTHESIS))
 			arg_lst = arg_lst->next;
 		if (!arg_lst)
-			break;
+			break ;
 		prev = get_prev_token(first, arg_lst);
 		next = get_next_token(arg_lst);
 		if (!parse_check(prev, next, arg_lst))
 			return (ft_printf_fd(2, "bomboshell: parse error near '%s'\n",
-				arg_lst->arg), 0);
+					arg_lst->arg), 0);
 		arg_lst = arg_lst->next;
 	}
 	return (1);
 }
 
-int	parsing(char *input)
+int	parsing(char *input, t_input **arg_lst)
 {
-	t_input	*arg_lst;
-
-	arg_lst = input_set(input);
-	if (!lsts_simplify(&arg_lst))
-	{
-		lsts_free(arg_lst);
+	input_set(input, arg_lst);
+	if (!lsts_simplify(arg_lst))
 		return (-1);
-	}
-	if (!arg_lst)
-	{
-		lsts_free(arg_lst);
+	if (!*arg_lst)
 		return (0);
-	}
-	if (token_parse(arg_lst))
-	{
-		lsts_free(arg_lst);
-		//TODO exec
+	if (token_parse(*arg_lst))
 		return (0);
-	}
 	else
-	{
-		lsts_free(arg_lst);
 		return (-1);
-	}
 }

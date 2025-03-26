@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 16:04:10 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/26 15:49:08 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/26 16:40:21 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 int	get_prev_token(t_input *lst, t_input *arg)
 {
-	int 	prev;
-	
+	int	prev;
+
 	prev = -1;
 	if (lst == arg)
 		return (-1);
@@ -68,9 +68,9 @@ int	token_get(char *input, int *i)
 	if (!input[0])
 		return (-1);
 	if (i && ((input[0] == '|' && input[1] == '|')
-		|| (input[0] == '&' && input[1] == '&')
-		|| (input[0] == '>' && input[1] == '>')
-		|| (input[0] == '<' && input[1] == '<')))
+			|| (input[0] == '&' && input[1] == '&')
+			|| (input[0] == '>' && input[1] == '>')
+			|| (input[0] == '<' && input[1] == '<')))
 		*i += 1;
 	if ((input[0] == '|' && input[1] == '|')
 		|| (input[0] == '&' && input[1] == '&'))
@@ -78,13 +78,13 @@ int	token_get(char *input, int *i)
 	else if (input[0] == '|')
 		return (PIPE);
 	else if ((input[0] == '>' || input[0] == '<'
-		|| (input[0] == '>' && input[1] == '>')
-		|| (input[0] == '<' && input[1] == '<')))
+			|| (input[0] == '>' && input[1] == '>')
+			|| (input[0] == '<' && input[1] == '<')))
 		return (REDIR);
 	else if (input[0] == '(' || input[0] == ')')
 		return (PARANTHESIS);
 	else if (input[0] == ' ' || input[0] == '\t' || input[0] == '\n'
-			|| input[0] == '\v' || input[0] == '\f' || input[0] == '\r')
+		|| input[0] == '\v' || input[0] == '\f' || input[0] == '\r')
 		return (SPACES);
 	else if (input[0] == '\'' || input[0] == '"')
 		return (QUOTE);

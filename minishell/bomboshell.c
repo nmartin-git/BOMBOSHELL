@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 11:45:55 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/25 15:15:52 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/26 16:50:35 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,17 @@ int	only_space(char *str)
 int	main(void)
 {
 	char	*input;
+	t_input	*arg_lst;
 
 	while (1)
 	{
 		input = readline("🚀🍑😱💣> ");
 		if (!input)
 			break ;
-		parsing(input);
+		arg_lst = NULL;
+		if (parsing(input, &arg_lst))
+			write(1, "exec\n", 5);//exec();
+		lsts_free(arg_lst);
 		if (!only_space(input))
 			add_history(input);
 		free(input);
