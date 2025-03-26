@@ -27,11 +27,16 @@ int	only_space(char *str)
 	return (1);
 }
 
-int	main(void)
+int	main(int ac, char **av)
 {
 	char	*input;
 	t_input	*arg_lst;
 
+	if (ac != 1)
+	{
+write(2, "bomboshell: too many arguments\n", 31);
+		return (2/*mettre bon exit code*/);
+	}
 	while (1)
 	{
 		input = readline("🚀🍑😱💣> ");
