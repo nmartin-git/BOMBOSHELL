@@ -6,7 +6,7 @@
 #    By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/09 19:01:34 by nmartin           #+#    #+#              #
-#    Updated: 2025/02/18 15:35:15 by nmartin          ###   ########.fr        #
+#    Updated: 2025/03/21 15:43:26 by nmartin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,7 @@ SRC_PRINTF = ft_printf.c prnt_conv.c prnt_conv1.c prnt_conv2.c \
 OBJ_PRINTF = $(SRC_PRINTF:.c=.o)
 SRC_GNL = get_next_line.c gnl_get_next_line_utils.c
 OBJ_GNL = $(SRC_GNL:.c=.o)
-SRC_UTILS = ft_free_tab.c ft_printf_fd.c ft_size_tab.c ft_abs.c
+SRC_UTILS = ft_free_tab.c ft_printf_fd.c ft_size_tab.c ft_abs.c ft_strjoin_free.c
 OBJ_UTILS = $(SRC_UTILS:.c=.o)
 
 all : $(NAME)
