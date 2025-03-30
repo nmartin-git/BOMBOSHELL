@@ -6,28 +6,52 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 14:01:16 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/30 14:23:37 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/30 19:23:52 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
-void	files_tokenisation(t_input **arg_lst)
+t_input	*del_redir(t_input **arg_lst, t_input *tmp, t_input *prev)
+{
+	if (prev)
+	{
+		prev->next = tmp->next;
+		prev = prev->next;
+	}
+	else
+	{
+		*arg_lst = tmp->next;
+		prev = *arg_lst;
+	}
+	lsts_free(tmp);
+	return (prev);
+}
+
+void	files_tokenisation(t_input **arg_lst, t_input *prev)
 {
 	t_input	*tmp;
-	t_input	*prev;
 
 	tmp = *arg_lst;
-	prev = NULL;
 	while (tmp && tmp->next)
 	{
-		
+		printf("%d %s\n", tmp->token, tmp->arg);
 		if (tmp->token == REDIR)
 		{
 			if (tmp->arg[0] == '<' && tmp->arg[1] == '<')
-				
+				tmp->next->token = HERE_DOC;
+			else if (tmp->arg[0] == '<')
+				tmp->next->token = INFILE;
+			else if (tmp->arg[0] == '>' && tmp->arg[1] == '>')
+				tmp->next->token = APPEND;
+			else if (tmp->arg[0] == '>')
+				tmp->next->token = OUTFILE;
+			prev = del_redir(arg_lst, tmp, prev);
 		}
-		prev = tmp;
-		tmp = tmp->next;
+		else
+			prev = tmp;
+		if (!prev)
+			break ;
+		tmp = prev->next;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 11:45:55 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/30 13:56:10 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/30 18:33:03 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	main(int ac, char **av)
 			break ;
 		arg_lst = NULL;
 		if (parsing(input, &arg_lst) && arg_lst)
-			write(1, "exec\n", 5);//TODO exec(&arg_lst);
+			exec(&arg_lst);
 		lsts_free(arg_lst);
 		if (!only_space(input))
 			add_history(input);

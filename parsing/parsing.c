@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 11:39:48 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/26 16:49:05 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/30 18:32:42 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,9 +117,9 @@ int	parsing(char *input, t_input **arg_lst)
 	if (!lsts_simplify(arg_lst))
 		return (-1);
 	if (!*arg_lst)
-		return (0);
+		return (1);
 	if (token_parse(*arg_lst))
-		return (0);
+		return (1);
 	else
 		return (-1);
 }
