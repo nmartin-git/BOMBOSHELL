@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 11:45:55 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/26 16:50:35 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/30 13:56:10 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ int	main(int ac, char **av)
 	char	*input;
 	t_input	*arg_lst;
 
+	(void)av;
 	if (ac > 1)
 	{
 		write(2, "bomboshell: too many arguments\n", 31);
@@ -43,8 +44,8 @@ int	main(int ac, char **av)
 		if (!input)
 			break ;
 		arg_lst = NULL;
-		if (parsing(input, &arg_lst))
-			write(1, "exec\n", 5);//exec();
+		if (parsing(input, &arg_lst) && arg_lst)
+			write(1, "exec\n", 5);//TODO exec(&arg_lst);
 		lsts_free(arg_lst);
 		if (!only_space(input))
 			add_history(input);

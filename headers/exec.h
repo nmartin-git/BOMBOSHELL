@@ -1,18 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec.c                                             :+:      :+:    :+:   */
+/*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/27 13:52:33 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/30 13:55:39 by nmartin          ###   ########.fr       */
+/*   Created: 2025/03/27 13:53:26 by nmartin           #+#    #+#             */
+/*   Updated: 2025/03/30 13:55:57 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "exec.h"
+#ifndef EXEC_H
 
-int	exec(t_input **arg_lst)
-{
-	files_tokenisation(arg_lst);
-}
+# define EXEC_H
+# include "parsing.h"
+
+int	exec(t_input **arg_lst);
+
+#endif

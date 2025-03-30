@@ -1,18 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec.c                                             :+:      :+:    :+:   */
+/*   files_tokenisation.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/27 13:52:33 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/30 13:55:39 by nmartin          ###   ########.fr       */
+/*   Created: 2025/03/30 14:01:16 by nmartin           #+#    #+#             */
+/*   Updated: 2025/03/30 14:23:37 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
-int	exec(t_input **arg_lst)
+void	files_tokenisation(t_input **arg_lst)
 {
-	files_tokenisation(arg_lst);
+	t_input	*tmp;
+	t_input	*prev;
+
+	tmp = *arg_lst;
+	prev = NULL;
+	while (tmp && tmp->next)
+	{
+		
+		if (tmp->token == REDIR)
+		{
+			if (tmp->arg[0] == '<' && tmp->arg[1] == '<')
+				
+		}
+		prev = tmp;
+		tmp = tmp->next;
+	}
 }

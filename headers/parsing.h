@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 11:27:48 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/26 16:50:17 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/03/29 16:33:46 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,12 @@
 # define QUOTE 6
 # define WORD_S_QUOTE 7
 # define WORD_D_QUOTE 8
+
+# define HERE_DOC 9
+# define INFILE 10
+# define OUTFILE 11
+# define APPEND 12
+# define CMD 13
 
 typedef struct s_input {
 	int				token;
