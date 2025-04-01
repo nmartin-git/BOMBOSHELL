@@ -6,13 +6,14 @@
 #    By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/05 15:41:03 by nmartin           #+#    #+#              #
-#    Updated: 2025/03/30 18:24:37 by nmartin          ###   ########.fr        #
+#    Updated: 2025/04/01 17:37:37 by nmartin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 YELLOW = \033[33m
 GREEN = \033[32m
 PURPLE = \033[35m
+BLUE = \033[34m
 RESET = \033[0m
 
 CC = cc
@@ -25,7 +26,7 @@ PARSING_PATH = ./parsing/
 PARSING_FILES = parsing.c tokenisation.c input_set.c parsing_utils.c quotes_utils.c
 PARSING := $(addprefix $(PARSING_PATH), $(PARSING_FILES))
 EXEC_PATH = ./exec/
-EXEC_FILES = exec.c files_tokenisation.c
+EXEC_FILES = exec.c exec_tokenisation.c
 EXEC := $(addprefix $(EXEC_PATH), $(EXEC_FILES))
 OBJ_PATH = ./objs/
 OBJ := $(addprefix $(OBJ_PATH), $(MINISHELL_FILES:.c=.o)) $(addprefix $(OBJ_PATH), $(PARSING_FILES:.c=.o)) $(addprefix $(OBJ_PATH), $(EXEC_FILES:.c=.o))
