@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 13:52:33 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/01 17:44:20 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/02 14:18:36 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,18 @@ void	print_tokens(t_input *arg_lst)
 	printf("null\n");
 }
 
+void    exec_cmd(t_input *arg_lst)
+{
+    
+}
+
 int	exec(t_input **arg_lst)
 {
 	print_tokens(*arg_lst);
 	files_tokenisation(arg_lst, NULL);
+    //expend_env_var
     cmd_tokenisation(*arg_lst);
+    //exec
 	print_tokens(*arg_lst);
 	return (0);
 }
