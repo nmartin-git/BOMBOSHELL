@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 13:53:26 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/01 17:35:44 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/04 17:57:04 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,14 @@
 # define OUTFILE 11
 # define APPEND 12
 # define CMD 13
+
+typedef struct s_exec {
+	int			pid;
+	int			input;
+	int			output;
+	int			*pipe;
+	struct exec	*next;
+}	t_exec;
 
 int		exec(t_input **arg_lst);
 
