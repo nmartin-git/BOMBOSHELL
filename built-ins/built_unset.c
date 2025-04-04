@@ -1,0 +1,119 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   built_unset.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/25 15:36:18 by atazzit           #+#    #+#             */
+/*   Updated: 2025/04/04 23:32:31 by nmartin          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "built-ins.h"
+
+int	is_valid_identifier(char *str)
+{
+	int	i;
+
+	if (!str || !*str || (!ft_isalpha(*str) && *str != '_'))
+		return (0);
+	i = 1;
+	while (str[i])
+	{
+		if (!ft_isalnum(str[i]) && str[i] != '_')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+void	unset_env_value(t_env *env, char *key)
+{
+	t_env	*current;
+	t_env	*prev;
+	char	*expanded_key;
+
+	expanded_key = handle_shell_var(env, key, "unset");
+	if (!expanded_key)
+		return ;
+	prev = NULL;
+	current = env;
+	while (current)
+	{
+		if (ft_strcmp(current->key, expanded_key) == 0)
+		{
+			if (prev)
+				prev->next = current->next;
+			else
+				env = current->next;
+			free(current->key);
+			if (current->value)
+				free(current->value);
+			free(current);
+			free(expanded_key);
+			return ;
+		}
+		prev = current;
+		current = current->next;
+	}
+	free(expanded_key);
+}
+
+char	*handle_shell_var(t_env *env, char *var, char *cmd)
+{
+	char	*value;
+
+	if (!var || !*var)
+	{
+		printf("%s: '': not a valid identifier\n", cmd);
+		return (NULL);
+	}
+	if (var[0] == '$' && var[1])
+	{
+		value = get_env_value(env, var + 1);
+		if (!value)
+		{
+			printf("%s: '%s': not a valid identifier\n", cmd, var);
+			return (NULL);
+		}
+		if (!is_valid_identifier(value))
+		{
+			printf("%s: '%s': not a valid identifier\n", cmd, value);
+			return (NULL);
+		}
+		return (ft_strdup(value));
+	}
+	if (!is_valid_identifier(var))
+	{
+		printf("%s: '%s': not a valid identifier\n", cmd, var);
+		return (NULL);
+	}
+	return (ft_strdup(var));
+}
+
+int	ft_unset(t_shell *shell, t_command *cmd)
+{
+	int	i;
+	int	status;
+
+	if (!shell || !cmd || cmd->argc < 2)
+		return (1);
+	status = 0;
+	i = 1;
+	while (i < cmd->argc)
+	{
+		unset_env_value(shell->env_vars, cmd->argv[i]);
+		i++;
+	}
+	return (status);
+}
+int	ft_strcmp(const char *s1, const char *s2)
+{
+	while (*s1 && *s1 == *s2)
+	{
+		s1++;
+		s2++;
+	}
+	return ((unsigned char)*s1 - (unsigned char)*s2);
+}

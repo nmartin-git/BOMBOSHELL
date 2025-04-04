@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 18:07:27 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/04 18:20:49 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/04 20:44:32 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void print_tokens(t_input *arg_lst) //TODO supp
 	printf("null\n");
 }//TODO supp ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-void	handle_exec(t_input *cmd, t_input *files)
+void	handle_exec(t_input *cmd, t_input *files, t_exec *exec_lst)
 {
 	// if (is_built - ins)
 	// 	// exec_built-ins(tmp, files, input, output)
@@ -66,24 +66,27 @@ int exec(t_input **arg_lst)
 	t_input *tmp;
 	t_input *files;
 	t_exec	*exec_lst;
+	t_exec	*exec_tmp;
 
-	print_tokens(*arg_lst);
+	print_tokens(*arg_lst);//TODO supp
 	files_tokenisation(arg_lst, NULL);
 	// expend_env_var
 	cmd_tokenisation(*arg_lst);
 	tmp = arg_lst;
 	files = arg_lst;
-	exec_lst = exec_init;
+	exec_lst = exec_init(*arg_lst, NULL);
+	exec_tmp = exec_lst;
 	while (tmp)
 	{
 		if (tmp->token == CMD)
 		{
-			handle_exec(tmp, files);
+			handle_exec(tmp, files, exec_tmp);
 			while (files && files->token != PIPE && files->token != BOOL)
 				files = files->next;
+			exec_tmp = exec_tmp->next;
 		}
 		tmp = tmp->next;
 	}
-	print_tokens(*arg_lst);
+	print_tokens(*arg_lst);//TODO supp
 	return (0);
 }

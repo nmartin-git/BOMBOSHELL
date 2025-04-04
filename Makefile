@@ -6,7 +6,7 @@
 #    By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/05 15:41:03 by nmartin           #+#    #+#              #
-#    Updated: 2025/04/01 17:37:37 by nmartin          ###   ########.fr        #
+#    Updated: 2025/04/04 23:34:38 by nmartin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,8 +28,11 @@ PARSING := $(addprefix $(PARSING_PATH), $(PARSING_FILES))
 EXEC_PATH = ./exec/
 EXEC_FILES = exec.c exec_tokenisation.c
 EXEC := $(addprefix $(EXEC_PATH), $(EXEC_FILES))
+BUILT_PATH = ./built-ins/
+BUILT_FILES = built-ins.c built_utils.c cmd.c built_cd.c built_echo.c built_env.c built_exit.c built_export.c built_pwd.c built_unset.c
+BUILT := $(addprefix $(BUILT_PATH), $(BUILT_FILES))
 OBJ_PATH = ./objs/
-OBJ := $(addprefix $(OBJ_PATH), $(MINISHELL_FILES:.c=.o)) $(addprefix $(OBJ_PATH), $(PARSING_FILES:.c=.o)) $(addprefix $(OBJ_PATH), $(EXEC_FILES:.c=.o))
+OBJ := $(addprefix $(OBJ_PATH), $(MINISHELL_FILES:.c=.o)) $(addprefix $(OBJ_PATH), $(PARSING_FILES:.c=.o)) $(addprefix $(OBJ_PATH), $(EXEC_FILES:.c=.o)) $(addprefix $(OBJ_PATH), $(BUILT_FILES:.c=.o))
 SRC_BNS_PATH = ./srcs_bonus/
 SRC_BNS_FILES = 
 SRC_BNS := $(addprefix $(SRC_BNS_PATH), $(SRC_BNS_FILES))
@@ -67,6 +70,12 @@ $(OBJ_PATH)%.o : $(PARSING_PATH)%.c
 
 $(OBJ_PATH)%.o : $(EXEC_PATH)%.c
 	@printf "$(BLUE)Compiling $(NAME) exec: [$<] $(RESET)"
+	@mkdir -p $(OBJ_PATH)
+	@$(CC) $(CFLAGS) $(HEADERS) -c $< -o $@
+	@printf "\r\033[K"
+
+$(OBJ_PATH)%.o : $(BUILT_PATH)%.c
+	@printf "$(BLUE)Compiling $(NAME) built-ins: [$<] $(RESET)"
 	@mkdir -p $(OBJ_PATH)
 	@$(CC) $(CFLAGS) $(HEADERS) -c $< -o $@
 	@printf "\r\033[K"
