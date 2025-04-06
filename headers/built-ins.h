@@ -13,8 +13,9 @@
 #ifndef BUILT_INS_H
 # define BUILT_INS_H
 
+# include <stdio.h>
+# include <limits.h>
 # include "libft.h"
-# define PATH_MAX 5000
 
 // liste env
 typedef struct s_env
@@ -33,11 +34,14 @@ typedef struct s_shell
 	char				**command;
 }						t_shell;
 
+int						execute_builtin(t_env **env, char *cmd);
+t_env					*init_env(char **envp);
+
 // builtin
+int						ft_cd(t_shell *shell);
 int						ft_pwd(t_shell *shell);
 int						ft_exit(t_shell *shell);
 int						ft_env(t_env *list);
-int						ft_cd(t_shell *shell);
 int						ft_unset(t_shell *shell);
 int						ft_export(t_shell *shell);
 int						ft_echo(t_shell *shell);
@@ -49,7 +53,7 @@ t_env					*new_env(char *key, char *value);
 void					add_env(t_env **env_list, t_env *new);
 void					free_env(t_env *env);
 void					unset_env_value(t_env *env, char *key);
-int						is_built_in(char *cmd);
+int						is_built_in(char *cmd, int i);
 int						ft_strcmp(const char *s1, const char *s2);
 void					print_echo(char **av, int i, t_shell *shell);
 int						is_valid_identifier(char *str);

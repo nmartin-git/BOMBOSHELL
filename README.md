@@ -22,6 +22,7 @@ ANAS:
 - gerer les erreurs (exit code etc..)
 - mettre les msg d'erreurs dans la sortie d'erreur (fd = 2)
 - faire une fonction free_shell (free un t_shell)
+- gerer le cas ou on unset le premier element de env (cahnger le pointeur de **env sur le nouveau premier element)
 
 reste a faire :
 

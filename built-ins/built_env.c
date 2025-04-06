@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 19:39:25 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/04 22:42:34 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/06 18:18:05 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,11 @@ t_env	*init_env(char **envp)
 		new = new_env(split[0], split[1]);
 		if (!new)
 		{
-			free_split(split);
+			ft_free_tab(split);
 			return (NULL);
 		}
 		add_env(&env_list, new);
-		free_split(split);
+		ft_free_tab(split);
 		i++;
 	}
 	return (env_list);

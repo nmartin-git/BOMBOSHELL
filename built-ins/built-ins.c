@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 14:25:03 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/06 16:10:39 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/06 17:59:24 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,27 +26,28 @@ t_shell	*set_t_shell(t_env *env, char *cmd)
 	command->env_vars = env;
 	command->current_dir = getcwd(NULL, 0);
 	command->command = args;
+	return (command);
 }
 
-int	execute_builtin(t_env *env, char *cmd)
+int	execute_builtin(t_env **env, char *cmd)
 {
 	t_shell	*command;
 
-	command = set_t_shell(env, cmd);
+	command = set_t_shell(*env, cmd);
 	if (ft_strncmp(command->command[0], "cd", 2) == 0)
-		return (ft_cd(shell));
+		return (ft_cd(command));
 	else if (ft_strncmp(command->command[0], "echo", 4) == 0)
-		return (ft_echo(shell));
+		return (ft_echo(command));
 	else if (ft_strncmp(command->command[0], "env", 3) == 0)
-		return (ft_env(env));
+		return (ft_env(*env));
 	else if (ft_strncmp(command->command[0], "exit", 4) == 0)
-		return (ft_exit(shell));
+		return (ft_exit(command));
 	else if (ft_strncmp(command->command[0], "export", 6) == 0)
-		return (ft_export(shell));
+		return (ft_export(command));
 	else if (ft_strncmp(command->command[0], "pwd", 3) == 0)
-		return (ft_pwd(shell));
+		return (ft_pwd(command));
 	else if (ft_strncmp(command->command[0], "unset", 5) == 0)
-		return (ft_unset(shell));
+		return (ft_unset(command));
 	else
 		return (0);
 }
@@ -77,27 +78,3 @@ int	is_built_in(char *cmd, int i)
 		return (1);
 	return (0);
 }
-
-// int	execute_builtin(char **av, char **envp)
-// {
-// 	static t_env	*env_list = NULL;
-// 	static t_shell	*shell = NULL;
-// 	t_command		cmd;
-
-// 	if (!av || !envp)
-// 		return (0);
-// 	if (!env_list)
-// 		env_list = init_env(envp);
-// 	if (!shell)
-// 	{
-// 		shell = malloc(sizeof(t_shell));
-// 		if (!shell)
-// 			return (0);
-// 		shell->env_vars = env_list;
-// 		shell->current_dir = getcwd(NULL, 0);
-// 		shell->command = NULL;
-// 	}
-// 	init_command(&cmd, av);
-// 	shell->command = &cmd;
-// 	return (execute_builtin2(av, shell, env_list));
-// }

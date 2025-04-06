@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 18:07:27 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/06 14:57:43 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/06 18:21:35 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,41 +53,14 @@ void print_tokens(t_input *arg_lst) //TODO supp
 	printf("null\n");
 }//TODO supp ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-// void	handle_exec(t_input *cmd, t_input *files, t_exec *exec_lst)
-// {
-// 	// if (is_built - ins)
-// 	// 	// exec_built-ins(tmp, files, input, output)
-// 	// else
-// 	// 	// exec_cmd(tmp, files, input, output)
-// }
-
-int	es_built_in(char *cmd, int i)
+void	handle_exec(t_input *cmd, t_input *files, t_exec *exec_lst)
 {
-	printf("-%s-\n", cmd);
-	while (cmd[i] == ' ')
-		i++;
-	if (ft_strncmp(&cmd[i], "cd", 2) == 0
-			&& (!cmd[i + 2] || cmd[i + 2] == ' '))
-		return (1);
-	else if (ft_strncmp(&cmd[i], "echo", 4) == 0
-			&& (!cmd[i + 4] || cmd[i + 4] == ' '))
-		return (1);
-	else if (ft_strncmp(&cmd[i], "env", 3) == 0
-			&& (!cmd[i + 3] || cmd[i + 3] == ' '))
-		return (1);
-	else if (ft_strncmp(&cmd[i], "exit", 4) == 0
-			&& (!cmd[i + 4] || cmd[i + 4] == ' '))
-		return (1);
-	else if (ft_strncmp(&cmd[i], "export", 6) == 0
-			&& (!cmd[i + 6] || cmd[i + 6] == ' '))
-		return (1);
-	else if (ft_strncmp(&cmd[i], "pwd", 3) == 0
-			&& (!cmd[i + 3] || cmd[i + 3] == ' '))
-		return (1);
-	else if (ft_strncmp(&cmd[i], "unset", 5) == 0
-			&& (!cmd[i + 5] || cmd[i + 5] == ' '))
-		return (1);
-	return (0);
+	// if (is_built - ins)
+	// 	// exec_built-ins(tmp, files, input, output)
+	// else
+	// 	// exec_cmd(tmp, files, input, output)
+	cmd = files;
+	exec_lst = NULL;
 }
 
 int exec(t_input **arg_lst, t_env **env)
@@ -97,7 +70,7 @@ int exec(t_input **arg_lst, t_env **env)
 	t_exec	*exec_lst;
 	t_exec	*exec_tmp;
 
-	print_tokens(*arg_lst);//TODO supp
+	//print_tokens(*arg_lst);//TODO supp
 	files_tokenisation(arg_lst, NULL);
 	// expend_env_var
 	cmd_tokenisation(*arg_lst);
@@ -109,8 +82,8 @@ int exec(t_input **arg_lst, t_env **env)
 	{
 		if (tmp->token == CMD)
 		{
-			if (es_built_in(tmp->arg, 0))
-				execute_builtin(tmp->arg, env);
+			if (is_built_in(tmp->arg, 0))
+				execute_builtin(env, tmp->arg);
 			else
 				handle_exec(tmp, files, exec_tmp);
 			while (files && files->token != PIPE && files->token != BOOL)
@@ -119,6 +92,6 @@ int exec(t_input **arg_lst, t_env **env)
 		}
 		tmp = tmp->next;
 	}
-	print_tokens(*arg_lst);//TODO supp
+	//print_tokens(*arg_lst);//TODO supp
 	return (0);
 }
