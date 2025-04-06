@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 11:39:48 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/26 16:49:05 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/01 17:45:01 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,8 +104,10 @@ int	token_parse(t_input *arg_lst)
 		prev = get_prev_token(first, arg_lst);
 		next = get_next_token(arg_lst);
 		if (!parse_check(prev, next, arg_lst))
-			return (ft_printf_fd(2, "bomboshell: parse error near '%s'\n",
-					arg_lst->arg), 0);
+		{
+			ft_printf_fd(2, "bomboshell: parse error near '%s'\n", arg_lst->arg);
+			return (0);
+		}
 		arg_lst = arg_lst->next;
 	}
 	return (1);
@@ -113,13 +115,23 @@ int	token_parse(t_input *arg_lst)
 
 int	parsing(char *input, t_input **arg_lst)
 {
+	t_input	*tmp;
+
 	input_set(input, arg_lst);
 	if (!lsts_simplify(arg_lst))
-		return (-1);
+		return (0);
 	if (!*arg_lst)
-		return (0);
+		return (1);
 	if (token_parse(*arg_lst))
-		return (0);
+	{
+		while (*arg_lst && (*arg_lst)->token == SPACES)
+		{
+			tmp = (*arg_lst)->next;
+			free_arg(*arg_lst);
+			*arg_lst = tmp;
+		}
+		return (1);
+	}
 	else
-		return (-1);
+		return (0);
 }
