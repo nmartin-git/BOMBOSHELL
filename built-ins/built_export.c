@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 19:37:52 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/04 22:42:49 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/06 16:27:36 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,21 +69,19 @@ static void	print_exports(t_env *env)
 	}
 }
 
-int	ft_export(t_shell *shell, t_command *cmd)
+int	ft_export(t_shell *cmd)
 {
 	int	i;
 
-	if (!shell || !cmd)
-		return (1);
-	if (cmd->argc == 1)
+	if (!cmd->command[1])
 	{
-		print_exports(shell->env_vars);
+		print_exports(cmd->env_vars);
 		return (0);
 	}
 	i = 1;
-	while (i < cmd->argc)
+	while (cmd->command[i])
 	{
-		handle_export_arg(shell->env_vars, cmd->argv[i]);
+		handle_export_arg(cmd->env_vars, cmd->command[i]);
 		i++;
 	}
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 19:17:52 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/04 22:44:39 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/06 16:33:21 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,13 @@ static char	*expand_var(t_shell *shell, char *arg)
 	return (ft_strdup(var_value));
 }
 
-int	ft_echo(char **av, t_shell *shell)
+int	ft_echo(t_shell *cmd)
 {
 	int	i;
 	int	flag;
 	int	j;
 
-	if (!av || !av[1])
+	if (!cmd->command[1])
 	{
 		printf("\n");
 		return (1);
@@ -42,16 +42,17 @@ int	ft_echo(char **av, t_shell *shell)
 	flag = 1;
 	i = 1;
 	j = 1;
-	while (av[i] && av[i][0] == '-' && av[i][1] == 'n')
+	while (cmd->command[i]
+		&& cmd->command[i][0] == '-' && cmd->command[i][1] == 'n')
 	{
-		while (av[i][j] == 'n')
+		while (cmd->command[i][j] == 'n')
 			j++;
-		if (av[i][j] != '\0')
+		if (cmd->command[i][j] != '\0')
 			break ;
 		flag = 0;
 		i++;
 	}
-	print_echo(av, i, shell);
+	print_echo(cmd->command, i, cmd);
 	if (flag)
 		printf("\n");
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 17:24:54 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/04 20:25:23 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/06 14:06:09 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ char	*exec_envset(char **env, char *cmd)
 	char	*tmp;
 
 	i = 0;
-	while (env[i] && strncmp(env[i], "PATH=", 5) != 0)
+	while (env[i] && ft_strncmp(env[i], "PATH=", 5) != 0)
 		i++;
 	if (!env[i] || !cmd)
 		return (cmd);
@@ -72,11 +72,11 @@ char	*exec_envset(char **env, char *cmd)
 
 void    exec_cmd(t_input *arg_lst, int input, int output)
 {
-    char    **env;
+    char    **env = NULL;
     char	**cmd;
     char	*env_set;
 
-	cmd = ft_split(arg_lst, ' ');
+	cmd = ft_split(arg_lst->arg, ' ');
     //env = env_in_tab;
 	dup2(input, STDIN_FILENO);
 	close(input);

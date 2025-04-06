@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 14:01:16 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/01 17:43:31 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/06 14:36:51 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ void	files_tokenisation(t_input **arg_lst, t_input *prev)
 	tmp = *arg_lst;
 	while (tmp && tmp->next)
 	{
-		printf("%d %s -> %s\n", tmp->token, tmp->arg, tmp->next->arg);
 		if (tmp->token == REDIR)
 		{
 			del_spaces(tmp);
@@ -76,7 +75,6 @@ void	cmd_tokenisation(t_input *arg_lst)
 
 	while (arg_lst)
 	{
-		del_spaces(arg_lst);
 		if (arg_lst->token == WORD || arg_lst->token == WORD_S_QUOTE
 			|| arg_lst->token == WORD_D_QUOTE)
 		{

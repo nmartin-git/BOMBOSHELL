@@ -18,6 +18,10 @@ ANAS:
 
 - built-in
 - signaux
+- gerer la norme
+- gerer les erreurs (exit code etc..)
+- mettre les msg d'erreurs dans la sortie d'erreur (fd = 2)
+- faire une fonction free_shell (free un t_shell)
 
 reste a faire :
 

@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 15:36:18 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/04 23:32:31 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/06 16:17:15 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,9 @@ void	unset_env_value(t_env *env, char *key)
 				prev->next = current->next;
 			else
 				env = current->next;
-			free(current->key);
 			if (current->value)
 				free(current->value);
-			free(current);
-			free(expanded_key);
-			return ;
+			return (free(current->key), free(current), free(expanded_key));
 		}
 		prev = current;
 		current = current->next;
@@ -92,21 +89,20 @@ char	*handle_shell_var(t_env *env, char *var, char *cmd)
 	return (ft_strdup(var));
 }
 
-int	ft_unset(t_shell *shell, t_command *cmd)
+int	ft_unset(t_shell *cmd)
 {
-	int	i;
-	int	status;
+	int		i;
+	int		status;
 
-	if (!shell || !cmd || cmd->argc < 2)
-		return (1);
-	status = 0;
+	if (!cmd->env_vars)
+		return (0);
 	i = 1;
-	while (i < cmd->argc)
+	while (cmd->command[i])
 	{
-		unset_env_value(shell->env_vars, cmd->argv[i]);
+		unset_env_value(cmd->env_vars, cmd->command[i]);
 		i++;
 	}
-	return (status);
+	return (0);
 }
 int	ft_strcmp(const char *s1, const char *s2)
 {

@@ -6,20 +6,20 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 19:36:14 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/04 22:42:57 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/06 16:19:51 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "built-ins.h"
 
-int	ft_pwd(t_shell *shell)
+int	ft_pwd(t_shell *cmd)
 {
-	if (getcwd(shell->current_dir, PATH_MAX) == NULL)
+	if (getcwd(cmd->current_dir, PATH_MAX) == NULL)
 	{
 		perror("pwd error\n");
 		return (0);
 	}
-	printf("%s\n", shell->current_dir);
-	free(shell->current_dir);
+	printf("%s\n", cmd->current_dir);
+	free(cmd->current_dir);
 	return (1);
 }
