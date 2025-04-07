@@ -17,6 +17,8 @@
 # include <limits.h>
 # include "libft.h"
 
+# define PATH_MAX_ANANAS 4096
+
 // liste env
 typedef struct s_env
 {

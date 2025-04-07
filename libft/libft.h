@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 18:00:14 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/21 15:42:55 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/07 17:14:56 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,5 +131,6 @@ int		ft_printf_fd(int fd, const char *str, ...);
 int		ft_size_tab(char **tab);
 int		ft_abs(int nbr);
 char	*ft_strjoin_free(char *s1, char *s2);
+char	*ft_strndup(const char *s, int size);
 
 #endif

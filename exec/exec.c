@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 18:07:27 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/06 18:21:35 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/07 22:01:51 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,76 @@ void	handle_exec(t_input *cmd, t_input *files, t_exec *exec_lst)
 	exec_lst = NULL;
 }
 
+char    *get_env_var(char *arg, t_env *env, int *y)
+{
+    char    *var_name;
+    char    *var_value;
+
+    while (ft_isalnum(arg[*y]) || arg[*y] == '_')
+        *y += 1;
+    var_name = ft_strndup(arg, *y);
+    var_value = ft_strdup(get_env_value(env, var_name));
+    free(var_name);
+	if (!var_value)
+		var_value = ft_strdup("");
+    return (var_value);
+}
+
+void	replace_env_var(t_input *arg_lst, t_env *env, int i)
+{
+	char	*result;
+    char	*expand;
+	int		y;
+
+	expand = NULL;
+	y = 0;
+	if (ft_isalpha(arg_lst->arg[i]) || arg_lst->arg[i] == '_')
+        expand = get_env_var(&arg_lst->arg[i], env, &y);
+	else
+	{
+    	if (arg_lst->arg[i] == '?')
+    		expand = ft_itoa(/*last_exit_status*/0);
+		else if (arg_lst->arg[i] == '$')
+ 		   	expand = ft_itoa(/*pid_parent*/0);
+		y++;
+	}
+	if (i > 1)
+		result = ft_strjoin_free(ft_strndup(arg_lst->arg, i - 1), expand);
+	else
+		result = expand;
+	if (arg_lst->arg[i + y])
+		result = ft_strjoin_free(ft_strdup(&arg_lst->arg[i + y]), result);
+	free(arg_lst->arg);
+	arg_lst->arg = result;
+}
+
+void    expand_env_var(t_input *arg_lst, t_env *env)
+{
+	int	i;
+
+    while (arg_lst)
+    {
+        if (arg_lst->token == WORD || arg_lst->token == WORD_D_QUOTE)
+        {
+			i = 0;
+			while (arg_lst->arg[i])
+			{
+				while (arg_lst->arg[i] && arg_lst->arg[i] != '$')
+					i++;
+				if (arg_lst->arg[i] == '$')
+				{
+					if (ft_isalpha(arg_lst->arg[i + 1])
+						|| arg_lst->arg[i + 1] == '?' || arg_lst->arg[i + 1] == '_')
+						replace_env_var(arg_lst, env, i + 1);
+					else
+						i++;
+				}
+			}
+        }
+        arg_lst = arg_lst->next;
+    }
+}
+
 int exec(t_input **arg_lst, t_env **env)
 {
 	t_input *tmp;
@@ -70,9 +140,9 @@ int exec(t_input **arg_lst, t_env **env)
 	t_exec	*exec_lst;
 	t_exec	*exec_tmp;
 
-	//print_tokens(*arg_lst);//TODO supp
+	print_tokens(*arg_lst);//TODO supp
+	expand_env_var(*arg_lst, *env);
 	files_tokenisation(arg_lst, NULL);
-	// expend_env_var
 	cmd_tokenisation(*arg_lst);
 	tmp = *arg_lst;
 	files = *arg_lst;

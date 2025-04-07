@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 14:25:03 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/06 17:59:24 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/07 20:30:50 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ t_shell	*set_t_shell(t_env *env, char *cmd)
 	if (!command)
 		exit(127);//TODO mieux gerer l'erreur
 	command->env_vars = env;
-	command->current_dir = getcwd(NULL, 0);
+	command->current_dir = getcwd(NULL, PATH_MAX_ANANAS);
 	command->command = args;
 	return (command);
 }
