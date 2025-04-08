@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 18:07:27 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/07 22:01:51 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/08 18:19:17 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,14 +53,13 @@ void print_tokens(t_input *arg_lst) //TODO supp
 	printf("null\n");
 }//TODO supp ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-void	handle_exec(t_input *cmd, t_input *files, t_exec *exec_lst)
+void	handle_exec(t_input *cmd, t_input *file, t_exec *exec_lst, t_env **env)
 {
-	// if (is_built - ins)
-	// 	// exec_built-ins(tmp, files, input, output)
-	// else
-	// 	// exec_cmd(tmp, files, input, output)
-	cmd = files;
-	exec_lst = NULL;
+	if (is_built_in(cmd->arg, 0))
+		execute_builtin(env, cmd->arg);
+	else
+		exec_cmd(cmd, *env, exec_lst);
+	file = NULL;
 }
 
 char    *get_env_var(char *arg, t_env *env, int *y)
@@ -91,9 +90,9 @@ void	replace_env_var(t_input *arg_lst, t_env *env, int i)
 	else
 	{
     	if (arg_lst->arg[i] == '?')
-    		expand = ft_itoa(/*last_exit_status*/0);
+    		expand = ft_itoa(/*TODO last_exit_status*/0);
 		else if (arg_lst->arg[i] == '$')
- 		   	expand = ft_itoa(/*pid_parent*/0);
+ 		   	expand = ft_itoa(/*TODO pid_parent*/0);
 		y++;
 	}
 	if (i > 1)
@@ -140,7 +139,7 @@ int exec(t_input **arg_lst, t_env **env)
 	t_exec	*exec_lst;
 	t_exec	*exec_tmp;
 
-	print_tokens(*arg_lst);//TODO supp
+	///print_tokens(*arg_lst);//TODO supp
 	expand_env_var(*arg_lst, *env);
 	files_tokenisation(arg_lst, NULL);
 	cmd_tokenisation(*arg_lst);
@@ -152,10 +151,7 @@ int exec(t_input **arg_lst, t_env **env)
 	{
 		if (tmp->token == CMD)
 		{
-			if (is_built_in(tmp->arg, 0))
-				execute_builtin(env, tmp->arg);
-			else
-				handle_exec(tmp, files, exec_tmp);
+			handle_exec(tmp, files, exec_tmp, env);
 			while (files && files->token != PIPE && files->token != BOOL)
 				files = files->next;
 			exec_tmp = exec_tmp->next;
