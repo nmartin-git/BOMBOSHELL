@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:35:53 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/09 16:33:47 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/09 17:08:04 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,60 +41,10 @@ int	ppx_here_doc(t_input *arg)
 	return(fd_pipe[0]);
 }
 
-void	set_fds(t_input *file, t_exec *exec)
-{
-	int	fd_pipe[2];
-	
-	while (file && exec->input != -1 && exec->output != -1)
-	{
-		if (file->token == INFILE || file->token == HERE_DOC
-			|| file->token == OUTFILE || file->token == APPEND)
-		{
-			if (exec->input > 2)
-				close(exec->input);
-			if (file->token == INFILE)
-				exec->input = fd_output(file);
-			else if (file->token == HERE_DOC)
-				exec->input = ppx_here_doc(file);
-			else
-				exec->output = fd_output(file);
-		}
-		else if (exec->output < 1 && file->token == PIPE)
-		{
-			ppx_exit(pipe(fd_pipe), "Failed opening the pipe", NULL, 1);//TODO gerer l'erreur
-			exec->next->input = fd_pipe[0];
-			exec->output = fd_pipe[1];
-			return ;
-		}
-		if (!file->next || file->token == BOOL)
-			return ;
-		file = file->next;
-	}
-}
-
-int	set_input(t_exec *exec, t_input *file)
-{
-	if (file != PIPE)
-		exec->input = STDIN_FILENO;
-	while (file)
-	{
-		if (file->token == INFILE)
-		{
-			if (exec->input > 2)
-				close(exec->output);
-			exec->output = fd_output(file);
-		}
-		else if (file->token == HERE_DOC)
-			return (ppx_here_doc(file));
-		else if (file && (file->token == PIPE || file->token == BOOL))
-			return (STDOUT_FILENO);
-	}
-}
-
 int	fd_output(t_input *file)
 {
 	int	fd;
-	
+
 	if (access(file->arg, F_OK) == 0 && access(file->arg, W_OK) == -1)
 	{
 		ft_printf_fd(2, "bomboshell: %s : %s\n", strerror(13), file->arg);
@@ -113,6 +63,8 @@ int	fd_input(t_input *file)
 {
 	int	fd;
 
+	if (file->token == HERE_DOC)
+		return(ppx_here_doc(file));
 	if (access(file->arg, F_OK) == -1)
 	{
 		ft_printf_fd(2, "bomboshell: Cannot access '%s' : %s\n",
@@ -133,31 +85,30 @@ int	fd_input(t_input *file)
 	return (fd);
 }
 
-void	set_output(t_exec *exec, t_input *file)
+void	set_fds(t_input *file, t_exec *exec)
 {
 	int	fd_pipe[2];
-
-	while (file && file->output != -1)
+	
+	while (file && exec->input != -1 && exec->output != -1)
 	{
-		if (file->token == OUTFILE || file->token == APPEND)
+		if (file->token == INFILE || file->token == HERE_DOC
+			|| file->token == OUTFILE || file->token == APPEND)
 		{
-			if (exec->output > 2)
-				close(exec->output);
-			exec->output = fd_output(file);
+			if (exec->input > 2)
+				close(exec->input);
+			if (file->token == INFILE || file->token == HERE_DOC)
+				exec->input = fd_input(file);
+			else if (file->token == OUTFILE || file->token == APPEND)
+				exec->output = fd_output(file);
 		}
-		else if (exec->output < 1 && (!file->next || file->token == BOOL))
-		{
-			exec->output = STDOUT_FILENO;
-			return ;
-		}
-		else if (exec->output < 1 && file->token == PIPE)
+		else if (exec->output == STDOUT_FILENO && file->token == PIPE)
 		{
 			ppx_exit(pipe(fd_pipe), "Failed opening the pipe", NULL, 1);//TODO gerer l'erreur
-			if (exec->next)
-				exec->next->input = fd_pipe[0];
+			exec->next->input = fd_pipe[0];
 			exec->output = fd_pipe[1];
-			return ;
 		}
+		if (!file->next || file->token == BOOL || file->token  == PIPE)
+			return ;
 		file = file->next;
 	}
 }

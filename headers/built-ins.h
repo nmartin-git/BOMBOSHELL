@@ -36,7 +36,7 @@ typedef struct s_shell
 	char				**command;
 }						t_shell;
 
-int						execute_builtin(t_env **env, char *cmd);
+void					execute_builtin(t_env **env, char *cmd);
 t_env					*init_env(char **envp);
 
 // builtin

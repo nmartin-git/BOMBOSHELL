@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 17:24:54 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/09 15:34:04 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/09 18:49:08 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,21 +121,21 @@ void exec_cmd(t_input *arg_lst, t_env *env_chained, t_exec *exec)
 	char **cmd;
 	char *env_set;
 
+	//ft_printf("$%d %d$", exec->input, exec->output);
 	env_set = NULL;
-	exec = NULL;
 	cmd = ft_split(arg_lst->arg, ' ');
 	env = env_to_array(env_chained);
-	// dup2(exec->input, STDIN_FILENO);
-	// close(exec->input);
-	// dup2(exec->output, STDOUT_FILENO);
-	// close(exec->output);
-	// env_set = exec_envset(env, cmd[0]);
-	// if (cmd && cmd[0])
-	// 	execve(env_set, cmd, env);
-	// ft_printf_fd(2, "pipex : command not found : %s\n", cmd[0]);
-	// if (env_set != cmd[0])
-	// 	free(env_set);
+	if (exec->input != STDIN_FILENO)
+		(dup2(exec->input, STDIN_FILENO), close(exec->input));
+	if (exec->output != STDOUT_FILENO)
+		(dup2(exec->output, STDOUT_FILENO), close(exec->output));
+	env_set = exec_envset(env, cmd[0]);
+	if (cmd && cmd[0])
+		execve(env_set, cmd, env);
+	ft_printf_fd(2, "pipex : command not found : %s\n", cmd[0]);
+	if (env_set != cmd[0])
+		free(env_set);
 	ft_free_tab(cmd);
 	ft_free_tab(env);
-	// exit(127); // TODO gerer l'erreur
+	exit(127); // TODO gerer l'erreur
 }

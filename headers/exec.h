@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 13:53:26 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/09 15:34:36 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/09 19:05:28 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # include "parsing.h"
 # include "built-ins.h"
 # include <fcntl.h>
+# include <sys/wait.h>
+# include <string.h>
 
 # define HERE_DOC 9
 # define INFILE 10
@@ -45,5 +47,14 @@ void	cmd_tokenisation(t_input *arg_lst);
 t_exec	*exec_init(t_input *arg_lst, t_exec *exec_lst, t_exec *tmp);
 char	*exec_envset(char **env, char *cmd);
 void    exec_cmd(t_input *arg_lst, t_env *env, t_exec *exec);
+
+void	exec_wait(t_exec *exec);
+void	ppx_exit(int err, const char *str, int *fd_pipe, int status);
+int		ppx_cmp(const char *s1, const char *s2);
+
+int		ppx_here_doc(t_input *arg);
+int		fd_output(t_input *file);
+int		fd_input(t_input *file);
+void	set_fds(t_input *file, t_exec *exec);
 
 #endif

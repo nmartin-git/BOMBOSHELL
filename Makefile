@@ -6,7 +6,7 @@
 #    By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/05 15:41:03 by nmartin           #+#    #+#              #
-#    Updated: 2025/04/06 18:04:14 by nmartin          ###   ########.fr        #
+#    Updated: 2025/04/09 17:56:00 by nmartin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,13 +26,17 @@ PARSING_PATH = ./parsing/
 PARSING_FILES = parsing.c tokenisation.c input_set.c parsing_utils.c quotes_utils.c
 PARSING := $(addprefix $(PARSING_PATH), $(PARSING_FILES))
 EXEC_PATH = ./exec/
-EXEC_FILES = exec.c exec_tokenisation.c exec_utils.c
+EXEC_FILES = exec.c exec_tokenisation.c exec_utils.c exec_files.c ppx_utils.c
 EXEC := $(addprefix $(EXEC_PATH), $(EXEC_FILES))
 BUILT_PATH = ./built-ins/
-BUILT_FILES = built-ins.c builtin_utils.c built_cd.c built_echo.c built_env.c built_exit.c built_export.c built_pwd.c built_unset.c
+BUILT_FILES = built-ins.c builtin_utils.c built_cd.c built_echo.c built_env.c \
+				built_exit.c built_export.c built_pwd.c built_unset.c
 BUILT := $(addprefix $(BUILT_PATH), $(BUILT_FILES))
 OBJ_PATH = ./objs/
-OBJ := $(addprefix $(OBJ_PATH), $(MINISHELL_FILES:.c=.o)) $(addprefix $(OBJ_PATH), $(PARSING_FILES:.c=.o)) $(addprefix $(OBJ_PATH), $(EXEC_FILES:.c=.o)) $(addprefix $(OBJ_PATH), $(BUILT_FILES:.c=.o))
+OBJ := $(addprefix $(OBJ_PATH), $(MINISHELL_FILES:.c=.o)) \
+		$(addprefix $(OBJ_PATH), $(PARSING_FILES:.c=.o)) \
+			$(addprefix $(OBJ_PATH), $(EXEC_FILES:.c=.o)) \
+				$(addprefix $(OBJ_PATH), $(BUILT_FILES:.c=.o))
 SRC_BNS_PATH = ./srcs_bonus/
 SRC_BNS_FILES = 
 SRC_BNS := $(addprefix $(SRC_BNS_PATH), $(SRC_BNS_FILES))

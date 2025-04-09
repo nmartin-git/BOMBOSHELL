@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 18:07:27 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/09 15:34:20 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/09 19:07:17 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,30 @@ void print_tokens(t_input *arg_lst) //TODO supp
 
 void	handle_exec(t_input *cmd, t_input *file, t_exec *exec_lst, t_env **env)
 {
-	if (is_built_in(cmd->arg, 0))
+	int	status;
+	int	pid;
+
+	status = 0;
+	set_fds(file, exec_lst);
+	if (exec_lst->input == -1 || exec_lst->output == -1)
+	{
+		if (exec_lst->input > 2)
+			close (exec_lst->input);
+		else if (exec_lst->output > 2)
+			close (exec_lst->output);
+		return ;
+	}
+	ppx_exit(pid = fork(), "Fork failed", NULL, 1);//TODO gerer l'erreur
+	if (pid != 0)
+		exec_lst->pid = pid;
+	if (pid == 0 && is_built_in(cmd->arg, 0))
 		execute_builtin(env, cmd->arg);
-	else
+	else if (pid == 0)
 		exec_cmd(cmd, *env, exec_lst);
-	file = NULL;
+	if (exec_lst->input > 2)
+		close (exec_lst->input);
+	if (exec_lst->output > 2)
+		close (exec_lst->output);
 }
 
 char    *get_env_var(char *arg, t_env *env, int *y)
@@ -158,6 +177,7 @@ int exec(t_input **arg_lst, t_env **env)
 		}
 		tmp = tmp->next;
 	}
+	exec_wait(exec_lst); 
 	//print_tokens(*arg_lst);//TODO supp
 	return (0);
 }
