@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 13:53:26 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/08 20:35:56 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/09 15:34:36 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	del_spaces(t_input *tmp);
 void	files_tokenisation(t_input **arg_lst, t_input *prev);
 void	cmd_tokenisation(t_input *arg_lst);
 
-t_exec	*exec_init(t_input *arg_lst, t_exec *exec_lst);
+t_exec	*exec_init(t_input *arg_lst, t_exec *exec_lst, t_exec *tmp);
 char	*exec_envset(char **env, char *cmd);
 void    exec_cmd(t_input *arg_lst, t_env *env, t_exec *exec);
 

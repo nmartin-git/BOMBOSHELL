@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 17:24:54 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/08 18:26:05 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/09 15:34:04 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,8 @@ char **env_to_array(t_env *env_list)
 	return (env_array);
 }
 
-t_exec *exec_init(t_input *arg_lst, t_exec *exec_lst)
+t_exec *exec_init(t_input *arg_lst, t_exec *exec_lst, t_exec *tmp)
 {
-	t_exec *tmp;
-
 	while (arg_lst)
 	{
 		if (arg_lst->token == CMD)
@@ -79,6 +77,8 @@ t_exec *exec_init(t_input *arg_lst, t_exec *exec_lst)
 					exit(127); // TODO gerer l'erreur
 				tmp = tmp->next;
 			}
+			tmp->input = STDIN_FILENO;
+			tmp->output = STDOUT_FILENO;
 			tmp->next = NULL;
 		}
 		arg_lst = arg_lst->next;
