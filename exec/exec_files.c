@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:35:53 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/09 16:06:43 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/09 16:33:47 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,34 +47,22 @@ void	set_fds(t_input *file, t_exec *exec)
 	
 	while (file && exec->input != -1 && exec->output != -1)
 	{
-		if (file->token == INFILE)
+		if (file->token == INFILE || file->token == HERE_DOC
+			|| file->token == OUTFILE || file->token == APPEND)
 		{
 			if (exec->input > 2)
 				close(exec->input);
-			exec->input = fd_output(file);
-		}
-		else if (file->token == HERE_DOC)
-		{
-			if (exec->input > 2)
-				close(exec->input);
-			exec->input = ppx_here_doc(file);
-		}
-		if (file->token == OUTFILE || file->token == APPEND)
-		{
-			if (exec->output > 2)
-				close(exec->output);
-			exec->output = fd_output(file);
-		}
-		else if (exec->output < 1 && (!file->next || file->token == BOOL))
-		{
-			exec->output = STDOUT_FILENO;
-			return ;
+			if (file->token == INFILE)
+				exec->input = fd_output(file);
+			else if (file->token == HERE_DOC)
+				exec->input = ppx_here_doc(file);
+			else
+				exec->output = fd_output(file);
 		}
 		else if (exec->output < 1 && file->token == PIPE)
 		{
 			ppx_exit(pipe(fd_pipe), "Failed opening the pipe", NULL, 1);//TODO gerer l'erreur
-			if (exec->next)
-				exec->next->input = fd_pipe[0];
+			exec->next->input = fd_pipe[0];
 			exec->output = fd_pipe[1];
 			return ;
 		}
