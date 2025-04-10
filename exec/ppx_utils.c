@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 19:10:28 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/09 19:06:52 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/10 19:48:27 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,3 +52,56 @@ int	ppx_cmp(const char *s1, const char *s2)
 	return (0);
 }
 
+char *exec_envset(char **env, char *cmd)
+{
+	int i;
+	char **path;
+	char *cmd_path;
+	char *tmp;
+
+	i = 0;
+	while (env[i] && ft_strncmp(env[i], "PATH=", 5) != 0)
+		i++;
+	if (!env[i] || !cmd)
+		return (cmd);
+	path = ft_split(&env[i][5], ':');
+	if (!path)
+		return (cmd);
+	i = 0;
+	while (path[i])
+	{
+		tmp = ft_strjoin(path[i], "/");
+		cmd_path = ft_strjoin(tmp, cmd);
+		free(tmp);
+		if (access(cmd_path, F_OK | X_OK) == 0)
+			return (ft_free_tab(path), cmd_path);
+		free(cmd_path);
+		i++;
+	}
+	return (ft_free_tab(path), cmd);
+}
+
+void exec_cmd(t_input *arg_lst, t_env *env_chained, t_exec *exec)
+{
+	char **env;
+	char **cmd;
+	char *env_set;
+
+	//ft_printf("$%d %d$", exec->input, exec->output);
+	env_set = NULL;
+	cmd = ft_split(arg_lst->arg, ' ');
+	env = env_to_array(env_chained);
+	if (exec->input != STDIN_FILENO)
+		(dup2(exec->input, STDIN_FILENO), close(exec->input));
+	if (exec->output != STDOUT_FILENO)
+		(dup2(exec->output, STDOUT_FILENO), close(exec->output));
+	env_set = exec_envset(env, cmd[0]);
+	if (cmd && cmd[0])
+		execve(env_set, cmd, env);
+	ft_printf_fd(2, "pipex : command not found : %s\n", cmd[0]);
+	if (env_set != cmd[0])
+		free(env_set);
+	ft_free_tab(cmd);
+	ft_free_tab(env);
+	exit(127); // TODO gerer l'erreur
+}
