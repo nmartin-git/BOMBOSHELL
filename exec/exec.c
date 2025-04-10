@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 18:07:27 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/10 15:22:32 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/10 18:43:38 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,6 +162,7 @@ int exec(t_input **arg_lst, t_env **env)
 	expand_env_var(*arg_lst, *env);
 	files_tokenisation(arg_lst, NULL);
 	cmd_tokenisation(*arg_lst);
+	print_tokens(*arg_lst);
 	tmp = *arg_lst;
 	files = *arg_lst;
 	exec_lst = exec_init(*arg_lst, NULL, NULL);

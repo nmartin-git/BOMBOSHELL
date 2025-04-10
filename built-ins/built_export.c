@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 19:37:52 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/10 15:22:59 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/10 17:39:23 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,9 @@ static void	print_exports(t_env *env)
 int	ft_export(t_shell *cmd)
 {
 	int	i;
-	printf("\n");
+	i = 0;
+	while (cmd->command[i])
+		printf("%s\n", cmd->command[i++]);
 	if (!cmd->command[1])
 	{
 		print_exports(cmd->env_vars);

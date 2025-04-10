@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 14:01:16 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/07 14:36:10 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/10 19:01:12 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,31 @@ void	files_tokenisation(t_input **arg_lst, t_input *prev)
 	}
 }
 
+void	export_parsing(t_input *arg_lst)
+{
+	t_input	*del;
+	int		i;
+
+	while (arg_lst->next && arg_lst->next->token == SPACES)
+	{
+		arg_lst->arg = ft_strjoin_free
+			(arg_lst->arg, arg_lst->next->arg);
+		del = arg_lst->next;
+		arg_lst->next = arg_lst->next->next;
+		free(del);
+	}
+	i = 0;
+	while (arg_lst->arg[i] && arg_lst->arg[i] != '=')
+		i++;
+	if (arg_lst->arg[i] != '=')
+		return ;
+	i += ignore_spaces(&arg_lst->arg[i]);
+	if (arg_lst->arg[i] != '\0')
+		
+	else
+		
+}
+
 void	cmd_tokenisation(t_input *arg_lst)
 {
 	t_input	*del;
@@ -79,10 +104,12 @@ void	cmd_tokenisation(t_input *arg_lst)
 			|| arg_lst->token == WORD_D_QUOTE)
 		{
 			arg_lst->token = CMD;
+			if (ft_strncmp(arg_lst->arg, "export", 7) == 0)
+				export_parsing(arg_lst);
 			while (arg_lst->next && (arg_lst->next->token == WORD
-					|| arg_lst->next->token == SPACES
-					|| arg_lst->next->token == WORD_S_QUOTE
-					|| arg_lst->next->token == WORD_D_QUOTE))
+				|| arg_lst->next->token == SPACES
+				|| arg_lst->next->token == WORD_S_QUOTE
+				|| arg_lst->next->token == WORD_D_QUOTE))
 			{
 				arg_lst->arg = ft_strjoin_free
 					(arg_lst->arg, arg_lst->next->arg);
