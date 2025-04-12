@@ -45,7 +45,7 @@ int						ft_pwd(t_shell *shell);
 int						ft_exit(t_shell *shell);
 int						ft_env(t_env *list);
 int						ft_unset(t_shell *shell);
-int						ft_export(t_shell *shell);
+int						ft_export(t_shell *shell, char *str);
 int						ft_echo(t_shell *shell);
 
 // builtin utils

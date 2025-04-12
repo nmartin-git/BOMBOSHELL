@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 14:25:03 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/12 13:17:49 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/12 14:03:29 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,26 +33,26 @@ void	execute_builtin(t_env **env, char *cmd)
 {
 	t_shell	*command;
 
-	command = set_t_shell(*env, cmd);
 	int i = 0;
+	command = set_t_shell(*env, cmd);
 	while (command->command[i])
-		printf("*%s*\n", command->command[i++]);
+		printf("*%s*\n", command->command[i++]);//TODO supp
 	if (ft_strncmp(command->command[0], "cd", 2) == 0)
-		return exit(ft_cd(command));
+		exit(ft_cd(command));
 	else if (ft_strncmp(command->command[0], "echo", 4) == 0)
-		return exit(ft_echo(command));
+		exit(ft_echo(command));
 	else if (ft_strncmp(command->command[0], "env", 3) == 0)
-		return exit(ft_env(*env));
+		exit(ft_env(*env));
 	else if (ft_strncmp(command->command[0], "exit", 4) == 0)
-		return exit(ft_exit(command));
+		exit(ft_exit(command));
 	else if (ft_strncmp(command->command[0], "export", 6) == 0)
-		return exit(ft_export(command));
+		exit(ft_export(command, cmd));
 	else if (ft_strncmp(command->command[0], "pwd", 3) == 0)
-		return exit(ft_pwd(command));
+		exit(ft_pwd(command));
 	else if (ft_strncmp(command->command[0], "unset", 5) == 0)
-		return exit(ft_unset(command));
+		exit(ft_unset(command));
 	else
-		return exit(0);
+		exit(0);
 }
 int	is_built_in(char *cmd, int i)
 {
