@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 19:17:52 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/06 16:33:21 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/10 23:05:52 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,9 @@ int	ft_echo(t_shell *cmd)
 	{
 		while (cmd->command[i][j] == 'n')
 			j++;
-		if (cmd->command[i][j] != '\0')
+		if (cmd->command[i++][j] != '\0')
 			break ;
 		flag = 0;
-		i++;
 	}
 	print_echo(cmd->command, i, cmd);
 	if (flag)

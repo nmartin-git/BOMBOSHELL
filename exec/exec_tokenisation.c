@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 14:01:16 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/10 23:00:25 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/10 23:04:59 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,6 @@ void	export_parsing(t_input *arg_lst)
 		if (arg_lst->arg[i++] == '=')
 			export_get_arg(arg_lst, NULL, i);
 	}
-	printf("%%%s%%\n", arg_lst->arg);
 }
 
 void	cmd_tokenisation(t_input *arg_lst)

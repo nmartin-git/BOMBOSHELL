@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 14:25:03 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/09 17:50:50 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/12 13:17:49 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,9 @@ void	execute_builtin(t_env **env, char *cmd)
 	t_shell	*command;
 
 	command = set_t_shell(*env, cmd);
+	int i = 0;
+	while (command->command[i])
+		printf("*%s*\n", command->command[i++]);
 	if (ft_strncmp(command->command[0], "cd", 2) == 0)
 		return exit(ft_cd(command));
 	else if (ft_strncmp(command->command[0], "echo", 4) == 0)
