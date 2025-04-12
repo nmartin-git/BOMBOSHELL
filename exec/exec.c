@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 18:07:27 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/12 13:09:09 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/12 19:57:05 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void	handle_exec(t_input *cmd, t_input *file, t_exec *exec_lst, t_env **env)
 
 	status = 0;
 	set_fds(file, exec_lst);
+	printf("%d %d\n", exec_lst->input, exec_lst->output);
 	if (exec_lst->input == -1 || exec_lst->output == -1)
 	{
 		if (exec_lst->input > 2)
@@ -170,6 +171,8 @@ int exec(t_input **arg_lst, t_env **env)
 	{
 		if (tmp->token == CMD)
 		{
+			if (files != *arg_lst)
+				files = files->next;
 			handle_exec(tmp, files, exec_tmp, env);
 			while (files && files->token != PIPE && files->token != BOOL)
 				files = files->next;
@@ -177,7 +180,5 @@ int exec(t_input **arg_lst, t_env **env)
 		}
 		tmp = tmp->next;
 	}
-	exec_wait(exec_lst); 
-	//print_tokens(*arg_lst);//TODO supp
-	return (0);
+	return (exec_wait(exec_lst)); 
 }

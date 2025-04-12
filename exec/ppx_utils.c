@@ -6,22 +6,26 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 19:10:28 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/10 19:48:27 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/12 20:01:46 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
-void	exec_wait(t_exec *exec)
+int	exec_wait(t_exec *exec)
 {
-	int	status;
+	int		status;
+	t_exec	*tmp;
 
 	while (exec)
 	{
 		waitpid(exec->pid, &status, 0);
 		//last_exit_code = WEXITSTATUS(status) //TODO
+		tmp = exec;
 		exec = exec->next;
+		free(tmp);
 	}
+	return (0);
 }
 
 void	ppx_exit(int err, const char *str, int *fd_pipe, int status)
