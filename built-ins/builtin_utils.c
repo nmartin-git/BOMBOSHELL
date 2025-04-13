@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 00:36:18 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/10 17:41:21 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/04 22:43:30 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,4 +92,23 @@ void	set_env_value(t_env *env, char *key, char *value)
 		current = current->next;
 	}
 	add_env(head, new_env(key, value));
+}
+
+int	ft_strcmp(const char *s1, const char *s2)
+{
+	while (*s1 && *s1 == *s2)
+	{
+		s1++;
+		s2++;
+	}
+	return ((unsigned char)*s1 - (unsigned char)*s2);
+}
+
+int	print_invalid_id_error(char *arg, char *var)
+{
+	if (!var)
+		printf("export: '%s': not a valid identifier\n", arg);
+	else
+		printf("%s: '%s': not a valid identifier\n", arg, var);
+	return (1);
 }

@@ -1,0 +1,29 @@
+unset
+
+0: Success - variable was successfully unset or did not exist
+1: Error - invalid variable name or other error
+2: Usage error
+
+echo
+
+0: Success - almost always returns 0, even if nothing to echo
+1: Rarely used, but some implementations might return non-zero for errors
+
+pwd
+
+0: Success - current directory was successfully displayed
+1: Error - cannot determine the current directory (rare)
+2: Usage error (if given invalid options)
+
+cd
+
+0: Success - directory changed successfully
+1: Error - directory does not exist or is not accessible
+2: Usage error (invalid options or incorrect number of arguments)
+
+env
+
+0: Success - environment was successfully displayed/modified
+1: Error - general error
+2: Usage error (invalid options)
+Various other codes: Some implementations use other codes for specific errors

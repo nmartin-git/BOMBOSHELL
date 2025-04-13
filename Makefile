@@ -26,17 +26,17 @@ PARSING_PATH = ./parsing/
 PARSING_FILES = parsing.c tokenisation.c input_set.c parsing_utils.c quotes_utils.c
 PARSING := $(addprefix $(PARSING_PATH), $(PARSING_FILES))
 EXEC_PATH = ./exec/
-EXEC_FILES = exec.c exec_tokenisation.c exec_utils.c exec_files.c ppx_utils.c
+EXEC_FILES = exec.c exec_tokenisation.c exec_utils.c ppx_utils.c exec_files.c
 EXEC := $(addprefix $(EXEC_PATH), $(EXEC_FILES))
 BUILT_PATH = ./built-ins/
 BUILT_FILES = built-ins.c builtin_utils.c built_cd.c built_echo.c built_env.c \
 				built_exit.c built_export.c built_pwd.c built_unset.c export_parsing.c
 BUILT := $(addprefix $(BUILT_PATH), $(BUILT_FILES))
+WILDCARD_PATH = ./wildcard/
+WILDCARD_FILES = wildcard.c expansion.c utils.c launch.c
+WILDCARD := $(addprefix $(WILDCARD_PATH), $(WILDCARD_FILES))
 OBJ_PATH = ./objs/
-OBJ := $(addprefix $(OBJ_PATH), $(MINISHELL_FILES:.c=.o)) \
-		$(addprefix $(OBJ_PATH), $(PARSING_FILES:.c=.o)) \
-			$(addprefix $(OBJ_PATH), $(EXEC_FILES:.c=.o)) \
-				$(addprefix $(OBJ_PATH), $(BUILT_FILES:.c=.o))
+OBJ := $(addprefix $(OBJ_PATH), $(MINISHELL_FILES:.c=.o)) $(addprefix $(OBJ_PATH), $(PARSING_FILES:.c=.o)) $(addprefix $(OBJ_PATH), $(EXEC_FILES:.c=.o)) $(addprefix $(OBJ_PATH), $(BUILT_FILES:.c=.o)) $(addprefix $(OBJ_PATH), $(WILDCARD_FILES:.c=.o))
 SRC_BNS_PATH = ./srcs_bonus/
 SRC_BNS_FILES = 
 SRC_BNS := $(addprefix $(SRC_BNS_PATH), $(SRC_BNS_FILES))
@@ -80,6 +80,12 @@ $(OBJ_PATH)%.o : $(EXEC_PATH)%.c
 
 $(OBJ_PATH)%.o : $(BUILT_PATH)%.c
 	@printf "$(BLUE)Compiling $(NAME) built-ins: [$<] $(RESET)"
+	@mkdir -p $(OBJ_PATH) 
+	@$(CC) $(CFLAGS) $(HEADERS) -c $< -o $@
+	@printf "\r\033[K"
+
+$(OBJ_PATH)%.o : $(WILDCARD_PATH)%.c
+	@printf "$(BLUE)Compiling $(NAME) wildcard: [$<] $(RESET)"
 	@mkdir -p $(OBJ_PATH)
 	@$(CC) $(CFLAGS) $(HEADERS) -c $< -o $@
 	@printf "\r\033[K"
@@ -106,7 +112,6 @@ fclean :
 
 re : fclean all
 
-#commands perso
 
 exec : fclean all
 	@make clean --no-print-directory

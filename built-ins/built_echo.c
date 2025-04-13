@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 19:17:52 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/10 23:05:52 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/06 16:33:21 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static char	*expand_var(t_shell *shell, char *arg)
 
 	if (arg[0] != '$')
 		return (ft_strdup(arg));
-	if (arg[1] == '?' )
+	if (arg[1] == '?')
 		return (ft_itoa(shell->last_exit_status));
 	var_name = arg + 1;
 	var_value = get_env_value(shell->env_vars, var_name);
@@ -35,21 +35,19 @@ int	ft_echo(t_shell *cmd)
 	int	j;
 
 	if (!cmd->command[1])
-	{
-		printf("\n");
-		return (1);
-	}
+		return (printf("\n"), 1);
 	flag = 1;
 	i = 1;
 	j = 1;
-	while (cmd->command[i]
-		&& cmd->command[i][0] == '-' && cmd->command[i][1] == 'n')
+	while (cmd->command[i] && cmd->command[i][0] == '-'
+		&& cmd->command[i][1] == 'n')
 	{
 		while (cmd->command[i][j] == 'n')
 			j++;
-		if (cmd->command[i++][j] != '\0')
+		if (cmd->command[i][j] != '\0')
 			break ;
 		flag = 0;
+		i++;
 	}
 	print_echo(cmd->command, i, cmd);
 	if (flag)

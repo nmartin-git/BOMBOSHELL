@@ -28,7 +28,7 @@ int	is_valid_identifier(char *str)
 	return (1);
 }
 
-void	unset_env_value(t_env *env, char *key)
+int	unset_env_value(t_env *env, char *key)
 {
 	t_env	*current;
 	t_env	*prev;
@@ -36,7 +36,7 @@ void	unset_env_value(t_env *env, char *key)
 
 	expanded_key = handle_shell_var(env, key, "unset");
 	if (!expanded_key)
-		return ;
+		return (0);
 	prev = NULL;
 	current = env;
 	while (current)
@@ -49,66 +49,45 @@ void	unset_env_value(t_env *env, char *key)
 				env = current->next;
 			if (current->value)
 				free(current->value);
-			return (free(current->key), free(current), free(expanded_key));
+			return (free(current->key), free(current), free(expanded_key), 1);
 		}
 		prev = current;
 		current = current->next;
 	}
-	free(expanded_key);
+	return (free(expanded_key), 1);
 }
 
 char	*handle_shell_var(t_env *env, char *var, char *cmd)
 {
 	char	*value;
 
+	value = NULL;
 	if (!var || !*var)
-	{
-		printf("%s: '': not a valid identifier\n", cmd);
-		return (NULL);
-	}
+		return (print_invalid_id_error(cmd, NULL), NULL);
 	if (var[0] == '$' && var[1])
 	{
 		value = get_env_value(env, var + 1);
-		if (!value)
-		{
-			printf("%s: '%s': not a valid identifier\n", cmd, var);
-			return (NULL);
-		}
-		if (!is_valid_identifier(value))
-		{
-			printf("%s: '%s': not a valid identifier\n", cmd, value);
-			return (NULL);
-		}
+		if (!is_valid_identifier(value) || !value)
+			return (print_invalid_id_error(cmd, value), NULL);
 		return (ft_strdup(value));
 	}
 	if (!is_valid_identifier(var))
-	{
-		printf("%s: '%s': not a valid identifier\n", cmd, var);
-		return (NULL);
-	}
+		return (print_invalid_id_error(cmd, value), NULL);
 	return (ft_strdup(var));
 }
 
 int	ft_unset(t_shell *cmd)
 {
-	int		i;
+	int	i;
 
 	if (!cmd->env_vars)
-		return (0);
+		return (1);
 	i = 1;
 	while (cmd->command[i])
 	{
-		unset_env_value(cmd->env_vars, cmd->command[i]);
+		if (!unset_env_value(cmd->env_vars, cmd->command[i]))
+			return (1);
 		i++;
 	}
 	return (0);
-}
-int	ft_strcmp(const char *s1, const char *s2)
-{
-	while (*s1 && *s1 == *s2)
-	{
-		s1++;
-		s2++;
-	}
-	return ((unsigned char)*s1 - (unsigned char)*s2);
 }
