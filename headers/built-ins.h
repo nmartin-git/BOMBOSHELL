@@ -15,7 +15,10 @@
 
 # include <stdio.h>
 # include <limits.h>
+# include <sys/wait.h>
 # include "libft.h"
+
+# define PATH_MAX_ANANAS 4096
 
 // liste env
 typedef struct s_env
@@ -34,7 +37,18 @@ typedef struct s_shell
 	char				**command;
 }						t_shell;
 
-int						execute_builtin(t_env **env, char *cmd);
+typedef struct s_exec {
+	int				pid;
+	int				input;
+	int				output;
+	int				pid_to_wait;
+	int				exec_both;
+	struct s_exec	*next;
+}	t_exec;
+
+void					fd_builtin(t_exec *exec);
+void					handle_bool(t_exec *exec);
+void					execute_builtin(t_env **env, char *cmd, t_exec *exec);
 t_env					*init_env(char **envp);
 
 // builtin
@@ -43,7 +57,7 @@ int						ft_pwd(t_shell *shell);
 int						ft_exit(t_shell *shell);
 int						ft_env(t_env *list);
 int						ft_unset(t_shell *shell);
-int						ft_export(t_shell *shell);
+int						ft_export(t_shell *shell, char *str);
 int						ft_echo(t_shell *shell);
 
 // builtin utils

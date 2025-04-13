@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 19:37:52 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/06 16:27:36 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/12 14:01:50 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static void	handle_export_arg(t_env *env, char *arg)
 	expanded_key = NULL;
 	if (!equals)
 	{
-		if (arg[0] == '$')
+		if (arg[0] == '"')
 		{
 			expanded_key = get_env_value(env, arg + 1);
 			if (is_valid_identifier(arg) && expanded_key)
@@ -69,10 +69,11 @@ static void	print_exports(t_env *env)
 	}
 }
 
-int	ft_export(t_shell *cmd)
+int	ft_export(t_shell *cmd, char *command)
 {
 	int	i;
-
+	i = 0;
+	printf("|%s|", command);
 	if (!cmd->command[1])
 	{
 		print_exports(cmd->env_vars);

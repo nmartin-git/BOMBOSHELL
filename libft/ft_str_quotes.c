@@ -1,25 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   built_pwd.c                                        :+:      :+:    :+:   */
+/*   ft_str_quotes.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/13 19:36:14 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/07 20:29:37 by nmartin          ###   ########.fr       */
+/*   Created: 2025/04/10 21:19:13 by nmartin           #+#    #+#             */
+/*   Updated: 2025/04/12 16:42:51 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "built-ins.h"
+#include "libft.h"
 
-int	ft_pwd(t_shell *cmd)
+char	*ft_str_quotes(char *str, char start, char end)
 {
-	if (getcwd(cmd->current_dir, PATH_MAX_ANANAS) == NULL)
-	{
-		perror("pwd error\n");
-		return (0);
-	}
-	printf("%s\n", cmd->current_dir);
-	free(cmd->current_dir);
-	return (1);
+	char	*result;
+	int		len;
+	int		i;
+
+	i = -1;
+	if (!str)
+		return (NULL);
+	len = ft_strlen(str) + 3;
+	result = malloc(sizeof(char) * len);
+	if (!result)
+		return (NULL);
+	result[0] = start;
+	while (str[++i])
+		result[i + 1] = str[i];
+	result[i + 1] = end;
+	result [i + 2] = '\0';
+	free(str);
+	return (result);
 }
