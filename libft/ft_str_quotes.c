@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 21:19:13 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/10 21:47:48 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/12 16:42:51 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ char	*ft_str_quotes(char *str, char start, char end)
 	int		i;
 
 	i = -1;
+	if (!str)
+		return (NULL);
 	len = ft_strlen(str) + 3;
 	result = malloc(sizeof(char) * len);
 	if (!result)

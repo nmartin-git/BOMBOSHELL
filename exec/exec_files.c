@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:35:53 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/10 20:43:01 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/12 19:30:00 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,12 @@ int	ppx_here_doc(t_input *arg)
 	return(fd_pipe[0]);
 }
 
-int	fd_output(t_input *file)
+int	fd_output(t_input *file, t_exec *exec)
 {
 	int	fd;
 
+	if (exec->output > 2)
+		close(exec->output);
 	if (access(file->arg, F_OK) == 0 && access(file->arg, W_OK) == -1)
 	{
 		ft_printf_fd(2, "bomboshell: %s : %s\n", strerror(13), file->arg);
@@ -59,10 +61,12 @@ int	fd_output(t_input *file)
 	return (fd);
 }
 
-int	fd_input(t_input *file)
+int	fd_input(t_input *file, t_exec *exec)
 {
 	int	fd;
 
+	if (exec->input > 2)
+		close(exec->input);
 	if (file->token == HERE_DOC)
 		return(ppx_here_doc(file));
 	if (access(file->arg, F_OK) == -1)
@@ -91,16 +95,10 @@ void	set_fds(t_input *file, t_exec *exec)
 	
 	while (file && exec->input != -1 && exec->output != -1)
 	{
-		if (file->token == INFILE || file->token == HERE_DOC
-			|| file->token == OUTFILE || file->token == APPEND)
-		{
-			if (exec->input > 2)
-				close(exec->input);
-			if (file->token == INFILE || file->token == HERE_DOC)
-				exec->input = fd_input(file);
-			else if (file->token == OUTFILE || file->token == APPEND)
-				exec->output = fd_output(file);
-		}
+		if (file->token == INFILE || file->token == HERE_DOC)
+			exec->input = fd_input(file, exec);
+		else if (file->token == OUTFILE || file->token == APPEND)
+			exec->output = fd_output(file, exec);
 		else if (exec->output == STDOUT_FILENO && file->token == PIPE)
 		{
 			ppx_exit(pipe(fd_pipe), "Failed opening the pipe", NULL, 1);//TODO gerer l'erreur

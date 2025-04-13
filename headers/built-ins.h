@@ -40,13 +40,13 @@ void				execute_builtin(t_env **env, char *cmd);
 t_env				*init_env(char **envp);
 
 // builtin
-int					ft_cd(t_shell *shell);
-int					ft_pwd(t_shell *shell);
-int					ft_exit(t_shell *shell);
-int					ft_env(t_env *list);
-int					ft_unset(t_shell *shell);
-int					ft_export(t_shell *shell, char *str);
-int					ft_echo(t_shell *shell);
+int						ft_cd(t_shell *shell);
+int						ft_pwd(t_shell *shell);
+int						ft_exit(t_shell *shell);
+int						ft_env(t_env *list);
+int						ft_unset(t_shell *shell);
+int						ft_export(t_shell *shell, char *str);
+int						ft_echo(t_shell *shell);
 
 // builtin utils
 char				*get_env_value(t_env *env, char *key);

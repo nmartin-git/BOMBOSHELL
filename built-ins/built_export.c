@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 19:37:52 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/06 16:27:36 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/12 14:01:50 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,11 +137,11 @@ static void	print_exports(t_env *env)
 	}
 }
 
-int	ft_export(t_shell *cmd, char *str)
+int	ft_export(t_shell *cmd, char *command)
 {
 	int	i;
-
-	printf("IN FT%s\n", str);
+	i = 0;
+	printf("|%s|", command);
 	if (!cmd->command[1])
 	{
 		print_exports(cmd->env_vars);

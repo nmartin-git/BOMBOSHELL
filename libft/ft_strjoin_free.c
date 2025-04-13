@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 15:41:49 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/07 20:20:33 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/12 15:47:08 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,12 @@ char	*ft_strjoin_free(char *s1, char *s2)
 		return (NULL);
 	i = 0;
 	y = 0;
-	while (s1[i])
+	while (s1 && s1[i])
 	{
 		str[i] = s1[i];
 		i++;
 	}
-	while (s2[y])
+	while (s2 && s2[y])
 	{
 		str[i + y] = s2[y];
 		y++;
