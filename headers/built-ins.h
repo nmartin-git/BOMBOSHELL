@@ -47,7 +47,7 @@ typedef struct s_exec {
 }	t_exec;
 
 void					fd_builtin(t_exec *exec);
-void					handle_bool(t_exec *exec);
+t_shell					*set_t_shell(t_env *env, char *cmd);
 void					execute_builtin(t_env **env, char *cmd, t_exec *exec);
 t_env					*init_env(char **envp);
 

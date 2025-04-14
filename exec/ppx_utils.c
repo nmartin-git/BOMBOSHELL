@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 19:10:28 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/13 16:20:45 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/14 16:41:18 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,6 @@ void exec_cmd(t_input *arg_lst, t_env *env_chained, t_exec *exec)
 	char **cmd;
 	char *env_set;
 
-	handle_bool(exec);
 	env_set = NULL;
 	cmd = ft_split(arg_lst->arg, ' ');
 	env = env_to_array(env_chained);

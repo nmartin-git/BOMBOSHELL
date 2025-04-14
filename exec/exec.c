@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 18:07:27 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/13 16:51:59 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/14 16:03:57 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,8 +164,8 @@ int exec(t_input **arg_lst, t_env **env, t_exec *exec_lst)
 	tmp = *arg_lst;
 	files = *arg_lst;
 	exec_lst = exec_init(*arg_lst, NULL, NULL);
-	if (exec_lst)
-		(exec_lst->pid_to_wait = 0);
+	if (one_cmd(*arg_lst, env, exec_lst))
+		return (0);
 	exec_tmp = exec_lst;
 	while (tmp)
 	{
@@ -174,7 +174,6 @@ int exec(t_input **arg_lst, t_env **env, t_exec *exec_lst)
 			if (files != *arg_lst)
 				files = files->next;
 			handle_exec(tmp, files, exec_tmp, env);
-			printf("/%s %d/\n", tmp->arg, exec_tmp->pid);
 			next_cmd(&files, &exec_tmp);
 		}
 		tmp = tmp->next;

@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 14:25:03 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/13 16:52:36 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/14 16:57:02 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,27 +16,13 @@ void	fd_builtin(t_exec *exec)
 {
 	if (exec->next && exec->next->input > 2)
 		close(exec->next->input);
+	if (exec->input != STDIN_FILENO)
+		close (exec->input);
 	if (exec->output != STDOUT_FILENO)
 	{
 		dup2(exec->output, STDOUT_FILENO);
 		close(exec->output);
 	}
-}
-
-void	handle_bool(t_exec *exec)
-{
-	int	status;
-
-	status = 0;
-	if (!exec->pid_to_wait)
-		return ;
-	printf("wait %d\n", exec->pid_to_wait);
-	waitpid(exec->pid_to_wait, &status, 0);
-	printf("wait\n");
-	if (WEXITSTATUS(status) && exec->exec_both)
-		exit(127);//TODO gerer l'erreur
-	else if (!WEXITSTATUS(status) && !exec->exec_both)
-		exit(127);//TODO gerer l'erreur
 }
 
 t_shell	*set_t_shell(t_env *env, char *cmd)
@@ -61,7 +47,6 @@ void	execute_builtin(t_env **env, char *cmd, t_exec *exec)
 	t_shell	*command;
 
 	command = set_t_shell(*env, cmd);
-	handle_bool(exec);
 	fd_builtin(exec);
 	if (ft_strncmp(command->command[0], "cd", 2) == 0)
 		exit(ft_cd(command));
