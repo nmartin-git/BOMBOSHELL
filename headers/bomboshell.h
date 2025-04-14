@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 19:10:53 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/06 17:46:20 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/14 18:58:48 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 # include "libft.h"
 # include "parsing.h"
 # include "exec.h"
-# include "built-ins.h"
+# include "builtins.h"
 
 int	only_space(char *str);
 

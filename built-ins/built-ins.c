@@ -6,11 +6,11 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 14:25:03 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/14 16:57:02 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/14 19:00:33 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "built-ins.h"
+#include "builtins.h"
 
 void	fd_builtin(t_exec *exec)
 {

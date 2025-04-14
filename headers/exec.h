@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 13:53:26 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/14 17:00:03 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/14 18:59:02 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 # define EXEC_H
 # include "parsing.h"
-# include "built-ins.h"
+# include "builtins.h"
 # include <fcntl.h>
 # include <sys/wait.h>
 # include <string.h>

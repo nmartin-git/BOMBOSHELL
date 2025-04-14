@@ -6,11 +6,11 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 19:17:52 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/10 23:05:52 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/14 19:01:50 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "built-ins.h"
+#include "builtins.h"
 
 static char	*expand_var(t_shell *shell, char *arg)
 {

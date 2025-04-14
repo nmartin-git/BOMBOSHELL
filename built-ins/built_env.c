@@ -6,11 +6,11 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 19:39:25 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/06 18:18:05 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/14 19:02:01 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "built-ins.h"
+#include "builtins.h"
 
 int	ft_env(t_env *list)
 {

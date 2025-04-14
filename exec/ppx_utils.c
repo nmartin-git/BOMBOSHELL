@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 19:10:28 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/14 16:41:18 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/14 18:06:44 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ void exec_cmd(t_input *arg_lst, t_env *env_chained, t_exec *exec)
 	env_set = exec_envset(env, cmd[0]);
 	if (cmd && cmd[0])
 		execve(env_set, cmd, env);
-	ft_printf_fd(2, "bomboshell : command not found : %s\n", cmd[0]);
+	ft_printf_fd(2, "bomboshell: command not found : %s\n", cmd[0]);
 	if (env_set != cmd[0])
 		free(env_set);
 	ft_free_tab(cmd);

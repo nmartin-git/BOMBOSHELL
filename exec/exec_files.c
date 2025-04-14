@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:35:53 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/14 16:18:59 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/14 18:16:04 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	fd_output(t_input *file, t_exec *exec)
 		close(exec->output);
 	if (access(file->arg, F_OK) == 0 && access(file->arg, W_OK) == -1)
 	{
-		ft_printf_fd(2, "bomboshell: %s : %s\n", strerror(13), file->arg);
+		ft_printf_fd(2, "bomboshell: %s: %s\n", file->arg, strerror(13));
 		return (-1);
 	}
 	if (file->token == OUTFILE)
@@ -71,13 +71,12 @@ int	fd_input(t_input *file, t_exec *exec)
 		return(ppx_here_doc(file));
 	if (access(file->arg, F_OK) == -1)
 	{
-		ft_printf_fd(2, "bomboshell: Cannot access '%s' : %s\n",
-			file->arg, strerror(2));
+		ft_printf_fd(2, "bomboshell: %s: %s\n", file->arg, strerror(2));
 		return (-1);
 	}
 	if (access(file->arg, R_OK) == -1)
 	{
-		ft_printf_fd(2, "bomboshell: %s : %s\n", strerror(13), file->arg);
+		ft_printf_fd(2, "bomboshell: %s: %s\n", file->arg, strerror(13));
 		return (-1);
 	}
 	fd = open(file->arg, O_RDONLY);

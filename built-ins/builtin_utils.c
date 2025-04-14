@@ -6,11 +6,11 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 00:36:18 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/10 17:41:21 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/14 19:01:27 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "built-ins.h"
+#include "builtins.h"
 
 t_env	*new_env(char *key, char *value)
 {
