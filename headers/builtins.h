@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   built-ins.h                                        :+:      :+:    :+:   */
+/*   builtins.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 18:57:14 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/14 18:58:26 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/15 18:06:05 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ typedef struct s_exec {
 	struct s_exec	*next;
 }	t_exec;
 
+void					free_exec_lst(t_exec *exec_lst);
 void					fd_builtin(t_exec *exec);
 t_shell					*set_t_shell(t_env *env, char *cmd);
 void					execute_builtin(t_env **env, char *cmd, t_exec *exec);

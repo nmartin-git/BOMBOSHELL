@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 11:39:48 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/14 17:53:14 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/15 18:16:47 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ int	lsts_simplify(t_input **arg_lst)
 		}
 	}
 	unclosed_check(arg_lst);
+	double_spaces(*arg_lst);
 	if (!paranthesis_check(*arg_lst))
 		return (0);
 	return (1);

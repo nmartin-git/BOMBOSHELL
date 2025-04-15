@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 18:07:27 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/15 15:09:24 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/15 18:09:12 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ void	replace_env_var(t_input *arg_lst, t_env *env, int i)
 	else
 		result = expand;
 	if (arg_lst->arg[i + y])
-		result = ft_strjoin_free(ft_strdup(&arg_lst->arg[i + y]), result);
+		result = ft_strjoin_free(result, ft_strdup(&arg_lst->arg[i + y]));
 	free(arg_lst->arg);
 	arg_lst->arg = result;
 }
@@ -160,9 +160,9 @@ int exec(t_input **arg_lst, t_env **env, t_exec *exec_lst)
 
 	expand_env_var(*arg_lst, *env);
 	files_tokenisation(arg_lst, NULL);
-	//print_tokens(*arg_lst);
+	print_tokens(*arg_lst);
 	cmd_tokenisation(*arg_lst);
-	//print_tokens(*arg_lst);
+	print_tokens(*arg_lst);
 	tmp = *arg_lst;
 	files = *arg_lst;
 	exec_lst = exec_init(*arg_lst, NULL, NULL);

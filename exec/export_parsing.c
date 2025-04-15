@@ -6,17 +6,32 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:54:40 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/15 13:33:45 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/15 18:07:47 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
+
+t_input	*ignore_redir(t_input *arg_lst)
+{
+	while (arg_lst->next && arg_lst->next->token != PIPE
+		&& arg_lst->next->token != BOOL 
+		&& (arg_lst->next->token == INFILE || arg_lst->next->token == HERE_DOC
+		|| arg_lst->next->token == APPEND || arg_lst->next->token == OUTFILE))
+	{
+		arg_lst = arg_lst->next;
+		if (arg_lst->next && arg_lst->next && arg_lst->next->token == SPACES)
+			arg_lst = arg_lst->next;
+	}
+	return (arg_lst);
+}
 
 int	export_parsing_utils(t_input* arg_lst)
 {
 	t_input	*del;
 	int		quotes;
 
+	arg_lst = ignore_redir(arg_lst);
 	while (arg_lst->next && arg_lst->next->token == SPACES)
 	{
 		arg_lst->arg = ft_strjoin_free(arg_lst->arg, arg_lst->next->arg);//TODO gerer l'erreur de malloc
@@ -24,6 +39,7 @@ int	export_parsing_utils(t_input* arg_lst)
 		arg_lst->next = arg_lst->next->next;
 		free(del);
 	}
+	
 	if (!arg_lst->next
 		|| arg_lst->next->token == PIPE || arg_lst->token == BOOL)
 		return (0);
@@ -84,18 +100,20 @@ void	export_get_arg(t_input *arg_lst, int i, int	quotes)
 	}
 }
 
-void	export_parsing(t_input *arg_lst)
+void	export_parsing(t_input *arg_lst, t_input *cmd)
 {
 	int		i;
 	int		quotes;
 	t_input *del;
 
 	i = 0;
-	while (arg_lst->next && (arg_lst->next->token == WORD
-			|| arg_lst->next->token == SPACES
-			|| arg_lst->next->token == WORD_S_QUOTE
-			|| arg_lst->next->token == WORD_D_QUOTE))
+	while (arg_lst->next && arg_lst->next->token != BOOL
+		&& arg_lst->next->token != PIPE)
 	{
+		if (arg_lst->next->token == WORD
+			|| arg_lst->next->token == WORD_S_QUOTE
+			|| arg_lst->next->token == WORD_D_QUOTE)
+			cmd = arg_lst->next;
 		quotes = export_parsing_utils(arg_lst);
 		while (arg_lst->arg[i] && arg_lst->arg[i] != '=')
 			i++;

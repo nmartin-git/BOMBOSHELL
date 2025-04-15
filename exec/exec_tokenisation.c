@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 14:01:16 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/15 15:27:19 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/15 17:54:00 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,9 +88,10 @@ void	cmd_word_order(t_input *arg, t_input *del, t_input *cmd, t_input *prev)
 	{
 		prev = arg;
 		if (arg->next->token == WORD || arg->next->token == WORD_S_QUOTE
-			|| arg->next->token == WORD_D_QUOTE
-			|| arg->next->token == SPACES)
+			|| arg->next->token == WORD_D_QUOTE)
 		{
+			if (arg->token == SPACES)
+				cmd->arg = ft_strjoin_free(cmd->arg, ft_strdup(" "));//TODO gerer l'erreur
 			cmd->arg = ft_strjoin_free(cmd->arg, arg->next->arg);//TODO gerer l'erreur
 			del = arg->next;
 			prev->next = arg->next->next;
@@ -115,9 +116,10 @@ void	cmd_tokenisation(t_input *arg_lst)
 			|| arg_lst->token == WORD_D_QUOTE)
 		{
 			arg_lst->token = CMD;
-			cmd_word_order(arg_lst, NULL, arg_lst, NULL);
 			if (ft_strncmp(arg_lst->arg, "export", 7) == 0)
-				export_parsing(arg_lst);
+				export_parsing(arg_lst, arg_lst);
+			cmd_word_order(arg_lst, NULL, arg_lst, NULL);
+			printf("+%s+\n", arg_lst->arg);
 			while (arg_lst->next && (arg_lst->next->token == WORD
 				|| arg_lst->next->token == SPACES
 				|| arg_lst->next->token == WORD_S_QUOTE
