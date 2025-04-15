@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 13:53:26 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/14 18:59:02 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/15 14:11:01 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ int		exec(t_input **arg_lst, t_env **env, t_exec *exec_lst);
 t_input	*del_redir(t_input **arg_lst, t_input *tmp, t_input *prev);
 void	del_spaces(t_input *tmp);
 void	files_tokenisation(t_input **arg_lst, t_input *prev);
+void	cmd_word_order(t_input *arg, t_input *del, t_input *cmd, t_input *pre);
 void	cmd_tokenisation(t_input *arg_lst);
 
 void	next_cmd(t_input **files, t_exec **exec_tmp);

@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 14:01:16 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/14 18:30:13 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/15 15:27:19 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 t_input	*del_redir(t_input **arg_lst, t_input *tmp, t_input *prev)
 {
+	t_input	*del;
+
 	if (prev)
 	{
 		prev->next = tmp->next;
@@ -25,6 +27,16 @@ t_input	*del_redir(t_input **arg_lst, t_input *tmp, t_input *prev)
 		prev = *arg_lst;
 	}
 	free_arg(tmp);
+	tmp = prev;
+	while (tmp->next && (tmp->next->token == WORD_D_QUOTE
+		|| tmp->next->token == WORD_S_QUOTE))
+	{
+		tmp->arg = ft_strjoin_free
+		(tmp->arg, tmp->next->arg);//TODO gerer l'erreur
+		del = tmp->next;
+		tmp->next = tmp->next->next;
+		free(del);
+	}
 	return (prev);
 }
 
@@ -69,6 +81,30 @@ void	files_tokenisation(t_input **arg_lst, t_input *prev)
 	}
 }
 
+void	cmd_word_order(t_input *arg, t_input *del, t_input *cmd, t_input *prev)
+{
+	while (arg->next && arg->next->token != PIPE
+		&& arg->next->token != BOOL)
+	{
+		prev = arg;
+		if (arg->next->token == WORD || arg->next->token == WORD_S_QUOTE
+			|| arg->next->token == WORD_D_QUOTE
+			|| arg->next->token == SPACES)
+		{
+			cmd->arg = ft_strjoin_free(cmd->arg, arg->next->arg);//TODO gerer l'erreur
+			del = arg->next;
+			prev->next = arg->next->next;
+			free(del);
+		}
+		else
+			while (arg->next && arg->next->token != PIPE
+				&& arg->next->token != BOOL && arg->next->token != WORD
+				&& arg->next->token != WORD_S_QUOTE
+				&& arg->next->token != WORD_D_QUOTE)
+				arg = arg->next;
+	}
+}
+
 void	cmd_tokenisation(t_input *arg_lst)
 {
 	t_input	*del;
@@ -79,6 +115,7 @@ void	cmd_tokenisation(t_input *arg_lst)
 			|| arg_lst->token == WORD_D_QUOTE)
 		{
 			arg_lst->token = CMD;
+			cmd_word_order(arg_lst, NULL, arg_lst, NULL);
 			if (ft_strncmp(arg_lst->arg, "export", 7) == 0)
 				export_parsing(arg_lst);
 			while (arg_lst->next && (arg_lst->next->token == WORD
