@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 15:20:42 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/15 18:05:43 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/16 23:34:31 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ int	one_cmd(t_input *arg_lst, t_env **env, t_exec *exec_lst)
 	{
 		set_fds(arg_lst, exec_lst);
 		/*TODO last_exit = */exec_one_cmd(env, cmd->arg, exec_lst);
+		free_exec_lst(exec_lst);
 		return (1);
 	}
 	else

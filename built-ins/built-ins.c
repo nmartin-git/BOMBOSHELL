@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 14:25:03 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/15 18:07:29 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/16 22:51:13 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,7 @@ void	execute_builtin(t_env **env, char *cmd, t_exec *exec)
 		exit_code = ft_pwd(command);
 	else if (ft_strncmp(command->command[0], "unset", 5) == 0)
 		exit_code = ft_unset(command);
-	//TODO free t_sell *command && exec_lst
-	free_exec_lst(exec);//marche pas
+	//TODO free t_sell *command
 	exit(exit_code);
 }
 

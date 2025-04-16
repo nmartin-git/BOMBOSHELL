@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 13:53:26 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/15 18:05:17 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/16 21:11:04 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
 # define OUTFILE 11
 # define APPEND 12
 # define CMD 13
+
+void print_tokens(t_input *arg_lst); //TODO supp
 
 void	handle_exec(t_input *cmd, t_input *files, t_exec *exec, t_env **env);
 char	*get_env_var(char *arg, t_env *env, int *y);
@@ -47,10 +49,10 @@ int		ppx_cmp(const char *s1, const char *s2);
 char	*exec_envset(char **env, char *cmd);
 void    exec_cmd(t_input *arg_lst, t_env *env, t_exec *exec);
 
-int		export_parsing_utils(t_input* arg_lst);
+int		export_parsing_utils(t_input *arg_lst, t_input *first);
 void	export_quotes(t_input *arg_lst, int i);
 void	export_get_arg(t_input *arg_lst, int i, int	quotes);
-void	export_parsing(t_input *arg_lst, t_input *cmd);
+void	export_parsing(t_input *arg_lst);
 
 int		ppx_here_doc(t_input *arg);
 int		fd_output(t_input *file, t_exec *exec);
