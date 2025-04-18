@@ -6,27 +6,71 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 17:24:54 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/18 14:57:29 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/18 16:38:16 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
+int	paranthesis_bool(t_input **arg_lst, t_input *tmp, t_input *prev, int i)
+{
+	t_input	*paranthesis;
+
+	tmp = *arg_lst;
+	while (tmp && i)
+	{
+		if (tmp->next && tmp->token == PARANTHESIS)
+			i--;
+		
+		tmp = tmp->next;
+	}
+	paranthesis = tmp;
+	while (tmp)
+	{
+		if (tmp->token == BOOL)
+			break;
+		
+		if (tmp->next && tmp->next->token == PARANTHESIS
+			&& tmp->next->arg[0] == ')')
+		{
+			del_redir(arg_lst, tmp->next, tmp);
+			del_redir(arg_lst, paranthesis, NULL);
+			return (0);
+		}
+		tmp = tmp->next;
+	}
+	return (1);
+}
+
 int	paranthesis_parsing(t_input **arg_lst)
 {
 	t_input	*tmp;
 	t_input	*prev;
+	int		paranthesis_nbr;
 
 	prev = NULL;
 	tmp = *arg_lst;
+	paranthesis_nbr = 0;
 	while (tmp)
 	{
 		if (tmp->token == PARANTHESIS && prev
 			&& (prev->token != PIPE || prev->token != BOOL))
-		if (tmp->token != SPACES && tmp->token != PARANTHESIS)
+		{
+			ft_printf_fd(2, "bomboshell: parse error near '%s'\n", tmp->arg);
+			return (0);
+		}
+		if (tmp->token != SPACES)
 			prev = tmp;
 		tmp = tmp->next;
 	}
+	tmp = *arg_lst;
+	while (tmp)
+	{
+		if (tmp->token == PARANTHESIS)
+			paranthesis_nbr++;
+		tmp = tmp->next;
+	}
+	return (paranthesis_bool(arg_lst, *arg_lst, NULL, paranthesis_nbr));
 }
 
 void	next_cmd(t_input **files, t_exec **exec_tmp)
