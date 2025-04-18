@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 19:37:52 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/18 19:15:22 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/18 19:36:35 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ int	ft_export(t_shell *cmd, char *command)
 {
 	int	exit_status;
 
+	exit_status = 0;//c;est quoi exit code
 	if (!cmd->command[1])
 	{
 		print_exports(cmd->env_vars);

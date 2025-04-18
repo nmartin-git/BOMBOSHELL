@@ -3,18 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: atazzit <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 23:51:48 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/13 23:51:49 by atazzit          ###   ########.fr       */
+/*   Updated: 2025/04/18 19:33:11 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "bomboshell.h"
-#include "wildcard.h"
-#include <readline/history.h>
-#include <readline/readline.h>
-#include <signal.h>
+#include "bombosignal.h"
 
 int			g_exit_status = 0;
 

@@ -13,7 +13,7 @@
 #ifndef WILDCARD_H
 # define WILDCARD_H
 
-# include "bomboshell.h"
+# include "bombosignal.h"
 # include "libft.h"
 # include <dirent.h>
 # include <stdio.h>
@@ -25,7 +25,7 @@ typedef struct s_wildcard
 {
 	char				*content;
 	struct s_wildcard	*next;
-	// int					count;
+
 }						t_wildcard_list;
 
 t_wildcard_list			*expand_wildcards(char *pattern);
@@ -38,7 +38,6 @@ char					**expand_args_wildcards(char **args);
 int						has_wildcards(const char *str);
 void					find_matches(char **args, t_wildcard_list **expanded,
 							int i);
-void					expand_wildcards_in_tokens(t_input *arg_lst);
 char					**list_to_array(t_wildcard_list *head);
 int						list_size(t_wildcard_list *head);
 t_wildcard_list			*add_match(t_wildcard_list *matches, char *pattern,

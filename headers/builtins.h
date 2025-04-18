@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 18:57:14 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/18 19:16:36 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/18 19:34:49 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <stdio.h>
 # include <limits.h>
 # include <sys/wait.h>
-# include "bomboshell.h"
+# include "bombosignal.h"
 # include "libft.h"
 
 # define PATH_MAX_ANANAS 4096

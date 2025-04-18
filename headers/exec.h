@@ -6,16 +6,17 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 13:53:26 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/18 18:45:36 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/18 19:43:53 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXEC_H
 
 # define EXEC_H
-# include "bomboshell.h"
+# include "bombosignal.h"
 # include "builtins.h"
 # include "parsing.h"
+# include "wildcard.h"
 # include <fcntl.h>
 # include <sys/wait.h>
 # include <string.h>
@@ -59,7 +60,7 @@ void	export_quotes(t_input *arg_lst, int i);
 void	export_get_arg(t_input *arg_lst, int i, int	quotes);
 void	export_parsing(t_input *arg_lst);
 
-int		ppx_here_doc(t_input *arg);
+int		ppx_here_doc(t_input *arg, t_env *env);
 int		fd_output(t_input *file, t_exec *exec);
 int		fd_input(t_input *file, t_exec *exec, t_env *env);
 void	set_fds(t_input *file, t_exec *exec, t_env *env);
@@ -75,5 +76,10 @@ char	*create_env_string(char *key, char *value);
 void	free_env_array(char **env_array, int count);
 
 char	*expand_env_vars_in_str(char *str, t_env *env);
+
+void	expand_wildcards_in_tokens(t_input *arg_lst);
+void	replace_token_arg(t_input *tmp, char **expanded);
+void	free_expanded_array(char **expanded);
+t_input	*add_remaining_tokens(t_input *tmp, char **expanded, int token);
 
 #endif

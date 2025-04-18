@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 11:27:48 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/18 19:16:46 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/18 19:35:02 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include "libft.h"
-# include "bomboshell.h"
+# include "bombosignal.h"
 
 # define SPACES 0
 # define PIPE 1

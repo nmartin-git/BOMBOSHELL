@@ -1,0 +1,12 @@
+{
+	"files.associations": {
+		"builtins.h": "c",
+		"history.h": "c",
+		"bombosignal.h": "c",
+		"exec.h": "c",
+		"parsing.h": "c",
+		"libft.h": "c",
+		"wildcard.h": "c",
+		"fcntl.h": "c"
+	}
+}
