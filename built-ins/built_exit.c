@@ -6,11 +6,11 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 19:37:32 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/06 16:31:15 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/16 23:07:50 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "built-ins.h"
+#include "builtins.h"
 
 int	ft_is_number(char *str)
 {

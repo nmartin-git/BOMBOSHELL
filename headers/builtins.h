@@ -1,21 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   bomboshell.h                                       :+:      :+:    :+:    */
+/*   builtins.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   */
-/*   Created: 2025/03/13 19:10:53 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/13 19:22:46 by nmartin          ###   ########.fr       */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/14 18:57:14 by nmartin           #+#    #+#             */
+/*   Updated: 2025/04/18 14:24:47 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef BUILT_INS_H
-# define BUILT_INS_H
+#ifndef BUILTINS_H
+# define BUILTINS_H
 
 # include <stdio.h>
 # include <limits.h>
+# include <sys/wait.h>
 # include "libft.h"
+
+# define PATH_MAX_ANANAS 4096
 
 // liste env
 typedef struct s_env
@@ -34,7 +37,19 @@ typedef struct s_shell
 	char				**command;
 }						t_shell;
 
-int						execute_builtin(t_env **env, char *cmd);
+typedef struct s_exec {
+	int				pid;
+	int				input;
+	int				output;
+	int				pid_to_wait;
+	int				exec_both;
+	struct s_exec	*next;
+}	t_exec;
+
+void					free_exec_lst(t_exec *exec_lst);
+void					fd_builtin(t_exec *exec);
+t_shell					*set_t_shell(t_env *env, char *cmd);
+void					execute_builtin(t_env **env, char *cmd, t_exec *exec);
 t_env					*init_env(char **envp);
 
 // builtin
@@ -43,7 +58,7 @@ int						ft_pwd(t_shell *shell);
 int						ft_exit(t_shell *shell);
 int						ft_env(t_env *list);
 int						ft_unset(t_shell *shell);
-int						ft_export(t_shell *shell);
+int						ft_export(t_shell *shell, char *str);
 int						ft_echo(t_shell *shell);
 
 // builtin utils

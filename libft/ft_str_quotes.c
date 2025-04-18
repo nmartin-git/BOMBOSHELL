@@ -1,42 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strjoin_free.c                                  :+:      :+:    :+:   */
+/*   ft_str_quotes.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/21 15:41:49 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/12 15:47:08 by nmartin          ###   ########.fr       */
+/*   Created: 2025/04/10 21:19:13 by nmartin           #+#    #+#             */
+/*   Updated: 2025/04/12 16:42:51 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strjoin_free(char *s1, char *s2)
+char	*ft_str_quotes(char *str, char start, char end)
 {
+	char	*result;
 	int		len;
 	int		i;
-	int		y;
-	char	*str;
 
-	len = ft_strlen((char *)s1) + ft_strlen((char *)s2);
-	str = malloc(sizeof(char) * (len + 1));
-	if (str == NULL)
+	i = -1;
+	if (!str)
 		return (NULL);
-	i = 0;
-	y = 0;
-	while (s1 && s1[i])
-	{
-		str[i] = s1[i];
-		i++;
-	}
-	while (s2 && s2[y])
-	{
-		str[i + y] = s2[y];
-		y++;
-	}
-	str[i + y] = '\0';
-	free(s1);
-	free(s2);
-	return (str);
+	len = ft_strlen(str) + 3;
+	result = malloc(sizeof(char) * len);
+	if (!result)
+		return (NULL);
+	result[0] = start;
+	while (str[++i])
+		result[i + 1] = str[i];
+	result[i + 1] = end;
+	result [i + 2] = '\0';
+	free(str);
+	return (result);
 }

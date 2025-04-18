@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 11:45:55 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/06 17:55:13 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/14 17:06:49 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,7 @@ int	main(int ac, char **av, char **envp)
 	t_input	*arg_lst;
 	t_env	*env;
 
-	(void)av;
-	if (ac > 1)
+	if (ac > 1 && av)
 	{
 		write(2, "bomboshell: too many arguments\n", 31);
 		return (2);
@@ -47,11 +46,12 @@ int	main(int ac, char **av, char **envp)
 			break ;
 		arg_lst = NULL;
 		if (parsing(input, &arg_lst) && arg_lst)
-			exec(&arg_lst, &env);
+			exec(&arg_lst, &env, NULL);
 		lsts_free(arg_lst);
 		if (!only_space(input))
 			add_history(input);
 		free(input);
 	}
+	free_env(env);
 	rl_clear_history();
 }
