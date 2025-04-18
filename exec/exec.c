@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 18:07:27 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/16 23:10:12 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/18 14:43:55 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ void	handle_exec(t_input *cmd, t_input *file, t_exec *exec_lst, t_env **env)
 			close (exec_lst->input);
 		else if (exec_lst->output > 2)
 			close (exec_lst->output);
+		exec_lst->pid = -1;
 		return ;
 	}
 	ppx_exit(pid = fork(), "Fork failed", NULL, 1);//TODO gerer l'erreur
@@ -161,6 +162,8 @@ int exec(t_input **arg_lst, t_env **env, t_exec *exec_lst)
 	expand_env_var(*arg_lst, *env);
 	files_tokenisation(arg_lst, NULL);
 	cmd_tokenisation(*arg_lst);
+	if (paranthesis_parsing(arg_lst))
+		return(2);
 	tmp = *arg_lst;
 	files = *arg_lst;
 	exec_lst = exec_init(*arg_lst, NULL, NULL);

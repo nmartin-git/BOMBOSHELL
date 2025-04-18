@@ -6,11 +6,28 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 17:24:54 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/16 22:54:58 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/18 14:57:29 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
+
+int	paranthesis_parsing(t_input **arg_lst)
+{
+	t_input	*tmp;
+	t_input	*prev;
+
+	prev = NULL;
+	tmp = *arg_lst;
+	while (tmp)
+	{
+		if (tmp->token == PARANTHESIS && prev
+			&& (prev->token != PIPE || prev->token != BOOL))
+		if (tmp->token != SPACES && tmp->token != PARANTHESIS)
+			prev = tmp;
+		tmp = tmp->next;
+	}
+}
 
 void	next_cmd(t_input **files, t_exec **exec_tmp)
 {
@@ -94,8 +111,8 @@ t_exec *exec_init(t_input *arg_lst, t_exec *exec_lst, t_exec *tmp)
 					exit(127); // TODO gerer l'erreur
 				tmp = tmp->next;
 			}
-			(tmp->input = STDIN_FILENO, tmp->output = STDOUT_FILENO);
-			tmp->first = exec_lst;
+			tmp->input = STDIN_FILENO;
+			tmp->output = STDOUT_FILENO;
 			tmp->next = NULL;
 		}
 		arg_lst = arg_lst->next;

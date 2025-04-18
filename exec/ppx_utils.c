@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 19:10:28 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/16 22:23:44 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/18 14:31:39 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,13 @@ int	exec_wait(t_exec *exec)
 	first = exec;
 	while (exec)
 	{
-		waitpid(exec->pid, &status, 0);
-		//last_exit_code = WEXITSTATUS(status) //TODO
+		if (exec->pid == -1)
+			return (0);//last_exit_code = 1//TODO
+		else
+		{
+			waitpid(exec->pid, &status, 0);
+			//last_exit_code = WEXITSTATUS(status) //TODO
+		}
 		exec = exec->next;
 	}
 	free_exec_lst(first);
