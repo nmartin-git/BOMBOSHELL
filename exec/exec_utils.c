@@ -6,16 +6,142 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 17:24:54 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/06 14:06:09 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/16 22:54:58 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
-t_exec	*exec_init(t_input *arg_lst, t_exec *exec_lst)
+void	next_cmd(t_input **files, t_exec **exec_tmp)
 {
-	t_exec	*tmp;
+	while (*files && (*files)->token != PIPE && (*files)->token != BOOL)
+		*files = (*files)->next;
+	if ((*exec_tmp)->next && *files && (*files)->token == BOOL)
+	{
+		(*exec_tmp)->next->pid_to_wait = (*exec_tmp)->pid;
+		if ((*files)->arg[0] == '&')
+			(*exec_tmp)->next->exec_both = 1;
+		else
+			(*exec_tmp)->next->exec_both = 0;
+	}
+	else if ((*exec_tmp)->next)
+		(*exec_tmp)->next->pid_to_wait = 0;
+	*exec_tmp = (*exec_tmp)->next;
+}
 
+int	count_valid_env_entries(t_env *env_list)
+{
+	int		count;
+	t_env	*current;
+
+	count = 0;
+	current = env_list;
+	while (current)
+	{
+		if (current->value)
+			count++;
+		current = current->next;
+	}
+	return (count);
+}
+
+char	*create_env_string(char *key, char *value)
+{
+	int		count;
+	char	*env_str;
+
+	count = ft_strlen(key) + ft_strlen(value) + 2;
+	env_str = (char *)malloc(sizeof(char) * count);
+	if (!env_str)
+		return (NULL);
+	ft_strlcpy(env_str, key, ft_strlen(key) + 1);
+	ft_strlcat(env_str, "=", ft_strlen(env_str) + 2);
+	ft_strlcat(env_str, value, ft_strlen(env_str) + ft_strlen(value) + 1);
+	return (env_str);
+}
+
+void	free_env_array(char **env_array, int count)
+{
+	while (--count >= 0)
+		free(env_array[count]);
+	free(env_array);
+}
+
+char	**env_to_array(t_env *env_list)
+{
+	int		count;
+	t_env	*current;
+	char	**env_array;
+	int		i;
+
+	count = count_valid_env_entries(env_list);
+	env_array = (char **)malloc(sizeof(char *) * (count + 1));
+	if (!env_array)
+		return (NULL);
+	current = env_list;
+	i = 0;
+	while (current)
+	{
+		if (current->value)
+		{
+			env_array[i] = create_env_string(current->key, current->value);
+			if (!env_array[i])
+				return (free_env_array(env_array, i), NULL);
+			i++;
+		}
+		current = current->next;
+	}
+	env_array[i] = NULL;
+	return (env_array);
+}
+
+static char	*get_var_value(char *str, int *i, t_env *env)
+{
+	char	*var_start;
+	char	*var_name;
+	char	*var_value;
+
+	var_start = &str[*i + 1];
+	while (ft_isalnum(str[*i + 1]) || str[*i + 1] == '_')
+		(*i)++;
+	var_name = ft_strndup(var_start, &str[*i] - var_start);
+	var_value = get_env_value(env, var_name);
+	free(var_name);
+	if (!var_value)
+		return (ft_strdup(""));
+	return (ft_strdup(var_value));
+}
+
+static char	*append_char_to_result(char *result, char c)
+{
+	char	*single_char;
+	char	*new_result;
+
+	single_char = ft_strndup(&c, 1);
+	new_result = ft_strjoin_free(result, single_char);
+	return (new_result);
+}
+
+char	*expand_env_vars_in_str(char *str, t_env *env)
+{
+	char	*result;
+	int		i;
+
+	result = ft_strdup("");
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '$' && (ft_isalpha(str[i + 1]) || str[i + 1] == '_'))
+			result = ft_strjoin_free(result, get_var_value(str, &i, env));
+		else
+			result = append_char_to_result(result, str[i]);
+		i++;
+	}
+	return (result);
+}
+
+t_exec	*exec_init(t_input *arg_lst, t_exec *exec_lst, t_exec *tmp)
+{
 	while (arg_lst)
 	{
 		if (arg_lst->token == CMD)
@@ -24,71 +150,21 @@ t_exec	*exec_init(t_input *arg_lst, t_exec *exec_lst)
 			{
 				exec_lst = malloc(sizeof(t_exec));
 				if (!exec_lst)
-					exit (127);//TODO gerer l'erreur
+					exit(127); // TODO gerer l'erreur
 				tmp = exec_lst;
 			}
 			else
 			{
 				tmp->next = malloc(sizeof(t_exec));
 				if (!tmp->next)
-					exit (127);//TODO gerer l'erreur
+					exit(127); // TODO gerer l'erreur
 				tmp = tmp->next;
 			}
+			(tmp->input = STDIN_FILENO, tmp->output = STDOUT_FILENO);
+			tmp->first = exec_lst;
 			tmp->next = NULL;
 		}
 		arg_lst = arg_lst->next;
 	}
 	return (exec_lst);
-}
-
-char	*exec_envset(char **env, char *cmd)
-{
-	int		i;
-	char	**path;
-	char	*cmd_path;
-	char	*tmp;
-
-	i = 0;
-	while (env[i] && ft_strncmp(env[i], "PATH=", 5) != 0)
-		i++;
-	if (!env[i] || !cmd)
-		return (cmd);
-	path = ft_split(&env[i][5], ':');
-	if (!path)
-		return (cmd);
-	i = 0;
-	while (path[i])
-	{
-		tmp = ft_strjoin(path[i], "/");
-		cmd_path = ft_strjoin(tmp, cmd);
-		free(tmp);
-		if (access(cmd_path, F_OK | X_OK) == 0)
-			return (ft_free_tab(path), cmd_path);
-		free(cmd_path);
-		i++;
-	}
-	return (ft_free_tab(path), cmd);
-}
-
-void    exec_cmd(t_input *arg_lst, int input, int output)
-{
-    char    **env = NULL;
-    char	**cmd;
-    char	*env_set;
-
-	cmd = ft_split(arg_lst->arg, ' ');
-    //env = env_in_tab;
-	dup2(input, STDIN_FILENO);
-	close(input);
-	dup2(output, STDOUT_FILENO);
-	close(output);
-	env_set = exec_envset(env, cmd[0]);
-	if (cmd && cmd[0])
-		execve(env_set, cmd, env);
-	ft_printf_fd(2, "pipex : command not found : %s\n", cmd[0]);
-	if (env_set != cmd[0])
-		free(env_set);
-	ft_free_tab(cmd);
-	ft_free_tab(env);
-	exit(127);//TODO gerer l'erreur
 }

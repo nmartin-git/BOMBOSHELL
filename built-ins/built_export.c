@@ -6,52 +6,57 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 19:37:52 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/06 16:27:36 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/16 21:46:07 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "built-ins.h"
+#include "builtins.h"
 
-static void	handle_export_arg(t_env *env, char *arg)
+static int	handle_export_arg(t_env *env, char *cmd)
 {
 	char	*equals;
 	char	*key;
 	char	*value;
-	char	*expanded_key;
+	char	*trimmed_value;
 
-	equals = ft_strchr(arg, '=');
-	expanded_key = NULL;
-	if (!equals)
-	{
-		if (arg[0] == '$')
-		{
-			expanded_key = get_env_value(env, arg + 1);
-			if (is_valid_identifier(arg) && expanded_key)
-				set_env_value(env, arg, NULL);
-			else
-				printf("export: '%s': not a valid identifier\n", arg);
-		}
-		else if (is_valid_identifier(arg))
-			set_env_value(env, arg, NULL);
-		else
-			printf("export: '%s': not a valid identifier\n", arg);
-		return ;
-	}
+	equals = ft_strchr(cmd, '=');
+	if (!equals || equals == cmd || *(equals + 1) == '\0')
+		return (print_invalid_id_error(cmd, NULL), 1);
 	*equals = '\0';
-	key = arg;
+	key = cmd;
 	value = equals + 1;
-	if (key[0] == '$')
+	if (!is_valid_identifier(key))
 	{
-		expanded_key = get_env_value(env, key + 1);
-		if (expanded_key && is_valid_identifier(expanded_key))
-			set_env_value(env, expanded_key, value);
-		else
-			printf("export: '%s': not a valid identifier\n", arg);
+		*equals = '=';
+		return (print_invalid_id_error(key, NULL), 1);
 	}
-	else if (is_valid_identifier(key))
-		set_env_value(env, key, value);
-	else
-		printf("export: '%s': not a valid identifier\n", arg);
+	trimmed_value = trim_quotes(value);
+	if (!trimmed_value)
+	{
+		*equals = '=';
+		return (print_invalid_id_error(value, NULL), 1);
+	}
+	(set_env_value(env, key, trimmed_value), free(trimmed_value));
+	*equals = '=';
+	return (0);
+}
+
+static void	handle_multiple_exports(t_env *env, char *command)
+{
+	char	**pairs;
+	int		i;
+
+	pairs = split_sous_stero(&command);
+	if (!pairs)
+		return ;
+	i = 0;
+	while (pairs[i])
+	{
+		handle_export_arg(env, pairs[i]);
+		free(pairs[i]);
+		i++;
+	}
+	free(pairs);
 }
 
 static void	print_exports(t_env *env)
@@ -61,7 +66,7 @@ static void	print_exports(t_env *env)
 	current = env;
 	while (current)
 	{
-		printf("declare -x %s", current->key);
+		printf("export %s", current->key);
 		if (current->value)
 			printf("=\"%s\"", current->value);
 		printf("\n");
@@ -69,20 +74,18 @@ static void	print_exports(t_env *env)
 	}
 }
 
-int	ft_export(t_shell *cmd)
+int	ft_export(t_shell *cmd, char *command)
 {
-	int	i;
+	int	exit_status;
 
+	exit_status = 0;
 	if (!cmd->command[1])
 	{
 		print_exports(cmd->env_vars);
 		return (0);
 	}
-	i = 1;
-	while (cmd->command[i])
-	{
-		handle_export_arg(cmd->env_vars, cmd->command[i]);
-		i++;
-	}
-	return (0);
+	if (ft_strncmp(command, "export ", 7) == 0)
+		command += 7;
+	handle_multiple_exports(cmd->env_vars, command);
+	return (exit_status);
 }

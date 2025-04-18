@@ -6,11 +6,11 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 00:36:18 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/04 22:43:30 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/14 19:01:27 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "built-ins.h"
+#include "builtins.h"
 
 t_env	*new_env(char *key, char *value)
 {
@@ -25,6 +25,7 @@ t_env	*new_env(char *key, char *value)
 	env->next = NULL;
 	return (env);
 }
+
 void	add_env(t_env **env_list, t_env *new)
 {
 	t_env	*current;
@@ -56,6 +57,7 @@ void	free_env(t_env *env)
 		current = next;
 	}
 }
+
 char	*get_env_value(t_env *env, char *key)
 {
 	t_env	*current;
@@ -63,7 +65,7 @@ char	*get_env_value(t_env *env, char *key)
 	current = env;
 	while (current)
 	{
-		if (!ft_strncmp(current->key, key, ft_strlen(key)))
+		if (ft_strncmp(current->key, key, ft_strlen(key) + 1) == 0)
 			return (current->value);
 		current = current->next;
 	}
@@ -92,4 +94,31 @@ void	set_env_value(t_env *env, char *key, char *value)
 		current = current->next;
 	}
 	add_env(head, new_env(key, value));
+}
+
+int	print_invalid_id_error(char *arg, char *var)
+{
+	if (!var)
+		printf("export: '%s': not a valid identifier\n", arg);
+	else
+		printf("%s: '%s': not a valid identifier\n", arg, var);
+	return (1);
+}
+
+char	*trim_quotes(char *value)
+{
+	size_t	len;
+	char	*new_value;
+
+	len = ft_strlen(value);
+	if (len >= 2 && ((value[0] == '"' && value[len - 1] == '"')
+			|| (value[0] == '\'' && value[len - 1] == '\'')))
+	{
+		new_value = ft_substr(value, 1, len - 2);
+		return (new_value);
+	}
+	else if ((value[0] == '"' || value[0] == '\'') && value[len
+			- 1] != value[0])
+		return (NULL);
+	return (ft_strdup(value));
 }

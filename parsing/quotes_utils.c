@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 16:40:33 by nmartin           #+#    #+#             */
-/*   Updated: 2025/03/24 14:04:49 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/15 18:16:08 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,14 +55,6 @@ void	get_last_quote(char quote, t_input **arg_lst)
 		arg_tmp = arg_tmp->next;
 	}
 	del_last_quote(del, arg_lst);
-	arg_tmp = *arg_lst;
-	while (arg_tmp)
-	{
-		printf("%s -> ", arg_tmp->arg);
-		arg_tmp = arg_tmp->next;
-	}
-	if (!arg_tmp)
-		printf("null\n");
 }
 
 void	unclosed_check(t_input **arg_lst)
