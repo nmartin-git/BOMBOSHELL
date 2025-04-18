@@ -6,11 +6,10 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 14:25:03 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/16 22:51:13 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/18 19:16:12 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "bomboshell.h"
 #include "builtins.h"
 
 void	free_exec_lst(t_exec *exec_lst)
@@ -58,7 +57,9 @@ t_shell	*set_t_shell(t_env *env, char *cmd)
 void	execute_builtin(t_env **env, char *cmd, t_exec *exec)
 {
 	t_shell	*command;
+	int		exit_code;
 
+	exit_code = 0;
 	command = set_t_shell(*env, cmd);
 	fd_builtin(exec);
 	if (ft_strncmp(command->command[0], "cd", 2) == 0)

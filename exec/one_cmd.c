@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 15:20:42 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/16 23:34:31 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/18 19:09:04 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,6 @@ int	exec_one_cmd(t_env **env, char *cmd, t_exec *exec)
 int	one_cmd(t_input *arg_lst, t_env **env, t_exec *exec_lst)
 {
 	t_input	*cmd;
-	int		exit_code;
 
 	cmd = arg_lst;
 	if (!exec_lst)
@@ -81,8 +80,7 @@ int	one_cmd(t_input *arg_lst, t_env **env, t_exec *exec_lst)
 	if (is_built_in(cmd->arg, 0))
 	{
 		set_fds(arg_lst, exec_lst, *env);
-		exit_code = exec_one_cmd(env, cmd->arg, exec_lst);
-		g_exit_status = exit_code;
+		g_exit_status = exec_one_cmd(env, cmd->arg, exec_lst);
 		free_exec_lst(exec_lst);
 		return (1);
 	}

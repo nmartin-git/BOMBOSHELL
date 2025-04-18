@@ -6,11 +6,10 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 19:37:32 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/16 23:07:50 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/18 19:17:55 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "bomboshell.h"
 #include "builtins.h"
 
 int	ft_is_number(char *str)

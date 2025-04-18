@@ -6,11 +6,10 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 19:36:54 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/14 19:01:36 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/18 19:18:15 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "bomboshell.h"
 #include "builtins.h"
 
 int	ft_cd(t_shell *cmd)

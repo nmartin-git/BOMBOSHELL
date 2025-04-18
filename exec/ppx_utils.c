@@ -6,11 +6,10 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 19:10:28 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/16 22:23:44 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/18 19:09:17 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "bomboshell.h"
 #include "exec.h"
 
 int	exec_wait(t_exec *exec)
@@ -18,7 +17,6 @@ int	exec_wait(t_exec *exec)
 	int		status;
 	t_exec	*first;
 
-	// g_exit_status	g_exit_status;
 	first = exec;
 	while (exec)
 	{
@@ -33,7 +31,7 @@ int	exec_wait(t_exec *exec)
 	return (g_exit_status);
 }
 
-void	ppx_exit(int err, const char *str, int *fd_pipe)
+void	ppx_exit(int err, const char *str, int *fd_pipe, int status)
 {
 	if (err == -1)
 	{
@@ -43,7 +41,8 @@ void	ppx_exit(int err, const char *str, int *fd_pipe)
 			close(fd_pipe[0]);
 			close(fd_pipe[1]);
 		}
-		exit(g_exit_status);
+		g_exit_status = status;
+		exit(status);
 	}
 }
 
@@ -90,13 +89,12 @@ char	*exec_envset(char **env, char *cmd)
 	return (ft_free_tab(path), cmd);
 }
 
-void	exec_cmd(t_input *arg_lst, t_env *env_chained, t_exec *exec)
+void exec_cmd(t_input *arg_lst, t_env *env_chained, t_exec *exec)
 {
-	char	**env;
-	char	**cmd;
-	char	*env_set;
+	char **env;
+	char **cmd;
+	char *env_set;
 
-	default_sig();
 	env_set = NULL;
 	cmd = ft_split(arg_lst->arg, ' ');
 	env = env_to_array(env_chained);

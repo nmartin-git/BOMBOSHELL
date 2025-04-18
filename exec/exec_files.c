@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:35:53 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/14 18:16:04 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/18 19:13:55 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,9 @@ int	ppx_here_doc(t_input *arg, t_env *env)
 
 	(void)env;
 	str = NULL;
-	ppx_exit(pipe(fd_pipe), "Failed opening the pipe", NULL);
+	ppx_exit(pipe(fd_pipe), "Failed opening the pipe", NULL, 1);
 	// TODO gerer exit code
-	ppx_exit(pid = fork(), "Fork failed", fd_pipe);
+	ppx_exit(pid = fork(), "Fork failed", fd_pipe, 1);
 	// TODO gerer exit code
 	if (pid == 0)
 	{
@@ -49,7 +49,7 @@ int	ppx_here_doc(t_input *arg, t_env *env)
 			(free(str), ft_printf("> "));
 			str = get_next_line(0);
 		}
-		(free(str), close(fd_pipe[1]));
+		free(str);
 		exit(0);
 	}
 	return (here_doc_exit(pid, fd_pipe));
@@ -114,12 +114,11 @@ void	set_fds(t_input *file, t_exec *exec, t_env *env)
 			exec->output = fd_output(file, exec);
 		else if (exec->output == STDOUT_FILENO && file->token == PIPE)
 		{
-			ppx_exit(pipe(fd_pipe), "Failed opening the pipe", NULL);
-			// TODO gerer l'erreur
+			ppx_exit(pipe(fd_pipe), "Failed opening the pipe", NULL, 1);//TODO gerer l'erreur
 			exec->next->input = fd_pipe[0];
 			exec->output = fd_pipe[1];
 		}
-		if (!file->next || file->token == BOOL || file->token == PIPE)
+		if (!file->next || file->token == BOOL || file->token  == PIPE)
 			return ;
 		file = file->next;
 	}

@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 18:07:27 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/16 23:10:12 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/18 19:10:44 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ void	handle_exec(t_input *cmd, t_input *file, t_exec *exec_lst, t_env **env)
 	status = 0;
 	set_fds(file, exec_lst, *env);
 	default_sig();
-	// TODO supp printf("%d %d\n", exec_lst->input, exec_lst->output);
 	if (exec_lst->input == -1 || exec_lst->output == -1)
 	{
 		if (exec_lst->input > 2)
@@ -72,7 +71,7 @@ void	handle_exec(t_input *cmd, t_input *file, t_exec *exec_lst, t_env **env)
 			close(exec_lst->output);
 		return ;
 	}
-	ppx_exit(pid = fork(), "Fork failed", NULL); // TODO gerer l'erreur
+	ppx_exit(pid = fork(), "Fork failed", NULL, 1); // TODO gerer l'erreur
 	if (pid != 0)
 		exec_lst->pid = pid;
 	if (pid == 0)
@@ -169,6 +168,10 @@ int	exec(t_input **arg_lst, t_env **env, t_exec *exec_lst)
 	expand_wildcards_in_tokens(*arg_lst);
 	files_tokenisation(arg_lst, NULL);
 	cmd_tokenisation(*arg_lst);
+	print_tokens(*arg_lst);
+	if (!paranthesis_parsing(arg_lst, *arg_lst, NULL))
+		return (2);
+	print_tokens(*arg_lst);
 	tmp = *arg_lst;
 	files = *arg_lst;
 	exec_lst = exec_init(*arg_lst, NULL, NULL);

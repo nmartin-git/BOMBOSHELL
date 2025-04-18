@@ -14,7 +14,6 @@
 # define WILDCARD_H
 
 # include "bomboshell.h"
-//# include "exec.h"
 # include "libft.h"
 # include <dirent.h>
 # include <stdio.h>
