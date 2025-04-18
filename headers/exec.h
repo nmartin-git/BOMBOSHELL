@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 13:53:26 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/16 21:11:04 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/18 18:08:23 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,10 @@ void	del_spaces(t_input *tmp);
 void	files_tokenisation(t_input **arg_lst, t_input *prev);
 void	cmd_word_order(t_input *arg, t_input *del, t_input *cmd, t_input *pre);
 void	cmd_tokenisation(t_input *arg_lst);
+
+void	del_paranthesis(t_input **arg_lst, t_input *del, t_input *prev);
+int		paranthesis_bool(t_input **arg_lst, t_input *tmp, t_input *pre, int i);
+int		paranthesis_parsing(t_input **arg_lst, t_input *tmp, t_input *prev);
 
 void	next_cmd(t_input **files, t_exec **exec_tmp);
 char 	**env_to_array(t_env *env_list);
