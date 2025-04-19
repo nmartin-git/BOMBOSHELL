@@ -6,27 +6,72 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 17:24:54 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/18 19:13:02 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/19 17:02:39 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
+void	skip_bool(t_input **files, t_exec **exec_tmp)
+{
+	while (*files)
+	{
+		if (*files && (*files)->token == BOOL)
+		{
+			*files = (*files)->next;
+			while (*files && (*files)->token == SPACES)
+				*files = (*files)->next;
+			if (*files && (*files)->token == PARANTHESIS)
+				break;
+			while (*files && (*files)->token != BOOL)
+			{
+				if (*exec_tmp && (*files)->token == CMD)
+					*exec_tmp = (*exec_tmp)->next;
+				*files = (*files)->next;
+			}
+		}
+		else if (*files && (*files)->token == PARANTHESIS
+			&& (*files)->arg[0] == '(')
+		{
+			while (*files && (*files)->token == PARANTHESIS
+				&& (*files)->arg[0] != ')')
+			{
+				if (*exec_tmp && (*files)->token == CMD)
+					*exec_tmp = (*exec_tmp)->next;
+				*files = (*files)->next;
+			}
+		}
+		else
+		{
+			while (*files && (*files)->token == SPACES)
+				*files = (*files)->next;
+			if (!*files
+				|| ((*files)->token != BOOL && (*files)->token != PARANTHESIS))
+				break;
+		}
+	}
+}
+
 void	next_cmd(t_input **files, t_exec **exec_tmp)
 {
 	while (*files && (*files)->token != PIPE && (*files)->token != BOOL)
 		*files = (*files)->next;
-	if ((*exec_tmp)->next && *files && (*files)->token == BOOL)
+	if (*files && (*files)->token == BOOL)
 	{
-		(*exec_tmp)->next->pid_to_wait = (*exec_tmp)->pid;
-		if ((*files)->arg[0] == '&')
-			(*exec_tmp)->next->exec_both = 1;
-		else
-			(*exec_tmp)->next->exec_both = 0;
+		if ((*exec_tmp)->next && *files && (*files)->token == BOOL)
+		{
+			(*exec_tmp)->next->pid_to_wait = (*exec_tmp)->pid;
+			if ((*files)->arg[0] == '&')
+				(*exec_tmp)->next->exec_both = 1;
+			else
+				(*exec_tmp)->next->exec_both = 0;
+		}
+		else if ((*exec_tmp)->next && (*files)->token == BOOL)
+			(*exec_tmp)->next->pid_to_wait = 0;
+		skip_bool(files, exec_tmp);
 	}
-	else if ((*exec_tmp)->next)
-		(*exec_tmp)->next->pid_to_wait = 0;
-	*exec_tmp = (*exec_tmp)->next;
+	if (*exec_tmp)
+		*exec_tmp = (*exec_tmp)->next;
 }
 
 int	count_valid_env_entries(t_env *env_list)
@@ -104,7 +149,7 @@ static char	*get_var_value(char *str, int *i, t_env *env)
 	var_start = &str[*i + 1];
 	while (ft_isalnum(str[*i + 1]) || str[*i + 1] == '_')
 		(*i)++;
-	var_name = ft_strndup(var_start, &str[*i] - var_start);
+	var_name = ft_strndup(var_start, &str[*i] - var_start + 1);
 	var_value = get_env_value(env, var_name);
 	free(var_name);
 	if (!var_value)
@@ -137,6 +182,7 @@ char	*expand_env_vars_in_str(char *str, t_env *env)
 			result = append_char_to_result(result, str[i]);
 		i++;
 	}
+	free (str);
 	return (result);
 }
 

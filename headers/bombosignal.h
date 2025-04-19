@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 19:26:38 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/18 19:35:47 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/19 16:48:25 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <string.h>
+# include <sys/wait.h>
 
 extern int	g_exit_status;
 

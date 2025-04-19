@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 18:07:27 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/18 20:02:44 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/19 16:38:49 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,8 +186,10 @@ int	exec(t_input **arg_lst, t_env **env, t_exec *exec_lst)
 	{
 		if (tmp->token == CMD)
 		{
-			if (files != *arg_lst)
+			if (files && files != *arg_lst)
 				files = files->next;
+			if (!files)
+				break;
 			handle_exec(tmp, files, exec_tmp, env);
 			next_cmd(&files, &exec_tmp);
 		}

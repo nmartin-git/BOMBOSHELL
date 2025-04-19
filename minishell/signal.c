@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 23:51:48 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/18 19:33:11 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/19 16:47:55 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ static void	handle_sigint(int sig)
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
+	if (wait(NULL) != -1)
+		printf("\n");
 }
 
 // static void	handle_sigquit(int sig)

@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:35:53 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/18 19:13:55 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/19 16:55:13 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,11 @@ static int	here_doc_exit(int pid, int fd_pipe[2])
 	int	status;
 
 	waitpid(pid, &status, 0);
+	close(fd_pipe[1]);
 	if (WIFEXITED(status) && WEXITSTATUS(status) == 130)
 	{
 		g_exit_status = 130;
-		close(fd_pipe[1]);
+		close(fd_pipe[0]);
 		return (-1);
 	}
 	return (fd_pipe[0]);
@@ -45,11 +46,13 @@ int	ppx_here_doc(t_input *arg, t_env *env)
 		while (!ppx_cmp(arg->arg, str))
 		{
 			if (str)
+				str = expand_env_vars_in_str(str, env);
+			if (str)
 				ft_printf_fd(fd_pipe[1], "%s", str);
 			(free(str), ft_printf("> "));
 			str = get_next_line(0);
 		}
-		free(str);
+		(free(str), close(fd_pipe[1]));
 		exit(0);
 	}
 	return (here_doc_exit(pid, fd_pipe));
