@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 18:07:27 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/19 16:38:49 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/19 19:36:56 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ void	handle_exec(t_input *cmd, t_input *file, t_exec *exec_lst, t_env **env)
 	int	pid;
 
 	status = 0;
+	printf("m\n");
 	set_fds(file, exec_lst, *env);
 	default_sig();
 	if (exec_lst->input == -1 || exec_lst->output == -1)
@@ -146,8 +147,9 @@ void	expand_env_var(t_input *arg_lst, t_env *env)
 					i++;
 				if (arg_lst->arg[i] == '$')
 				{
-					if (ft_isalpha(arg_lst->arg[i + 1]) || arg_lst->arg[i
-						+ 1] == '?' || arg_lst->arg[i + 1] == '_')
+					if (ft_isalpha(arg_lst->arg[i + 1])
+						|| arg_lst->arg[i + 1] == '?'
+						|| arg_lst->arg[i + 1] == '_')
 						replace_env_var(arg_lst, env, i + 1);
 					else
 						i++;
@@ -186,12 +188,14 @@ int	exec(t_input **arg_lst, t_env **env, t_exec *exec_lst)
 	{
 		if (tmp->token == CMD)
 		{
+			if (exec_tmp == exec_lst)
+				skip_bool(&files, &exec_tmp);
 			if (files && files != *arg_lst)
 				files = files->next;
-			if (!files)
-				break;
 			handle_exec(tmp, files, exec_tmp, env);
 			next_cmd(&files, &exec_tmp);
+			if (!exec_tmp)
+				break;
 		}
 		tmp = tmp->next;
 	}

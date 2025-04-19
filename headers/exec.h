@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 13:53:26 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/18 19:43:53 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/19 19:36:10 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@
 # define CMD 13
 
 void	print_tokens(t_input *arg_lst); // TODO supp
+
+void	skip_bool(t_input **files, t_exec **exec_tmp);
 
 void	handle_exec(t_input *cmd, t_input *files, t_exec *exec, t_env **env);
 char	*get_env_var(char *arg, t_env *env, int *y);

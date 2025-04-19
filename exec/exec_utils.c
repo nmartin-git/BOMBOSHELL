@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 17:24:54 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/19 17:02:39 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/19 19:51:49 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 
 void	skip_bool(t_input **files, t_exec **exec_tmp)
 {
+	int	fd_pipe[2];
+
+	printf("-%s- %d\n", (*files)->arg, (*files)->token);
 	while (*files)
 	{
 		if (*files && (*files)->token == BOOL)
@@ -45,6 +48,14 @@ void	skip_bool(t_input **files, t_exec **exec_tmp)
 		{
 			while (*files && (*files)->token == SPACES)
 				*files = (*files)->next;
+			if (*files && (*files)->token == PIPE
+				&& *exec_tmp && (*exec_tmp)->next)
+			{
+				ppx_exit(pipe(fd_pipe), "Failed opening the pipe", NULL, 1);//TODO gerer l'erreur
+				(*exec_tmp)->next->input = fd_pipe[0];
+				(*exec_tmp)->output = fd_pipe[1];
+			}
+			printf("+%s+\n", (*files)->arg);
 			if (!*files
 				|| ((*files)->token != BOOL && (*files)->token != PARANTHESIS))
 				break;
@@ -54,8 +65,10 @@ void	skip_bool(t_input **files, t_exec **exec_tmp)
 
 void	next_cmd(t_input **files, t_exec **exec_tmp)
 {
+	printf("!%s!\n", (*files)->arg);
 	while (*files && (*files)->token != PIPE && (*files)->token != BOOL)
 		*files = (*files)->next;
+	printf("?%s?\n", (*files)->arg);
 	if (*files && (*files)->token == BOOL)
 	{
 		if ((*exec_tmp)->next && *files && (*files)->token == BOOL)
