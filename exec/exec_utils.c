@@ -6,17 +6,30 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 17:24:54 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/19 19:51:49 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/20 15:37:38 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
-void	skip_bool(t_input **files, t_exec **exec_tmp)
+void	skip_paranthesis(t_input **files, t_exec **exec_tmp)
+{
+	while (*files && !((*files)->token == PARANTHESIS
+		&& (*files)->arg[0] == ')'))
+	{
+		if (*exec_tmp && (*files)->token == CMD)
+			*exec_tmp = (*exec_tmp)->next;
+		*files = (*files)->next;
+		if ((*files)->token == PARANTHESIS && (*files)->arg[0] == '(')
+			skip_paranthesis(files, exec_tmp);
+	}
+	*files = (*files)->next;
+}
+
+void	skip_bool(t_input **files, t_exec **exec_tmp, t_input **tmp)
 {
 	int	fd_pipe[2];
 
-	printf("-%s- %d\n", (*files)->arg, (*files)->token);
 	while (*files)
 	{
 		if (*files && (*files)->token == BOOL)
@@ -24,26 +37,19 @@ void	skip_bool(t_input **files, t_exec **exec_tmp)
 			*files = (*files)->next;
 			while (*files && (*files)->token == SPACES)
 				*files = (*files)->next;
-			if (*files && (*files)->token == PARANTHESIS)
-				break;
-			while (*files && (*files)->token != BOOL)
+			if (*files && (*files)->token != PARANTHESIS)
 			{
-				if (*exec_tmp && (*files)->token == CMD)
-					*exec_tmp = (*exec_tmp)->next;
-				*files = (*files)->next;
+				while (*files && (*files)->token != BOOL)
+				{
+					if (*exec_tmp && (*files)->token == CMD)
+						*exec_tmp = (*exec_tmp)->next;
+					*files = (*files)->next;
+				}
 			}
 		}
 		else if (*files && (*files)->token == PARANTHESIS
 			&& (*files)->arg[0] == '(')
-		{
-			while (*files && (*files)->token == PARANTHESIS
-				&& (*files)->arg[0] != ')')
-			{
-				if (*exec_tmp && (*files)->token == CMD)
-					*exec_tmp = (*exec_tmp)->next;
-				*files = (*files)->next;
-			}
-		}
+			skip_paranthesis(files, exec_tmp);
 		else
 		{
 			while (*files && (*files)->token == SPACES)
@@ -55,7 +61,12 @@ void	skip_bool(t_input **files, t_exec **exec_tmp)
 				(*exec_tmp)->next->input = fd_pipe[0];
 				(*exec_tmp)->output = fd_pipe[1];
 			}
-			printf("+%s+\n", (*files)->arg);
+			if (tmp)
+			{
+				*tmp = *files;
+				while (*tmp && (*tmp)->token != CMD)
+					*tmp = (*tmp)->next;
+			}
 			if (!*files
 				|| ((*files)->token != BOOL && (*files)->token != PARANTHESIS))
 				break;
@@ -63,12 +74,10 @@ void	skip_bool(t_input **files, t_exec **exec_tmp)
 	}
 }
 
-void	next_cmd(t_input **files, t_exec **exec_tmp)
+void	next_cmd(t_input **files, t_exec **exec_tmp, t_input **tmp)
 {
-	printf("!%s!\n", (*files)->arg);
 	while (*files && (*files)->token != PIPE && (*files)->token != BOOL)
 		*files = (*files)->next;
-	printf("?%s?\n", (*files)->arg);
 	if (*files && (*files)->token == BOOL)
 	{
 		if ((*exec_tmp)->next && *files && (*files)->token == BOOL)
@@ -81,8 +90,9 @@ void	next_cmd(t_input **files, t_exec **exec_tmp)
 		}
 		else if ((*exec_tmp)->next && (*files)->token == BOOL)
 			(*exec_tmp)->next->pid_to_wait = 0;
-		skip_bool(files, exec_tmp);
+		skip_bool(files, exec_tmp, NULL);
 	}
+	*tmp = *files;
 	if (*exec_tmp)
 		*exec_tmp = (*exec_tmp)->next;
 }

@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 18:07:27 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/19 19:36:56 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/20 15:38:33 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ void	handle_exec(t_input *cmd, t_input *file, t_exec *exec_lst, t_env **env)
 	int	pid;
 
 	status = 0;
-	printf("m\n");
 	set_fds(file, exec_lst, *env);
 	default_sig();
 	if (exec_lst->input == -1 || exec_lst->output == -1)
@@ -189,15 +188,16 @@ int	exec(t_input **arg_lst, t_env **env, t_exec *exec_lst)
 		if (tmp->token == CMD)
 		{
 			if (exec_tmp == exec_lst)
-				skip_bool(&files, &exec_tmp);
+				skip_bool(&files, &exec_tmp, &tmp);
+			if (!exec_tmp)
+				break ;
 			if (files && files != *arg_lst)
 				files = files->next;
 			handle_exec(tmp, files, exec_tmp, env);
-			next_cmd(&files, &exec_tmp);
-			if (!exec_tmp)
-				break;
+			next_cmd(&files, &exec_tmp, &tmp);
 		}
-		tmp = tmp->next;
+		if (tmp)
+			tmp = tmp->next;
 	}
 	restore_signals();
 	return (exec_wait(exec_lst));

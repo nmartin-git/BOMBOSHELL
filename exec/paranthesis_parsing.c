@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 18:08:45 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/18 18:09:17 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/20 15:57:22 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,9 @@ int	paranthesis_parsing(t_input **arg_lst, t_input *tmp, t_input *prev)
 	paranthesis_nbr = 0;
 	while (tmp)
 	{
-		if (tmp->token == PARANTHESIS && tmp->arg[0] == '(' && prev
-			&& prev->token != PIPE && prev->token != BOOL)
+		if (tmp->token == PARANTHESIS && tmp->arg[0] == '('
+			&& prev && prev->token != PIPE && prev->token != BOOL
+			&& !(prev->token == PARANTHESIS && prev->arg[0] == '('))
 		{
 			write(2, "bomboshell: parse error near '('\n", 33);
 			return (0);
