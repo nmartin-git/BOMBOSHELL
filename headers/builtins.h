@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 18:57:14 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/18 19:34:49 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/20 19:33:47 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,10 @@ typedef struct s_exec
 	int				pid;
 	int				input;
 	int				output;
-	int				pid_to_wait;
 	int				exec_both;
-	struct s_exec	*first;
+	int				paranthesis;
+	int				order;
+	struct s_exec	*prev;
 	struct s_exec	*next;
 }					t_exec;
 

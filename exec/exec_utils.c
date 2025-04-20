@@ -6,27 +6,68 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 17:24:54 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/20 15:37:38 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/20 22:16:11 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
-void	skip_paranthesis(t_input **files, t_exec **exec_tmp)
+void	bool_output(t_exec *exec_tmp, int output)
 {
+	int	paranthesis;
+
+	paranthesis = exec_tmp->prev->paranthesis;
+	while (exec_tmp->prev && exec_tmp->prev->paranthesis == paranthesis)
+	{
+		exec_tmp->prev->output = output;
+		exec_tmp = exec_tmp->prev;
+	}
+}
+
+void	skip_paranthesis(t_input **files, t_exec **exec_tmp, int p, int order)
+{
+	int		fd_pipe[2];
+
 	while (*files && !((*files)->token == PARANTHESIS
 		&& (*files)->arg[0] == ')'))
 	{
 		if (*exec_tmp && (*files)->token == CMD)
+		{
+			(*files)->token = CMD_BOOL;
+			(*exec_tmp)->order = order;
+			(*exec_tmp)->paranthesis = p;
 			*exec_tmp = (*exec_tmp)->next;
+		}
+		if ((*exec_tmp) && *files && (*files)->token == BOOL)
+		{
+			if ((*files)->arg[0] == '&')
+				(*exec_tmp)->exec_both = 1;
+			else
+				(*exec_tmp)->exec_both = 0;
+		}
 		*files = (*files)->next;
 		if ((*files)->token == PARANTHESIS && (*files)->arg[0] == '(')
-			skip_paranthesis(files, exec_tmp);
+			skip_paranthesis(files, exec_tmp, p + 1, order);
 	}
 	*files = (*files)->next;
+	while (*files && (*files)->token == SPACES)
+			*files = (*files)->next;
+	if ((*exec_tmp) && *files && (*files)->token == BOOL)
+	{
+		if ((*files)->arg[0] == '&')
+			(*exec_tmp)->exec_both = 1;
+		else
+			(*exec_tmp)->exec_both = 0;
+	}
+	if (*files && (*files)->token == PIPE && *exec_tmp && p > 1)
+	{
+		ppx_exit(pipe(fd_pipe), "Failed opening the pipe", NULL, 1);//TODO gerer l'erreur
+		(*exec_tmp)->input = fd_pipe[0];
+		bool_output(*exec_tmp, fd_pipe[1]);
+	}
 }
 
-void	skip_bool(t_input **files, t_exec **exec_tmp, t_input **tmp)
+void	skip_bool(t_input **files, t_exec **exec_tmp, t_input **tmp, int *ordr)
 {
 	int	fd_pipe[2];
 
@@ -34,6 +75,13 @@ void	skip_bool(t_input **files, t_exec **exec_tmp, t_input **tmp)
 	{
 		if (*files && (*files)->token == BOOL)
 		{
+			if ((*exec_tmp))
+			{
+				if (*exec_tmp && (*files)->arg[0] == '&')
+					(*exec_tmp)->exec_both = 1;
+				else if (*exec_tmp)
+					(*exec_tmp)->exec_both = 0;
+			}
 			*files = (*files)->next;
 			while (*files && (*files)->token == SPACES)
 				*files = (*files)->next;
@@ -42,24 +90,31 @@ void	skip_bool(t_input **files, t_exec **exec_tmp, t_input **tmp)
 				while (*files && (*files)->token != BOOL)
 				{
 					if (*exec_tmp && (*files)->token == CMD)
+					{
+						(*files)->token = CMD_BOOL;
 						*exec_tmp = (*exec_tmp)->next;
+					}
 					*files = (*files)->next;
 				}
 			}
 		}
 		else if (*files && (*files)->token == PARANTHESIS
 			&& (*files)->arg[0] == '(')
-			skip_paranthesis(files, exec_tmp);
+		{
+			*ordr += 1;
+			skip_paranthesis(files, exec_tmp, 1, *ordr);
+		}
 		else
 		{
 			while (*files && (*files)->token == SPACES)
 				*files = (*files)->next;
+			printf("'%s'\n", (*files)->arg);
 			if (*files && (*files)->token == PIPE
 				&& *exec_tmp && (*exec_tmp)->next)
 			{
 				ppx_exit(pipe(fd_pipe), "Failed opening the pipe", NULL, 1);//TODO gerer l'erreur
-				(*exec_tmp)->next->input = fd_pipe[0];
-				(*exec_tmp)->output = fd_pipe[1];
+				(*exec_tmp)->input = fd_pipe[0];
+				bool_output(*exec_tmp, fd_pipe[1]);
 			}
 			if (tmp)
 			{
@@ -74,27 +129,33 @@ void	skip_bool(t_input **files, t_exec **exec_tmp, t_input **tmp)
 	}
 }
 
-void	next_cmd(t_input **files, t_exec **exec_tmp, t_input **tmp)
+void	next_cmd(t_input **files, t_exec **exec_tmp, t_input **tmp, int *order)
 {
 	while (*files && (*files)->token != PIPE && (*files)->token != BOOL)
 		*files = (*files)->next;
-	if (*files && (*files)->token == BOOL)
-	{
-		if ((*exec_tmp)->next && *files && (*files)->token == BOOL)
-		{
-			(*exec_tmp)->next->pid_to_wait = (*exec_tmp)->pid;
-			if ((*files)->arg[0] == '&')
-				(*exec_tmp)->next->exec_both = 1;
-			else
-				(*exec_tmp)->next->exec_both = 0;
-		}
-		else if ((*exec_tmp)->next && (*files)->token == BOOL)
-			(*exec_tmp)->next->pid_to_wait = 0;
-		skip_bool(files, exec_tmp, NULL);
-	}
-	*tmp = *files;
 	if (*exec_tmp)
 		*exec_tmp = (*exec_tmp)->next;
+	if (*files && (*files)->token == BOOL)
+	{
+		if ((*exec_tmp) && *files && (*files)->token == BOOL)
+		{
+			if ((*files)->arg[0] == '&')
+				(*exec_tmp)->exec_both = 1;
+			else
+				(*exec_tmp)->exec_both = 0;
+		}
+		skip_bool(files, exec_tmp, NULL, order);
+	}
+	*tmp = *files;
+	
+}
+
+void	close_fds(t_exec *exec_lst)
+{
+	if (exec_lst->input > 2)
+		close(exec_lst->input);
+	if (exec_lst->output > 2)
+		close(exec_lst->output);
 }
 
 int	count_valid_env_entries(t_env *env_list)
@@ -221,16 +282,20 @@ t_exec	*exec_init(t_input *arg_lst, t_exec *exec_lst, t_exec *tmp)
 				if (!exec_lst)
 					exit(127); // TODO gerer l'erreur
 				tmp = exec_lst;
+				tmp->prev = NULL;
 			}
 			else
 			{
 				tmp->next = malloc(sizeof(t_exec));
 				if (!tmp->next)
 					exit(127); // TODO gerer l'erreur
+				tmp->next->prev = tmp;
 				tmp = tmp->next;
 			}
 			tmp->input = STDIN_FILENO;
 			tmp->output = STDOUT_FILENO;
+			tmp->paranthesis = 0;
+			tmp->order = 0;
 			tmp->next = NULL;
 		}
 		arg_lst = arg_lst->next;

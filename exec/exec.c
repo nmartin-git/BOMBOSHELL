@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 18:07:27 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/20 15:38:33 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/20 22:30:57 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,20 +57,12 @@ void	print_tokens(t_input *arg_lst) // TODO supp
 
 void	handle_exec(t_input *cmd, t_input *file, t_exec *exec_lst, t_env **env)
 {
-	int	status;
 	int	pid;
 
-	status = 0;
 	set_fds(file, exec_lst, *env);
 	default_sig();
 	if (exec_lst->input == -1 || exec_lst->output == -1)
-	{
-		if (exec_lst->input > 2)
-			close(exec_lst->input);
-		else if (exec_lst->output > 2)
-			close(exec_lst->output);
-		return ;
-	}
+		return (close_fds(exec_lst));
 	ppx_exit(pid = fork(), "Fork failed", NULL, 1); // TODO gerer l'erreur
 	if (pid != 0)
 		exec_lst->pid = pid;
@@ -82,10 +74,7 @@ void	handle_exec(t_input *cmd, t_input *file, t_exec *exec_lst, t_env **env)
 		else
 			exec_cmd(cmd, *env, exec_lst);
 	}
-	if (exec_lst->input > 2)
-		close(exec_lst->input);
-	if (exec_lst->output > 2)
-		close(exec_lst->output);
+	close_fds(exec_lst);
 }
 
 char	*get_env_var(char *arg, t_env *env, int *y)
@@ -118,7 +107,7 @@ void	replace_env_var(t_input *arg_lst, t_env *env, int i)
 		if (arg_lst->arg[i] == '?')
 			expand = ft_itoa(g_exit_status);
 		else if (arg_lst->arg[i] == '$')
-			expand = ft_itoa(getpid());
+			expand = ft_strdup("P.DIDDY");
 		y++;
 	}
 	if (i > 1)
@@ -148,7 +137,8 @@ void	expand_env_var(t_input *arg_lst, t_env *env)
 				{
 					if (ft_isalpha(arg_lst->arg[i + 1])
 						|| arg_lst->arg[i + 1] == '?'
-						|| arg_lst->arg[i + 1] == '_')
+						|| arg_lst->arg[i + 1] == '_'
+						|| arg_lst->arg[i + 1] == '$')
 						replace_env_var(arg_lst, env, i + 1);
 					else
 						i++;
@@ -164,7 +154,9 @@ int	exec(t_input **arg_lst, t_env **env, t_exec *exec_lst)
 	t_input	*tmp;
 	t_input	*files;
 	t_exec	*exec_tmp;
+	int		order;
 
+	order = 0;
 	expand_env_var(*arg_lst, *env);
 	expand_wildcards_in_tokens(*arg_lst);
 	files_tokenisation(arg_lst, NULL);
@@ -188,17 +180,25 @@ int	exec(t_input **arg_lst, t_env **env, t_exec *exec_lst)
 		if (tmp->token == CMD)
 		{
 			if (exec_tmp == exec_lst)
-				skip_bool(&files, &exec_tmp, &tmp);
+				skip_bool(&files, &exec_tmp, &tmp, &order);
 			if (!exec_tmp)
 				break ;
 			if (files && files != *arg_lst)
 				files = files->next;
 			handle_exec(tmp, files, exec_tmp, env);
-			next_cmd(&files, &exec_tmp, &tmp);
+			next_cmd(&files, &exec_tmp, &tmp, &order);
 		}
 		if (tmp)
 			tmp = tmp->next;
 	}
+	exec_tmp = exec_lst;
+	while (exec_tmp)
+	{
+		printf("[%d (%d) in:%d out:%d] -> ", exec_tmp->paranthesis, exec_tmp->order, exec_tmp->input, exec_tmp->output);
+		exec_tmp = exec_tmp->next;
+	}
+	printf(" null\n");
+	exec_bool(exec_lst, *arg_lst, env);
 	restore_signals();
 	return (exec_wait(exec_lst));
 }

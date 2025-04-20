@@ -6,13 +6,13 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:35:53 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/19 16:55:13 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/20 21:47:40 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
-static int	here_doc_exit(int pid, int fd_pipe[2])
+int	here_doc_exit(int pid, int fd_pipe[2])
 {
 	int	status;
 

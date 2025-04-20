@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 15:20:42 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/18 19:09:04 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/20 17:37:04 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ int	one_cmd(t_input *arg_lst, t_env **env, t_exec *exec_lst)
 	cmd = arg_lst;
 	if (!exec_lst)
 		return (0);
-	exec_lst->pid_to_wait = 0;
 	while (cmd && cmd->token != CMD)
 		cmd = cmd->next;
 	if (exec_lst->next || !cmd || cmd->token != CMD)
