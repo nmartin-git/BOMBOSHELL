@@ -6,20 +6,25 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 17:24:54 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/20 22:16:11 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/21 19:52:39 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
-void	bool_output(t_exec *exec_tmp, int output)
+void	bool_output(t_exec *exec_tmp, int output, int input)
 {
 	int	paranthesis;
+	int	order;
 
+	order = exec_tmp->prev->paranthesis;
 	paranthesis = exec_tmp->prev->paranthesis;
-	while (exec_tmp->prev && exec_tmp->prev->paranthesis == paranthesis)
+	while (exec_tmp->prev
+		&& exec_tmp->prev->paranthesis == paranthesis
+		&& exec_tmp->prev->order == order)
 	{
 		exec_tmp->prev->output = output;
+		exec_tmp->prev->close_bool = input;
 		exec_tmp = exec_tmp->prev;
 	}
 }
@@ -38,7 +43,7 @@ void	skip_paranthesis(t_input **files, t_exec **exec_tmp, int p, int order)
 			(*exec_tmp)->paranthesis = p;
 			*exec_tmp = (*exec_tmp)->next;
 		}
-		if ((*exec_tmp) && *files && (*files)->token == BOOL)
+		else if ((*exec_tmp) && (*files)->token == BOOL)
 		{
 			if ((*files)->arg[0] == '&')
 				(*exec_tmp)->exec_both = 1;
@@ -59,11 +64,12 @@ void	skip_paranthesis(t_input **files, t_exec **exec_tmp, int p, int order)
 		else
 			(*exec_tmp)->exec_both = 0;
 	}
-	if (*files && (*files)->token == PIPE && *exec_tmp && p > 1)
+	if (*files && (*files)->token == PIPE && *exec_tmp && p > 0)
 	{
 		ppx_exit(pipe(fd_pipe), "Failed opening the pipe", NULL, 1);//TODO gerer l'erreur
 		(*exec_tmp)->input = fd_pipe[0];
-		bool_output(*exec_tmp, fd_pipe[1]);
+		(*exec_tmp)->close_bool = fd_pipe[1];
+		bool_output(*exec_tmp, fd_pipe[1], fd_pipe[0]);
 	}
 }
 
@@ -108,13 +114,13 @@ void	skip_bool(t_input **files, t_exec **exec_tmp, t_input **tmp, int *ordr)
 		{
 			while (*files && (*files)->token == SPACES)
 				*files = (*files)->next;
-			printf("'%s'\n", (*files)->arg);
 			if (*files && (*files)->token == PIPE
 				&& *exec_tmp && (*exec_tmp)->next)
 			{
 				ppx_exit(pipe(fd_pipe), "Failed opening the pipe", NULL, 1);//TODO gerer l'erreur
 				(*exec_tmp)->input = fd_pipe[0];
-				bool_output(*exec_tmp, fd_pipe[1]);
+				(*exec_tmp)->close_bool = fd_pipe[1];
+				bool_output(*exec_tmp, fd_pipe[1], fd_pipe[0]);
 			}
 			if (tmp)
 			{
@@ -296,6 +302,9 @@ t_exec	*exec_init(t_input *arg_lst, t_exec *exec_lst, t_exec *tmp)
 			tmp->output = STDOUT_FILENO;
 			tmp->paranthesis = 0;
 			tmp->order = 0;
+			tmp->pid = 0;
+			tmp->exec_both = 0;
+			tmp->close_bool = 0;
 			tmp->next = NULL;
 		}
 		arg_lst = arg_lst->next;

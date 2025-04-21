@@ -28,4 +28,4 @@ reste a faire :
 - variables d'environnements
 - wildcards
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!GERER cat<<'EOF' (ne pas expand)
+-X- GERER cat<<'EOF' (ne pas expand)

@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 11:27:48 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/18 19:35:02 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/21 16:08:46 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 
 typedef struct s_input {
 	int				token;
+	int				here_doc_s_or_d;
 	char			*arg;
 	struct s_input	*next;
 }	t_input;

@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:35:53 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/20 21:47:40 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/21 16:17:16 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	here_doc_exit(int pid, int fd_pipe[2])
 	return (fd_pipe[0]);
 }
 
-int	ppx_here_doc(t_input *arg, t_env *env)
+int	ppx_here_doc(t_input *arg, t_env *env, int quotes)
 {
 	int		fd_pipe[2];
 	char	*str;
@@ -45,7 +45,7 @@ int	ppx_here_doc(t_input *arg, t_env *env)
 		close(fd_pipe[0]);
 		while (!ppx_cmp(arg->arg, str))
 		{
-			if (str)
+			if (str && quotes)
 				str = expand_env_vars_in_str(str, env);
 			if (str)
 				ft_printf_fd(fd_pipe[1], "%s", str);
@@ -85,7 +85,7 @@ int	fd_input(t_input *file, t_exec *exec, t_env *env)
 	if (exec->input > 2)
 		close(exec->input);
 	if (file->token == HERE_DOC)
-		return (ppx_here_doc(file, env));
+		return (ppx_here_doc(file, env, file->here_doc_s_or_d));
 	if (access(file->arg, F_OK) == -1)
 	{
 		ft_printf_fd(2, "bomboshell: %s: %s\n", file->arg, strerror(2));

@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 19:10:28 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/20 22:27:18 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/21 16:38:23 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	exec_wait(t_exec *exec)
 	first = exec;
 	while (exec)
 	{
-		if (exec->pid)
+		if (exec->pid > 0)
 		{
 			waitpid(exec->pid, &status, 0);
 			if (WIFEXITED(status))

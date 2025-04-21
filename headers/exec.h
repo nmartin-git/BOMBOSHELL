@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 13:53:26 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/20 22:52:17 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/21 16:36:40 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	export_get_arg(t_input *arg_lst, int i, int	quotes);
 void	export_parsing(t_input *arg_lst);
 
 int		here_doc_exit(int pid, int fd_pipe[2]);
-int		ppx_here_doc(t_input *arg, t_env *env);
+int		ppx_here_doc(t_input *arg, t_env *env, int quotes);
 int		fd_output(t_input *file, t_exec *exec);
 int		fd_input(t_input *file, t_exec *exec, t_env *env);
 void	set_fds(t_input *file, t_exec *exec, t_env *env);
@@ -87,7 +87,7 @@ void	replace_token_arg(t_input *tmp, char **expanded);
 void	free_expanded_array(char **expanded);
 t_input	*add_remaining_tokens(t_input *tmp, char **expanded, int token);
 
-void	next_bool(t_exec **exec_lst, t_input **files, int paranthesis);
+void	next_bool(t_exec **exec_lst, t_input **files, int paranthesis, int ex);
 void	handle_bool_exec(t_input *cmd, t_input *file, t_exec *ex, t_env **env);
 void	exec_bool(t_exec *exec_lst, t_input *files, t_env **env);
 

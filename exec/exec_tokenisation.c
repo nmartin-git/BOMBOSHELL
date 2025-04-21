@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 14:01:16 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/16 23:32:37 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/21 16:12:32 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,13 @@ void	files_tokenisation(t_input **arg_lst, t_input *prev)
 		{
 			del_spaces(tmp);
 			if (tmp->arg[0] == '<' && tmp->arg[1] == '<')
+			{
+				if (tmp->next->token == WORD_S_QUOTE)
+					tmp->next->here_doc_s_or_d = 0;
+				else
+					tmp->next->here_doc_s_or_d = 1;
 				tmp->next->token = HERE_DOC;
+			}
 			else if (tmp->arg[0] == '<')
 				tmp->next->token = INFILE;
 			else if (tmp->arg[0] == '>' && tmp->arg[1] == '>')

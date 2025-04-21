@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 18:57:14 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/20 19:33:47 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/21 19:27:59 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ typedef struct s_exec
 	int				pid;
 	int				input;
 	int				output;
+	int				close_bool;
 	int				exec_both;
 	int				paranthesis;
 	int				order;

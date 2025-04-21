@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 18:07:27 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/20 22:30:57 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/21 19:48:21 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ void	print_tokens(t_input *arg_lst) // TODO supp
 			printf("APPEND -> ");
 		else if (tmp->token == CMD)
 			printf("CMD -> ");
+		else if (tmp->token == CMD_BOOL)
+			printf("CMD_BOOL -> ");
 		else if (tmp->token == REDIR)
 			printf("REDIR -> ");
 		else if (tmp->token == PIPE)
@@ -68,6 +70,8 @@ void	handle_exec(t_input *cmd, t_input *file, t_exec *exec_lst, t_env **env)
 		exec_lst->pid = pid;
 	if (pid == 0)
 	{
+		if (exec_lst->close_bool > 2)
+			close(exec_lst->close_bool);
 		default_sig();
 		if (is_built_in(cmd->arg, 0))
 			execute_builtin(env, cmd->arg, exec_lst);
@@ -169,12 +173,6 @@ int	exec(t_input **arg_lst, t_env **env, t_exec *exec_lst)
 	if (one_cmd(*arg_lst, env, exec_lst))
 		return (0);
 	exec_tmp = exec_lst;
-	// while (tmp)
-	// {
-	// 	printf("_%s_\n", tmp->arg);
-	// 	tmp = tmp->next;
-	// }
-	// tmp = *arg_lst;
 	while (tmp)
 	{
 		if (tmp->token == CMD)
@@ -191,13 +189,6 @@ int	exec(t_input **arg_lst, t_env **env, t_exec *exec_lst)
 		if (tmp)
 			tmp = tmp->next;
 	}
-	exec_tmp = exec_lst;
-	while (exec_tmp)
-	{
-		printf("[%d (%d) in:%d out:%d] -> ", exec_tmp->paranthesis, exec_tmp->order, exec_tmp->input, exec_tmp->output);
-		exec_tmp = exec_tmp->next;
-	}
-	printf(" null\n");
 	exec_bool(exec_lst, *arg_lst, env);
 	restore_signals();
 	return (exec_wait(exec_lst));
