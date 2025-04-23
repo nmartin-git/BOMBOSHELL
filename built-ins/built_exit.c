@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 19:37:32 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/18 19:17:55 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/23 18:11:00 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	ft_exit(t_shell *cmd)
 	exit_status = ft_atoi(cmd->command[1]);
 	while (exit_status > 256)
 		exit_status %= 256;
-	ft_printf_fd(2, "exit %i\n", exit_status);
+	printf("exit\n");
 	g_exit_status = exit_status;
 	exit(g_exit_status);
 }

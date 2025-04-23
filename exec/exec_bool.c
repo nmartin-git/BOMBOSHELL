@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 20:57:56 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/21 19:47:25 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/23 18:39:07 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,16 @@ void	next_bool(t_exec **exec_lst, t_input **files, int paranthesis, int exe)
 	t_input	*tmp;
 	int		order;
 
-	if (*exec_lst && !exe)
-		(*exec_lst)->pid = -1;
 	if (*exec_lst)
 	{
+		if (!exe)
+			(*exec_lst)->pid = -1;
+		if ((*exec_lst)->input > 2
+			&& !((*exec_lst)->next && (*exec_lst)->input == (*exec_lst)->next->input))
+			close((*exec_lst)->input);
+		if ((*exec_lst)->output > 2
+			&& !((*exec_lst)->next && (*exec_lst)->output == (*exec_lst)->next->output))
+			close((*exec_lst)->output);
 		order = (*exec_lst)->order;
 		*exec_lst = (*exec_lst)->next;
 	}
@@ -59,6 +65,12 @@ void	handle_bool_exec(t_input *cmd, t_input *file, t_exec *exec, t_env **env)
 		exec->pid = pid;
 	if (pid == 0)
 	{
+		if (exec->next && exec->next->input > 2)
+			close(exec->next->input);
+		if (exec->input != STDIN_FILENO)
+			(dup2(exec->input, STDIN_FILENO), close(exec->input));
+		if (exec->output != STDOUT_FILENO)
+			(dup2(exec->output, STDOUT_FILENO), close(exec->output));
 		if (exec->close_bool)
 			close (exec->close_bool);
 		default_sig();
@@ -67,12 +79,6 @@ void	handle_bool_exec(t_input *cmd, t_input *file, t_exec *exec, t_env **env)
 		else
 			exec_cmd(cmd, *env, exec);
 	}
-	if (exec->input > 2
-		&& !(exec->next && exec->input == exec->next->input))
-		close(exec->input);
-	if (exec->output > 2
-		&& !(exec->next && exec->output == exec->next->output))
-		close(exec->output);
 }
 
 int		wait_bool(t_exec *exec)
@@ -120,12 +126,15 @@ void	exec_bool(t_exec *exec_lst, t_input *files, t_env **env)
 	{
 		if (tmp->token == CMD_BOOL)
 		{
+		//	printf("-%s-\n", tmp->arg);
 			if (!exec_lst)
 				break;
 			result = wait_bool(exec_lst);
 			if ((result && exec_lst->exec_both)
 				|| (!result && !exec_lst->exec_both))
+			{
 				next_bool(&exec_lst, &files, exec_lst->paranthesis, 0);
+			}
 			else
 			{
 				handle_bool_exec(tmp, files, exec_lst, env);

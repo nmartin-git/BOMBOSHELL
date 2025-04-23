@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 17:24:54 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/21 19:52:39 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/23 18:43:09 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,11 +137,20 @@ void	skip_bool(t_input **files, t_exec **exec_tmp, t_input **tmp, int *ordr)
 
 void	next_cmd(t_input **files, t_exec **exec_tmp, t_input **tmp, int *order)
 {
+	t_input	*is_paranthesis;
+
 	while (*files && (*files)->token != PIPE && (*files)->token != BOOL)
 		*files = (*files)->next;
+	is_paranthesis = *files;
+	if (is_paranthesis && is_paranthesis->next)
+		is_paranthesis = is_paranthesis->next;
+	while (is_paranthesis && is_paranthesis->token == SPACES)
+		is_paranthesis = is_paranthesis->next;
+	if (is_paranthesis && is_paranthesis->token == PARANTHESIS)
+		*files = is_paranthesis;
 	if (*exec_tmp)
 		*exec_tmp = (*exec_tmp)->next;
-	if (*files && (*files)->token == BOOL)
+	if (*files && ((*files)->token == BOOL || (*files)->token == PARANTHESIS))
 	{
 		if ((*exec_tmp) && *files && (*files)->token == BOOL)
 		{
@@ -153,7 +162,6 @@ void	next_cmd(t_input **files, t_exec **exec_tmp, t_input **tmp, int *order)
 		skip_bool(files, exec_tmp, NULL, order);
 	}
 	*tmp = *files;
-	
 }
 
 void	close_fds(t_exec *exec_lst)

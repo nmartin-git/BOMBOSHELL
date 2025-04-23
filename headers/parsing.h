@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 11:27:48 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/21 16:08:46 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/23 21:28:30 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,8 @@ void	lsts_free(t_input *arg_lst);
 void	parsing_exit(t_input *arg_lst);
 
 void	del_last_quote(int del, t_input **arg_lst);
-void	get_last_quote(char quote, t_input **arg_lst);
-void	unclosed_check(t_input **arg_lst);
+void	get_last_quote(char quote, t_input **arg_lst, int impair);
+void	unclosed_check(t_input **arg_lst, int s_quotes, int d_quotes);
 void	del_quotes(t_input *prev, t_input *unified, t_input **arg_lst);
 void	unify(char quote, t_input *tmp, t_input *prev, t_input **arg_lst);
 
