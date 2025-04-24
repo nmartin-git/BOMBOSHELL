@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 18:07:27 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/23 18:50:07 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/24 17:43:39 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,21 +189,7 @@ int	exec(t_input **arg_lst, t_env **env, t_exec *exec_lst)
 		if (tmp)
 			tmp = tmp->next;
 	}
-	exec_tmp = exec_lst;
-	while (exec_tmp)
-	{
-		printf("[in: %d out: %d] -> ", exec_tmp->input, exec_tmp->output);
-		exec_tmp = exec_tmp->next;
-	}
-	printf("null\n");
 	exec_bool(exec_lst, *arg_lst, env);
-	exec_tmp = exec_lst;
-	while (exec_tmp)
-	{
-		printf("[in: %d out: %d] -> ", exec_tmp->input, exec_tmp->output);
-		exec_tmp = exec_tmp->next;
-	}
-	printf("null\n");
 	restore_signals();
 	return (exec_wait(exec_lst));
 }

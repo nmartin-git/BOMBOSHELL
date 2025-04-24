@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 11:39:48 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/15 18:16:47 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/24 14:18:38 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	lsts_simplify(t_input **arg_lst)
 	while (tmp && tmp->next)
 	{
 		if (!quotes_unify(tmp, prev, arg_lst))
-			unclosed_check(arg_lst);
+			unclosed_check(arg_lst, 0, 0);
 		tmp = *arg_lst;
 		while (tmp && tmp->token != QUOTE)
 		{
@@ -81,7 +81,7 @@ int	lsts_simplify(t_input **arg_lst)
 			tmp = tmp->next;
 		}
 	}
-	unclosed_check(arg_lst);
+	unclosed_check(arg_lst, 0, 0);
 	double_spaces(*arg_lst);
 	if (!paranthesis_check(*arg_lst))
 		return (0);

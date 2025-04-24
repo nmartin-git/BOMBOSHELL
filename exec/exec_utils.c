@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 17:24:54 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/23 18:43:09 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/24 14:28:14 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -311,7 +311,7 @@ t_exec	*exec_init(t_input *arg_lst, t_exec *exec_lst, t_exec *tmp)
 			tmp->paranthesis = 0;
 			tmp->order = 0;
 			tmp->pid = 0;
-			tmp->exec_both = 0;
+			tmp->exec_both = 1;
 			tmp->close_bool = 0;
 			tmp->next = NULL;
 		}
