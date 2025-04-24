@@ -99,9 +99,9 @@ void	set_env_value(t_env *env, char *key, char *value)
 int	print_invalid_id_error(char *arg, char *var)
 {
 	if (!var)
-		printf("export: '%s': not a valid identifier\n", arg);
+		ft_printf_fd(2, "export: '%s': not a valid identifier\n", arg);
 	else
-		printf("%s: '%s': not a valid identifier\n", arg, var);
+		ft_printf_fd(2, "%s: '%s': not a valid identifier\n", arg, var);
 	return (1);
 }
 
@@ -121,4 +121,24 @@ char	*trim_quotes(char *value)
 			- 1] != value[0])
 		return (NULL);
 	return (ft_strdup(value));
+}
+void	free_t_shell(t_shell *command)
+{
+	int	i;
+
+	if (!command)
+		return ;
+	if (command->current_dir)
+		free(command->current_dir);
+	if (command->command)
+	{
+		i = 0;
+		while (command->command[i])
+		{
+			free(command->command[i]);
+			i++;
+		}
+		free(command->command);
+	}
+	free(command);
 }

@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 16:40:33 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/23 21:27:57 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/15 18:16:08 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,12 @@ void	del_last_quote(int del, t_input **arg_lst)
 	}
 }
 
-void	get_last_quote(char quote, t_input **arg_lst, int impair)
+void	get_last_quote(char quote, t_input **arg_lst)
 {
 	int		arg_nbr;
 	int		del;
 	t_input	*arg_tmp;
 
-	if (!impair % 2)
-		return ;
 	arg_nbr = 0;
 	arg_tmp = *arg_lst;
 	while (arg_tmp)
@@ -58,6 +56,33 @@ void	get_last_quote(char quote, t_input **arg_lst, int impair)
 	}
 	del_last_quote(del, arg_lst);
 }
+
+// void	unclosed_check(t_input **arg_lst)
+// {
+// 	t_input	*tmp;
+// 	int		quotes;
+
+// 	tmp = *arg_lst;
+// 	quotes = 0;
+// 	while (tmp)
+// 	{
+// 		if (tmp->token == QUOTE && tmp->arg[0] == '"')
+// 			quotes++;
+// 		tmp = tmp->next;
+// 	}
+// 	if (quotes % 2)
+// 		get_last_quote('"', arg_lst);
+// 	tmp = *arg_lst;
+// 	quotes = 0;
+// 	while (tmp)
+// 	{
+// 		if (tmp->token == QUOTE && tmp->arg[0] == '\'')
+// 			quotes++;
+// 		tmp = tmp->next;
+// 	}
+// 	if (quotes % 2)
+// 		get_last_quote('\'', arg_lst);
+// }
 
 void	unclosed_check(t_input **arg_lst, int s_quotes, int d_quotes)
 {
@@ -86,8 +111,10 @@ void	unclosed_check(t_input **arg_lst, int s_quotes, int d_quotes)
 		}
 		tmp = tmp->next;
 	}
-	get_last_quote('"', arg_lst, d_quotes);
-	get_last_quote('\'', arg_lst, s_quotes);
+	if (d_quotes % 2)
+		get_last_quote('"', arg_lst);
+	if (s_quotes % 2)
+		get_last_quote('\'', arg_lst);
 }
 
 void	del_quotes(t_input *prev, t_input *unified, t_input **arg_lst)

@@ -50,7 +50,7 @@ int	exec_one_cmd(t_env **env, char *cmd, t_exec *exec)
 	if (ft_strncmp(command->command[0], "cd", 2) == 0)
 		exit_code = ft_cd(command);
 	else if (ft_strncmp(command->command[0], "echo", 4) == 0)
-		exit_code = ft_echo(command);
+		exit_code = ft_echo(command, cmd);
 	else if (ft_strncmp(command->command[0], "env", 3) == 0)
 		exit_code = ft_env(*env);
 	else if (ft_strncmp(command->command[0], "exit", 4) == 0)
@@ -62,6 +62,7 @@ int	exec_one_cmd(t_env **env, char *cmd, t_exec *exec)
 	else if (ft_strncmp(command->command[0], "unset", 5) == 0)
 		exit_code = ft_unset(command);
 	close_one_cmd(dup_stdout);
+	free_t_shell(command);
 	return (exit_code);
 }
 

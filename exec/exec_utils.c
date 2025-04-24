@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 17:24:54 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/24 14:28:14 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/21 19:52:39 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,7 @@ void	bool_output(t_exec *exec_tmp, int output, int input)
 
 	order = exec_tmp->prev->paranthesis;
 	paranthesis = exec_tmp->prev->paranthesis;
-	while (exec_tmp->prev
-		&& exec_tmp->prev->paranthesis == paranthesis
+	while (exec_tmp->prev && exec_tmp->prev->paranthesis == paranthesis
 		&& exec_tmp->prev->order == order)
 	{
 		exec_tmp->prev->output = output;
@@ -31,10 +30,10 @@ void	bool_output(t_exec *exec_tmp, int output, int input)
 
 void	skip_paranthesis(t_input **files, t_exec **exec_tmp, int p, int order)
 {
-	int		fd_pipe[2];
+	int	fd_pipe[2];
 
 	while (*files && !((*files)->token == PARANTHESIS
-		&& (*files)->arg[0] == ')'))
+			&& (*files)->arg[0] == ')'))
 	{
 		if (*exec_tmp && (*files)->token == CMD)
 		{
@@ -56,7 +55,7 @@ void	skip_paranthesis(t_input **files, t_exec **exec_tmp, int p, int order)
 	}
 	*files = (*files)->next;
 	while (*files && (*files)->token == SPACES)
-			*files = (*files)->next;
+		*files = (*files)->next;
 	if ((*exec_tmp) && *files && (*files)->token == BOOL)
 	{
 		if ((*files)->arg[0] == '&')
@@ -66,7 +65,8 @@ void	skip_paranthesis(t_input **files, t_exec **exec_tmp, int p, int order)
 	}
 	if (*files && (*files)->token == PIPE && *exec_tmp && p > 0)
 	{
-		ppx_exit(pipe(fd_pipe), "Failed opening the pipe", NULL, 1);//TODO gerer l'erreur
+		ppx_exit(pipe(fd_pipe), "Failed opening the pipe", NULL, 1);
+		// TODO gerer l'erreur
 		(*exec_tmp)->input = fd_pipe[0];
 		(*exec_tmp)->close_bool = fd_pipe[1];
 		bool_output(*exec_tmp, fd_pipe[1], fd_pipe[0]);
@@ -114,10 +114,11 @@ void	skip_bool(t_input **files, t_exec **exec_tmp, t_input **tmp, int *ordr)
 		{
 			while (*files && (*files)->token == SPACES)
 				*files = (*files)->next;
-			if (*files && (*files)->token == PIPE
-				&& *exec_tmp && (*exec_tmp)->next)
+			if (*files && (*files)->token == PIPE && *exec_tmp
+				&& (*exec_tmp)->next)
 			{
-				ppx_exit(pipe(fd_pipe), "Failed opening the pipe", NULL, 1);//TODO gerer l'erreur
+				ppx_exit(pipe(fd_pipe), "Failed opening the pipe", NULL, 1);
+				// TODO gerer l'erreur
 				(*exec_tmp)->input = fd_pipe[0];
 				(*exec_tmp)->close_bool = fd_pipe[1];
 				bool_output(*exec_tmp, fd_pipe[1], fd_pipe[0]);
@@ -128,29 +129,20 @@ void	skip_bool(t_input **files, t_exec **exec_tmp, t_input **tmp, int *ordr)
 				while (*tmp && (*tmp)->token != CMD)
 					*tmp = (*tmp)->next;
 			}
-			if (!*files
-				|| ((*files)->token != BOOL && (*files)->token != PARANTHESIS))
-				break;
+			if (!*files || ((*files)->token != BOOL
+					&& (*files)->token != PARANTHESIS))
+				break ;
 		}
 	}
 }
 
 void	next_cmd(t_input **files, t_exec **exec_tmp, t_input **tmp, int *order)
 {
-	t_input	*is_paranthesis;
-
 	while (*files && (*files)->token != PIPE && (*files)->token != BOOL)
 		*files = (*files)->next;
-	is_paranthesis = *files;
-	if (is_paranthesis && is_paranthesis->next)
-		is_paranthesis = is_paranthesis->next;
-	while (is_paranthesis && is_paranthesis->token == SPACES)
-		is_paranthesis = is_paranthesis->next;
-	if (is_paranthesis && is_paranthesis->token == PARANTHESIS)
-		*files = is_paranthesis;
 	if (*exec_tmp)
 		*exec_tmp = (*exec_tmp)->next;
-	if (*files && ((*files)->token == BOOL || (*files)->token == PARANTHESIS))
+	if (*files && (*files)->token == BOOL)
 	{
 		if ((*exec_tmp) && *files && (*files)->token == BOOL)
 		{
@@ -280,7 +272,7 @@ char	*expand_env_vars_in_str(char *str, t_env *env)
 			result = append_char_to_result(result, str[i]);
 		i++;
 	}
-	free (str);
+	free(str);
 	return (result);
 }
 
@@ -294,7 +286,11 @@ t_exec	*exec_init(t_input *arg_lst, t_exec *exec_lst, t_exec *tmp)
 			{
 				exec_lst = malloc(sizeof(t_exec));
 				if (!exec_lst)
-					exit(127); // TODO gerer l'erreur
+				{
+					ft_printf_fd(2, "bomboshell: memory allocation failed\n");
+					g_exit_status = 1;
+					return (NULL);
+				}
 				tmp = exec_lst;
 				tmp->prev = NULL;
 			}
@@ -302,7 +298,12 @@ t_exec	*exec_init(t_input *arg_lst, t_exec *exec_lst, t_exec *tmp)
 			{
 				tmp->next = malloc(sizeof(t_exec));
 				if (!tmp->next)
-					exit(127); // TODO gerer l'erreur
+				{
+					ft_printf_fd(2, "bomboshell: memory allocation failed\n");
+					g_exit_status = 1;
+					free_exec_lst(exec_lst);
+					return (NULL);
+				}
 				tmp->next->prev = tmp;
 				tmp = tmp->next;
 			}
@@ -311,7 +312,7 @@ t_exec	*exec_init(t_input *arg_lst, t_exec *exec_lst, t_exec *tmp)
 			tmp->paranthesis = 0;
 			tmp->order = 0;
 			tmp->pid = 0;
-			tmp->exec_both = 1;
+			tmp->exec_both = 0;
 			tmp->close_bool = 0;
 			tmp->next = NULL;
 		}

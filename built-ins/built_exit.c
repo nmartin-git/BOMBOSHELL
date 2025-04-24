@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 19:37:32 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/23 18:11:00 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/18 19:17:55 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,17 +42,19 @@ int	ft_exit(t_shell *cmd)
 		ft_printf_fd(2, "bomboshell: exit: %s: numeric argument required\n",
 			cmd->command[1]);
 		g_exit_status = 2;
+		exit(g_exit_status);
 	}
 	if (cmd->command[2])
 	{
-		ft_printf("bomboshell: exit: Too many arguments");
 		g_exit_status = 1;
+		ft_printf_fd(2, " too many arguments");
 		return (1);
 	}
 	exit_status = ft_atoi(cmd->command[1]);
 	while (exit_status > 256)
 		exit_status %= 256;
-	printf("exit\n");
+	ft_printf_fd(1, "exit\n");
 	g_exit_status = exit_status;
+	free_t_shell(cmd);
 	exit(g_exit_status);
 }

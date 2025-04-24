@@ -28,11 +28,11 @@ t_input	*del_redir(t_input **arg_lst, t_input *tmp, t_input *prev)
 	}
 	free_arg(tmp);
 	tmp = prev;
-	while (tmp->next && (tmp->next->token == WORD_D_QUOTE
-		|| tmp->next->token == WORD_S_QUOTE))
+	while (tmp && tmp->next && (tmp->next->token == WORD_D_QUOTE
+			|| tmp->next->token == WORD_S_QUOTE))
 	{
-		tmp->arg = ft_strjoin_free
-		(tmp->arg, tmp->next->arg);//TODO gerer l'erreur
+		tmp->arg = ft_strjoin_free(tmp->arg, tmp->next->arg);
+		// TODO gerer l'erreur
 		del = tmp->next;
 		tmp->next = tmp->next->next;
 		free(del);
@@ -89,19 +89,20 @@ void	files_tokenisation(t_input **arg_lst, t_input *prev)
 
 void	cmd_word_order(t_input *arg, t_input *del, t_input *cmd, t_input *prev)
 {
-	while (arg->next && arg->next->token != PIPE
-		&& arg->next->token != BOOL)
+	while (arg->next && arg->next->token != PIPE && arg->next->token != BOOL)
 	{
 		if (arg->next->token == WORD || arg->next->token == WORD_S_QUOTE
 			|| arg->next->token == WORD_D_QUOTE)
 		{
 			if (arg->token == SPACES)
 			{
-				cmd->arg = ft_strjoin_free(cmd->arg, ft_strdup(" "));//TODO gerer l'erreur
+				cmd->arg = ft_strjoin_free(cmd->arg, ft_strdup(" "));
+				// TODO gerer l'erreur
 				del_redir(NULL, arg, prev);
 				arg = prev;
 			}
-			cmd->arg = ft_strjoin_free(cmd->arg, arg->next->arg);//TODO gerer l'erreur
+			cmd->arg = ft_strjoin_free(cmd->arg, arg->next->arg);
+			// TODO gerer l'erreur
 			del = arg->next;
 			arg->next = arg->next->next;
 			free(del);
@@ -131,17 +132,35 @@ void	cmd_tokenisation(t_input *arg_lst)
 			arg_lst->token = CMD;
 			if (ft_strncmp(arg_lst->arg, "export", 7) == 0)
 				export_parsing(arg_lst);
+			// printf("1-%s-\n", arg_lst->arg);
 			cmd_word_order(arg_lst, NULL, arg_lst, arg_lst);
+			//	printf("2-%s-\n", arg_lst->arg);
 			while (arg_lst->next && (arg_lst->next->token == WORD
-				|| arg_lst->next->token == SPACES
-				|| arg_lst->next->token == WORD_S_QUOTE
-				|| arg_lst->next->token == WORD_D_QUOTE))
+					|| arg_lst->next->token == SPACES
+					|| arg_lst->next->token == WORD_S_QUOTE
+					|| arg_lst->next->token == WORD_D_QUOTE))
 			{
-				arg_lst->arg = ft_strjoin_free
-					(arg_lst->arg, arg_lst->next->arg);//TODO gerer l'erreur
-				del = arg_lst->next;
-				arg_lst->next = arg_lst->next->next;
-				free(del);
+				if (arg_lst->next->token == SPACES && arg_lst->next->next
+					&& (arg_lst->next->next->token == WORD
+						|| arg_lst->next->next->token == WORD_S_QUOTE
+						|| arg_lst->next->next->token == WORD_D_QUOTE))
+				{
+					arg_lst->arg = ft_strjoin_free(arg_lst->arg,
+							ft_strdup(" "));
+					del_redir(NULL, arg_lst->next, arg_lst);
+				}
+				else if (arg_lst->next->token == SPACES)
+					del_redir(NULL, arg_lst->next, arg_lst);
+				else
+				{
+					// if (arg_lst->next->token == SPACES)
+					arg_lst->arg = ft_strjoin_free(arg_lst->arg,
+							arg_lst->next->arg);
+					// TODO gerer l'erreur
+					del = arg_lst->next;
+					arg_lst->next = arg_lst->next->next;
+					free(del);
+				}
 			}
 		}
 		arg_lst = arg_lst->next;

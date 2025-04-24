@@ -13,12 +13,12 @@
 #ifndef BOMBOSHELL_H
 # define BOMBOSHELL_H
 
-# include "exec.h"
+# include "bombosignal.h"
 # include "builtins.h"
+# include "exec.h"
 # include "libft.h"
 # include "parsing.h"
 # include "wildcard.h"
-# include "bombosignal.h"
 # include <curses.h>
 # include <dirent.h>
 # include <fcntl.h>
@@ -34,7 +34,6 @@
 # include <termios.h>
 # include <unistd.h>
 
-int			only_space(char *str);
-
+int	only_space(char *str);
 
 #endif

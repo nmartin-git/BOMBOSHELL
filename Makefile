@@ -18,8 +18,8 @@ RESET = \033[0m
 
 CC = cc
 CFLAGS = -g -Wall -Werror -Wextra -MMD -MP
-NAME = bomboshell
-MINISHELL_PATH = ./minishell/
+NAME = minishell
+MINISHELL_PATH = ./minishelll/
 MINISHELL_FILES = bomboshell.c signal.c
 MINISHELL := $(addprefix $(MINISHELL_PATH), $(MINISHELL_FILES))
 PARSING_PATH = ./parsing/

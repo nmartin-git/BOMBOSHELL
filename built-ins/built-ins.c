@@ -44,10 +44,10 @@ t_shell	*set_t_shell(t_env *env, char *cmd)
 
 	args = ft_split(cmd, ' ');
 	if (!args)
-		exit(127); // TODO mieux gerer l'erreur
+		exit(1); // TODO mieux gerer l'erreur
 	command = malloc(sizeof(t_shell));
 	if (!command)
-		exit(127); // TODO mieux gerer l'erreur
+		exit(1); // TODO mieux gerer l'erreur
 	command->env_vars = env;
 	command->current_dir = getcwd(NULL, PATH_MAX_ANANAS);
 	command->command = args;
@@ -65,7 +65,7 @@ void	execute_builtin(t_env **env, char *cmd, t_exec *exec)
 	if (ft_strncmp(command->command[0], "cd", 2) == 0)
 		g_exit_status = ft_cd(command);
 	else if (ft_strncmp(command->command[0], "echo", 4) == 0)
-		g_exit_status = ft_echo(command);
+		g_exit_status = ft_echo(command, cmd);
 	else if (ft_strncmp(command->command[0], "env", 3) == 0)
 		g_exit_status = ft_env(*env);
 	else if (ft_strncmp(command->command[0], "exit", 4) == 0)
@@ -76,6 +76,7 @@ void	execute_builtin(t_env **env, char *cmd, t_exec *exec)
 		g_exit_status = ft_pwd(command);
 	else if (ft_strncmp(command->command[0], "unset", 5) == 0)
 		g_exit_status = ft_unset(command);
+	free_t_shell(command);
 	exit(g_exit_status);
 }
 

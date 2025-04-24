@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 13:53:26 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/23 18:05:49 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/21 16:36:40 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 # include "parsing.h"
 # include "wildcard.h"
 # include <fcntl.h>
-# include <sys/wait.h>
 # include <string.h>
+# include <sys/wait.h>
 
 # define HERE_DOC 9
 # define INFILE 10
@@ -49,18 +49,23 @@ int		paranthesis_bool(t_input **arg_lst, t_input *tmp, t_input *pre, int i);
 int		paranthesis_parsing(t_input **arg_lst, t_input *tmp, t_input *prev);
 
 void	next_cmd(t_input **files, t_exec **exec_tmp, t_input **tmp, int *ordr);
-char 	**env_to_array(t_env *env_list);
+char	**env_to_array(t_env *env_list);
 t_exec	*exec_init(t_input *arg_lst, t_exec *exec_lst, t_exec *tmp);
 
 int		exec_wait(t_exec *exec);
 void	ppx_exit(int err, const char *str, int *fd_pipe, int status);
 int		ppx_cmp(const char *s1, const char *s2);
 char	*exec_envset(char **env, char *cmd);
-void    exec_cmd(t_input *arg_lst, t_env *env, t_exec *exec);
+char	*exec_envset_part2(char **path, char *cmd);
+// void    exec_cmd(t_input *arg_lst, t_env *env, t_exec *exec);
+void	exec_cmd_part1(t_input *arg_lst, t_env *env_chained, t_exec *exec);
+void	exec_cmd_part2(char **cmd, char **env, t_exec *exec);
+void	exec_cmd_part3(char **cmd, char **env);
+void	exec_cmd_part4(char **cmd, char **env, char *env_set);
 
 int		export_parsing_utils(t_input *arg_lst, t_input *first);
 void	export_quotes(t_input *arg_lst, int i);
-void	export_get_arg(t_input *arg_lst, int i, int	quotes);
+void	export_get_arg(t_input *arg_lst, int i, int quotes);
 void	export_parsing(t_input *arg_lst);
 
 int		here_doc_exit(int pid, int fd_pipe[2]);

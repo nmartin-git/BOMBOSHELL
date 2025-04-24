@@ -12,12 +12,39 @@
 
 #include "wildcard.h"
 
+static void	process_match(t_wildcard_list **matches, char *entry_name, int *i)
+{
+	char	*full_path;
+
+	full_path = ft_strjoin(" ", entry_name);
+	list_add_back_wildcard(matches, full_path);
+	free(full_path);
+	(*i)++;
+}
+
+static void	handle_dir_entry(DIR *dir, t_wildcard_list **matches, char *pattern,
+		int *i)
+{
+	struct dirent	*entry;
+
+	entry = readdir(dir);
+	while (entry != NULL)
+	{
+		if (entry->d_name[0] == '.' && pattern[0] != '.')
+		{
+			entry = readdir(dir);
+			continue ;
+		}
+		if (match_pattern(pattern, entry->d_name))
+			process_match(matches, entry->d_name, i);
+		entry = readdir(dir);
+	}
+}
+
 t_wildcard_list	*expand_wildcards(char *pattern)
 {
 	DIR				*dir;
-	struct dirent	*entry;
 	t_wildcard_list	*matches;
-	char			*full_path;
 	int				i;
 
 	dir = opendir(".");
@@ -25,18 +52,7 @@ t_wildcard_list	*expand_wildcards(char *pattern)
 	i = 0;
 	if (!dir)
 		return (NULL);
-	while ((entry = readdir(dir)) != NULL)
-	{
-		if (entry->d_name[0] == '.' && pattern[0] != '.')
-			continue ;
-		if (match_pattern(pattern, entry->d_name))
-		{
-			full_path = ft_strjoin(" ", entry->d_name);
-			list_add_back_wildcard(&matches, full_path);
-			free(full_path);
-			i++;
-		}
-	}
+	handle_dir_entry(dir, &matches, pattern, &i);
 	closedir(dir);
 	return (add_match(matches, pattern, i));
 }

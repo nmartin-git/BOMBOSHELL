@@ -12,26 +12,18 @@
 
 #include "builtins.h"
 
-int	ft_cd(t_shell *cmd)
+static int	cd_too_many_args(t_shell *cmd)
 {
-	char	*new_dir;
-	char	*old_pwd;
-
 	if (cmd->command[1] && cmd->command[2])
 	{
 		ft_printf_fd(2, "bomboshell: cd: too many arguments");
 		return (1);
 	}
-	old_pwd = cmd->current_dir;
-	if (!cmd->command[1])
-		new_dir = get_env_value(cmd->env_vars, "HOME");
-	else
-		new_dir = cmd->command[1];
-	if (!new_dir)
-	{
-		ft_printf_fd(2, "bomboshell: cd: HOME not set\n");
-		return (1);
-	}
+	return (0);
+}
+
+static int	cd_change_dir(t_shell *cmd, char *new_dir, char *old_pwd)
+{
 	if (chdir(new_dir) == -1)
 	{
 		ft_putstr_fd("bomboshell: cd:", 2);
@@ -49,4 +41,24 @@ int	ft_cd(t_shell *cmd)
 	set_env_value(cmd->env_vars, "PWD", cmd->current_dir);
 	g_exit_status = 0;
 	return (0);
+}
+
+int	ft_cd(t_shell *cmd)
+{
+	char	*new_dir;
+	char	*old_pwd;
+
+	if (cd_too_many_args(cmd))
+		return (1);
+	old_pwd = cmd->current_dir;
+	if (!cmd->command[1])
+		new_dir = get_env_value(cmd->env_vars, "HOME");
+	else
+		new_dir = cmd->command[1];
+	if (!new_dir)
+	{
+		ft_printf_fd(2, "bomboshell: cd: HOME not set\n");
+		return (1);
+	}
+	return (cd_change_dir(cmd, new_dir, old_pwd));
 }

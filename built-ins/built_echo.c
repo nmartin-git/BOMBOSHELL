@@ -12,62 +12,57 @@
 
 #include "builtins.h"
 
-static char	*expand_var(t_shell *shell, char *arg)
-{
-	char	*var_name;
-	char	*var_value;
-
-	if (arg[0] != '$')
-		return (ft_strdup(arg));
-	if (arg[1] == '?')
-		return (ft_itoa(g_exit_status));
-	var_name = arg + 1;
-	var_value = get_env_value(shell->env_vars, var_name);
-	if (!var_value)
-		return (ft_strdup(""));
-	return (ft_strdup(var_value));
-}
-
-int	ft_echo(t_shell *cmd)
+static int	skip_whitespace_and_echo_check(char *str)
 {
 	int	i;
-	int	flag;
-	int	j;
 
-	if (!cmd->command[1])
+	i = 0;
+	while (str[i] && (str[i] == ' ' || str[i] == '\t'))
+		i++;
+	i += 4;
+	if (!str[i])
 	{
 		printf("\n");
-		return (1);
+		return (0);
 	}
+	while (str[i] && str[i] == '-')
+		i++;
+	while (str[i] && str[i] == 'n')
+		i++;
+	while (str[i] && (str[i] == ' ' || str[i] == '\t'))
+		i++;
+	if (!str[i])
+	{
+		printf("\n");
+		return (0);
+	}
+	return (i);
+}
+
+int	ft_echo(t_shell *cmd, char *str)
+{
+	int	i;
+	int	j;
+	int	y;
+	int	flag;
+
+	y = skip_whitespace_and_echo_check(str);
+	if (!y)
+		return (0);
 	flag = 1;
 	i = 1;
-	j = 1;
 	while (cmd->command[i] && cmd->command[i][0] == '-'
 		&& cmd->command[i][1] == 'n')
 	{
+		j = 1;
 		while (cmd->command[i][j] == 'n')
 			j++;
 		if (cmd->command[i++][j] != '\0')
 			break ;
 		flag = 0;
 	}
-	print_echo(cmd->command, i, cmd);
+	printf("%s", &str[y]);
 	if (flag)
 		printf("\n");
 	return (0);
-}
-
-void	print_echo(char **av, int i, t_shell *shell)
-{
-	char	*expanded_arg;
-
-	while (av[i])
-	{
-		expanded_arg = expand_var(shell, av[i]);
-		printf("%s", expanded_arg);
-		free(expanded_arg);
-		if (av[i + 1])
-			printf(" ");
-		i++;
-	}
 }

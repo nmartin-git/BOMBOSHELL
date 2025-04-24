@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 20:57:56 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/24 17:34:39 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/21 19:47:25 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,10 @@ void	next_bool(t_exec **exec_lst, t_input **files, int paranthesis, int exe)
 	t_input	*tmp;
 	int		order;
 
+	if (*exec_lst && !exe)
+		(*exec_lst)->pid = -1;
 	if (*exec_lst)
 	{
-		if (!exe)
-			(*exec_lst)->pid = -1;
-		if ((*exec_lst)->input > 2
-			&& !((*exec_lst)->next && (*exec_lst)->input == (*exec_lst)->next->input))
-				close((*exec_lst)->input);
-		if ((*exec_lst)->output > 2
-			&& !((*exec_lst)->next && (*exec_lst)->output == (*exec_lst)->next->output))
-				close((*exec_lst)->output);
 		order = (*exec_lst)->order;
 		*exec_lst = (*exec_lst)->next;
 	}
@@ -47,8 +41,7 @@ void	next_bool(t_exec **exec_lst, t_input **files, int paranthesis, int exe)
 	// 	next_bool(exec_lst, files, paranthesis);
 	if (*exec_lst && (*exec_lst)->order != order)
 		return ;
-	if (*exec_lst && (*exec_lst)->paranthesis >= paranthesis
-		&& paranthesis > 0)
+	if (*exec_lst && (*exec_lst)->paranthesis >= paranthesis && paranthesis > 0)
 		next_bool(exec_lst, files, paranthesis, exe);
 }
 
@@ -59,29 +52,30 @@ void	handle_bool_exec(t_input *cmd, t_input *file, t_exec *exec, t_env **env)
 	set_fds(file, exec, *env);
 	default_sig();
 	if (exec->input == -1 || exec->output == -1)
+	{
+		g_exit_status = 1;
 		return (close_fds(exec));
+	}
 	ppx_exit(pid = fork(), "Fork failed", NULL, 1); // TODO gerer l'erreur
 	if (pid != 0)
 		exec->pid = pid;
 	if (pid == 0)
 	{
-		if (exec->next && exec->next->input > 2)
-			close(exec->next->input);
-		if (exec->input != STDIN_FILENO)
-			(dup2(exec->input, STDIN_FILENO), close(exec->input));
-		if (exec->output != STDOUT_FILENO)
-			(dup2(exec->output, STDOUT_FILENO), close(exec->output));
 		if (exec->close_bool)
-			close (exec->close_bool);
+			close(exec->close_bool);
 		default_sig();
 		if (is_built_in(cmd->arg, 0))
 			execute_builtin(env, cmd->arg, exec);
 		else
-			exec_cmd(cmd, *env, exec);
+			exec_cmd_part1(cmd, *env, exec);
 	}
+	if (exec->input > 2 && !(exec->next && exec->input == exec->next->input))
+		close(exec->input);
+	if (exec->output > 2 && !(exec->next && exec->output == exec->next->output))
+		close(exec->output);
 }
 
-int		wait_bool(t_exec *exec)
+int	wait_bool(t_exec *exec)
 {
 	int	status;
 
@@ -90,9 +84,9 @@ int		wait_bool(t_exec *exec)
 		while (exec->prev && exec->prev->pid == -1)
 			exec = exec->prev;
 	}
-	if (!exec->prev || (exec->prev && exec->prev->pid < 1))
+	if (!exec->prev || (exec->prev && !exec->prev->pid))
 	{
-		if ((!exec->prev || exec->prev->exec_both) && exec->prev->pid == -2)
+		if (!exec->prev || exec->prev->exec_both)
 			return (0);
 		else
 			return (1);
@@ -102,26 +96,9 @@ int		wait_bool(t_exec *exec)
 		g_exit_status = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
 		g_exit_status = 128 + WTERMSIG(status);
-	if (WIFEXITED(status) && (exec->prev->paranthesis != exec->paranthesis
-		|| exec->prev->order != exec->order))
-		exec->prev->pid = 0;
-	else
-		exec->prev->pid = -2;
+	exec->prev->pid = 0;
 	return (status);
 }
-
-// void	exec_nbr(t_exec *exec_lst)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (exec_lst)
-// 	{
-// 		exec_lst = exec_lst->next;
-// 		i++;
-// 	}
-// 	printf("?%d?\n", i);
-// }
 
 void	exec_bool(t_exec *exec_lst, t_input *files, t_env **env)
 {
@@ -144,16 +121,11 @@ void	exec_bool(t_exec *exec_lst, t_input *files, t_env **env)
 		if (tmp->token == CMD_BOOL)
 		{
 			if (!exec_lst)
-				break;
+				break ;
 			result = wait_bool(exec_lst);
-			if ((result && exec_lst->exec_both)
-				|| (!result && !exec_lst->exec_both))
-			{
-				if (exec_lst->prev && exec_lst->prev->paranthesis == exec_lst->paranthesis && exec_lst->prev->order == exec_lst->order)
-					next_bool(&exec_lst, &files, 0, 0);
-				else
-					next_bool(&exec_lst, &files, exec_lst->paranthesis, 0);
-			}
+			if ((result && exec_lst->exec_both) || (!result
+					&& !exec_lst->exec_both))
+				next_bool(&exec_lst, &files, exec_lst->paranthesis, 0);
 			else
 			{
 				handle_bool_exec(tmp, files, exec_lst, env);

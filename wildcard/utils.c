@@ -46,34 +46,6 @@ void	list_free_wildcard(t_wildcard_list *head)
 	}
 }
 
-// char	**list_to_array(t_wildcard_list *head)
-// {
-// 	int				count;
-// 	char			**array;
-// 	t_wildcard_list	*current;
-// 	int				i;
-
-// 	count = 0;
-// 	current = head;
-// 	while (current)
-// 	{
-// 		count++;
-// 		current = current->next;
-// 	}
-// 	array = malloc(sizeof(char *) * (count + 1));
-// 	if (!array)
-// 		return (NULL);
-// 	current = head;
-// 	i = 0;
-// 	while (current)
-// 	{
-// 		array[i++] = ft_strdup(current->content);
-// 		current = current->next;
-// 	}
-// 	array[i] = NULL;
-// 	return (array);
-// }
-
 int	list_size(t_wildcard_list *head)
 {
 	int				count;
@@ -96,7 +68,7 @@ int	has_wildcards(const char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '*' || str[i] == '?')
+		if (str[i] == '*')
 			return (1);
 		i++;
 	}

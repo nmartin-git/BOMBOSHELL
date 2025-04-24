@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 18:07:27 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/24 17:43:39 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/21 19:48:21 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,19 +64,24 @@ void	handle_exec(t_input *cmd, t_input *file, t_exec *exec_lst, t_env **env)
 	set_fds(file, exec_lst, *env);
 	default_sig();
 	if (exec_lst->input == -1 || exec_lst->output == -1)
+	{
+		g_exit_status = 1;
 		return (close_fds(exec_lst));
+	}
 	ppx_exit(pid = fork(), "Fork failed", NULL, 1); // TODO gerer l'erreur
 	if (pid != 0)
 		exec_lst->pid = pid;
 	if (pid == 0)
 	{
+		default_sig();
 		if (exec_lst->close_bool > 2)
 			close(exec_lst->close_bool);
-		default_sig();
+		// handle_diddy();
+		restore_signals();
 		if (is_built_in(cmd->arg, 0))
 			execute_builtin(env, cmd->arg, exec_lst);
 		else
-			exec_cmd(cmd, *env, exec_lst);
+			exec_cmd_part1(cmd, *env, exec_lst);
 	}
 	close_fds(exec_lst);
 }
@@ -92,7 +97,10 @@ char	*get_env_var(char *arg, t_env *env, int *y)
 	var_value = ft_strdup(get_env_value(env, var_name));
 	free(var_name);
 	if (!var_value)
+	{
 		var_value = ft_strdup("");
+		g_exit_status = 0;
+	}
 	return (var_value);
 }
 
@@ -139,9 +147,8 @@ void	expand_env_var(t_input *arg_lst, t_env *env)
 					i++;
 				if (arg_lst->arg[i] == '$')
 				{
-					if (ft_isalpha(arg_lst->arg[i + 1])
-						|| arg_lst->arg[i + 1] == '?'
-						|| arg_lst->arg[i + 1] == '_'
+					if (ft_isalpha(arg_lst->arg[i + 1]) || arg_lst->arg[i
+						+ 1] == '?' || arg_lst->arg[i + 1] == '_'
 						|| arg_lst->arg[i + 1] == '$')
 						replace_env_var(arg_lst, env, i + 1);
 					else
@@ -190,6 +197,6 @@ int	exec(t_input **arg_lst, t_env **env, t_exec *exec_lst)
 			tmp = tmp->next;
 	}
 	exec_bool(exec_lst, *arg_lst, env);
-	restore_signals();
+	// restore_signals();
 	return (exec_wait(exec_lst));
 }

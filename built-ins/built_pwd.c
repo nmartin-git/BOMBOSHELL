@@ -17,9 +17,8 @@ int	ft_pwd(t_shell *cmd)
 	if (getcwd(cmd->current_dir, PATH_MAX_ANANAS) == NULL)
 	{
 		perror("pwd error\n");
-		return (0);
+		return (1);
 	}
 	printf("%s\n", cmd->current_dir);
-	free(cmd->current_dir);
-	return (1);
+	return (0);
 }

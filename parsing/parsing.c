@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 11:39:48 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/24 14:18:38 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/15 18:16:47 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,7 @@ int	quotes_unify(t_input *tmp, t_input *prev, t_input **arg_lst)
 	is_open = tmp->next;
 	if (is_open && tmp->token == QUOTE && tmp->arg[0] == '\'')
 	{
-		while (is_open
-			&& !(is_open->token == QUOTE && is_open->arg[0] == '\''))
+		while (is_open && !(is_open->token == QUOTE && is_open->arg[0] == '\''))
 		{
 			if (!is_open->next)
 				return (0);
@@ -97,8 +96,8 @@ int	token_parse(t_input *arg_lst)
 	first = arg_lst;
 	while (arg_lst)
 	{
-		while (arg_lst
-			&& (arg_lst->token == SPACES || arg_lst->token == PARANTHESIS))
+		while (arg_lst && (arg_lst->token == SPACES
+				|| arg_lst->token == PARANTHESIS))
 			arg_lst = arg_lst->next;
 		if (!arg_lst)
 			break ;
@@ -106,7 +105,8 @@ int	token_parse(t_input *arg_lst)
 		next = get_next_token(arg_lst);
 		if (!parse_check(prev, next, arg_lst))
 		{
-			ft_printf_fd(2, "bomboshell: parse error near '%s'\n", arg_lst->arg);
+			ft_printf_fd(2, "bomboshell: parse error near '%s'\n",
+				arg_lst->arg);
 			return (0);
 		}
 		arg_lst = arg_lst->next;

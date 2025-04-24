@@ -16,9 +16,15 @@ int	here_doc_exit(int pid, int fd_pipe[2])
 {
 	int	status;
 
-	waitpid(pid, &status, 0);
 	close(fd_pipe[1]);
-	if (WIFEXITED(status) && WEXITSTATUS(status) == 130)
+	waitpid(pid, &status, 0);
+	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+	{
+		g_exit_status = 130;
+		close(fd_pipe[0]);
+		return (-1);
+	}
+	else if (WIFEXITED(status) && WEXITSTATUS(status) == 130)
 	{
 		g_exit_status = 130;
 		close(fd_pipe[0]);
@@ -41,9 +47,11 @@ int	ppx_here_doc(t_input *arg, t_env *env, int quotes)
 	// TODO gerer exit code
 	if (pid == 0)
 	{
-		signal(SIGINT, handle_here_doc);
 		close(fd_pipe[0]);
-		while (!ppx_cmp(arg->arg, str))
+		signal(SIGINT, handle_here_doc);
+		ft_printf("> ");
+		str = get_next_line(0);
+		while (str != NULL && !ppx_cmp(arg->arg, str))
 		{
 			if (str && quotes)
 				str = expand_env_vars_in_str(str, env);
@@ -52,9 +60,14 @@ int	ppx_here_doc(t_input *arg, t_env *env, int quotes)
 			(free(str), ft_printf("> "));
 			str = get_next_line(0);
 		}
-		(free(str), close(fd_pipe[1]));
+		if (str == NULL)
+			write(STDOUT_FILENO, "\n", 1);
+		else
+			free(str);
+		close(fd_pipe[1]);
 		exit(0);
 	}
+	restore_signals();
 	return (here_doc_exit(pid, fd_pipe));
 }
 
@@ -117,11 +130,12 @@ void	set_fds(t_input *file, t_exec *exec, t_env *env)
 			exec->output = fd_output(file, exec);
 		else if (exec->output == STDOUT_FILENO && file->token == PIPE)
 		{
-			ppx_exit(pipe(fd_pipe), "Failed opening the pipe", NULL, 1);//TODO gerer l'erreur
+			ppx_exit(pipe(fd_pipe), "Failed opening the pipe", NULL, 1);
+			// TODO gerer l'erreur
 			exec->next->input = fd_pipe[0];
 			exec->output = fd_pipe[1];
 		}
-		if (!file->next || file->token == BOOL || file->token  == PIPE)
+		if (!file->next || file->token == BOOL || file->token == PIPE)
 			return ;
 		file = file->next;
 	}

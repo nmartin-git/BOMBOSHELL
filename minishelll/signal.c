@@ -6,11 +6,11 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 23:51:48 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/23 21:04:06 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/19 16:47:55 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "bombosignal.h"
+#include "../headers/bomboshell.h"
 
 int			g_exit_status = 0;
 
@@ -23,15 +23,22 @@ static void	handle_sigint(int sig)
 	rl_replace_line("", 0);
 	rl_redisplay();
 	if (wait(NULL) != -1)
-		printf("\n");
+		handle_child(sig);
 }
 
-// static void	handle_sigquit(int sig)
-// {
-// 	(void)sig;
-// 	rl_on_new_line();
-// 	rl_redisplay();
-// }
+void	handle_child(int sig)
+{
+	if (sig == SIGINT)
+	{
+		write(1, "\n", 1);
+		// exit(130);
+	}
+}
+void	handle_diddy(void)
+{
+	signal(SIGINT, handle_child);
+	signal(SIGQUIT, SIG_DFL);
+}
 
 void	default_sig(void)
 {
@@ -50,7 +57,7 @@ void	handle_here_doc(int sig)
 	if (sig == SIGINT)
 	{
 		write(1, "\n", 1);
-		exit(130);
+		// exit(130);
 	}
 }
 
@@ -58,6 +65,10 @@ void	restore_signals(void)
 {
 	prompt_sig();
 }
+
+// SIGINT 	Terminer 	Interruption du clavier ( ctrl-c)
+// SIG_IGN pour ignorer le signal,
+// 3 	SIGQUIT 	Terminer 	Fin du processus, parfois du clavier ( ctrl-\)
 
 /*
 handle_sigint :

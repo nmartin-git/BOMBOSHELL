@@ -13,11 +13,11 @@
 #ifndef BUILTINS_H
 # define BUILTINS_H
 
-# include <stdio.h>
-# include <limits.h>
-# include <sys/wait.h>
 # include "bombosignal.h"
 # include "libft.h"
+# include <limits.h>
+# include <stdio.h>
+# include <sys/wait.h>
 
 # define PATH_MAX_ANANAS 4096
 
@@ -52,6 +52,7 @@ typedef struct s_exec
 }					t_exec;
 
 void				free_exec_lst(t_exec *exec_lst);
+void				free_t_shell(t_shell *command);
 void				fd_builtin(t_exec *exec);
 t_shell				*set_t_shell(t_env *env, char *cmd);
 void				execute_builtin(t_env **env, char *cmd, t_exec *exec);
@@ -64,7 +65,7 @@ int					ft_exit(t_shell *shell);
 int					ft_env(t_env *list);
 int					ft_unset(t_shell *shell);
 int					ft_export(t_shell *shell, char *str);
-int					ft_echo(t_shell *shell);
+int					ft_echo(t_shell *shell, char *s);
 
 // builtin utils
 char				*get_env_value(t_env *env, char *key);

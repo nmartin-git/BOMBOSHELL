@@ -26,6 +26,18 @@ int	only_space(char *str)
 	}
 	return (1);
 }
+// void	cleanup_resources(t_env *env, t_exec *exec)
+// {
+// 	free_env_list(env);
+// 	if (exec)
+// 		free_exec_lst(exec);
+// }
+
+// int main()
+// {
+//     cleanup_resources(env, input, exec_lst);
+//     return (exit_status);
+// }
 
 int	main(int ac, char **av, char **envp)
 {
@@ -33,6 +45,9 @@ int	main(int ac, char **av, char **envp)
 	t_input	*arg_lst;
 	t_env	*env;
 
+	// if (isatty(STDIN_FILENO) == 0 || isatty(STDERR_FILENO) == 0
+	// 	|| isatty(STDOUT_FILENO) == 0)
+	// 	return (1);
 	if (ac > 1 && av)
 	{
 		write(2, "bomboshell: too many arguments\n", 31);
