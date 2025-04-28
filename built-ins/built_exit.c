@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 19:37:32 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/28 15:07:13 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/28 17:18:26 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static void	exit_numeric_error(char *arg, t_shell *cmd)
 
 static int	too_many_args(char **args)
 {
-	if (args[2])
+	if (args && args[0] && args[1] && args[2])
 	{
 		ft_printf_fd(2, "bomboshell: exit: too many arguments\n");
 		g_exit_status = 1;

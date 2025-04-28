@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 21:33:37 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/27 14:44:37 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/28 18:14:14 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,10 @@ void	skip_boolgauche(t_input **files, t_exec **exec_tmp)
 {
 	if ((*exec_tmp))
 	{
-		if (*exec_tmp && (*files)->arg[0] == '&')
-			(*exec_tmp)->exec_both = 1;
-		else if (*exec_tmp)
-			(*exec_tmp)->exec_both = 0;
+		if (*exec_tmp && (*exec_tmp)->next && (*files)->arg[0] == '&')
+			(*exec_tmp)->next->exec_both = 1;
+		else if (*exec_tmp && (*exec_tmp)->next)
+			(*exec_tmp)->next->exec_both = 0;
 	}
 	*files = (*files)->next;
 	while (*files && (*files)->token == SPACES)
@@ -85,9 +85,19 @@ int	skip_booldroite(t_input **files, t_exec **exec_tmp, t_input **tmp)
 
 void	skip_bool(t_input **files, t_exec **exec_tmp, t_input **tmp, int *ordr)
 {
+	t_input	*check;
+
+	check = *tmp;
+	if (tmp)
+	{
+		while (check && check->token != BOOL && check->token != PIPE)
+			check = check->next;
+		if (check && check->token == PIPE)
+			return ;			
+	}
 	while (*files)
 	{
-		if (*files && (*files)->token == BOOL)
+		if (*files && ((*files)->token == BOOL || tmp))
 			skip_boolgauche(files, exec_tmp);
 		else if (*files && (*files)->token == PARANTHESIS
 			&& (*files)->arg[0] == '(')

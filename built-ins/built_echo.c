@@ -6,57 +6,11 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 19:17:52 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/20 18:25:00 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/28 17:05:27 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
-
-// int	ft_echo(t_shell *cmd, char *str)
-// {
-// 	int	i;
-// 	int	flag;
-// 	int	j;
-// 	int	y;
-
-// 	i = 0;
-// 	while (str[i] && (str[i] == ' ' || str[i] == '\t'))
-// 		i++;
-// 	i += 4;
-// 	if (!str[i])
-// 	{
-// 		printf("\n");
-// 		return (0);
-// 	}
-// 	while (str[i] && str[i] == '-')
-// 		i++;
-// 	while (str[i] && str[i] == 'n')
-// 		i++;
-// 	while (str[i] && (str[i] == ' ' || str[i] == '\t'))
-// 		i++;
-// 	if (!str[i])
-// 	{
-// 		printf("\n");
-// 		return (0);
-// 	}
-// 	y = i;
-// 	flag = 1;
-// 	i = 1;
-// 	j = 1;
-// 	while (cmd->command[i] && cmd->command[i][0] == '-'
-// 		&& cmd->command[i][1] == 'n')
-// 	{
-// 		while (cmd->command[i][j] == 'n')
-// 			j++;
-// 		if (cmd->command[i++][j] != '\0')
-// 			break ;
-// 		flag = 0;
-// 	}
-// 	printf("%s", &str[y]);
-// 	if (flag)
-// 		printf("\n");
-// 	return (0);
-// }
 
 int	is_n_flag(char *str)
 {

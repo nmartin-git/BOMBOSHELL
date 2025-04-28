@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 20:57:56 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/28 14:29:44 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/28 17:44:43 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,10 @@ void	handle_bool_exec(t_input *cmd, t_input *file, t_exec *exec, t_env **env)
 	}
 }
 
-int	wait_bool(t_exec *exec)
+int	wait_bool(t_exec *exec, int is_both)
 {
 	int	status;
-
+	is_both = 0;
 	if (exec->prev && exec->prev->pid == -1)
 	{
 		while (exec->prev && exec->prev->pid == -1)
@@ -80,17 +80,21 @@ int	wait_bool(t_exec *exec)
 	}
 	if (!exec->prev || (exec->prev && exec->prev->pid < 1))
 	{
-		if ((!exec->prev || exec->prev->exec_both) && exec->prev->pid == -2)
+		printf("?%d?\n", exec->prev->pid);
+		if (exec->prev->pid == 0)
 			return (0);
 		else
-			return (2);
+			return (1);
 	}
 	waitpid(exec->prev->pid, &status, 0);
 	if (WIFEXITED(status))
 		g_exit_status = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
 		g_exit_status = 128 + WTERMSIG(status);
-	exec->prev->pid = 0;
+	if (WEXITSTATUS(status))
+		exec->prev->pid = -2;
+	else
+		exec->prev->pid = 0;
 	return (WEXITSTATUS(status));
 }
 
@@ -100,7 +104,8 @@ void	bool_util(t_exec **exec, t_input **files, t_env **env, t_input **tmp)
 
 	if (!exec || !*exec)
 		return ;
-	result = wait_bool(*exec);
+	result = wait_bool(*exec, (*exec)->exec_both);
+	printf("%s : result = %d exec_both = %d\n", (*tmp)->arg, result, (*exec)->exec_both);
 	if ((result && (*exec)->exec_both)
 		|| (!result && !(*exec)->exec_both))
 	{
@@ -123,6 +128,13 @@ void	exec_bool(t_exec *exec_lst, t_input *files, t_env **env, t_input *tmp)
 	t_input	*first;
 
 	first = files;
+	t_exec *exec_tmp= exec_lst;
+	while (exec_tmp)
+	{
+		printf("[order = %d paranthesis = %d exec_both = %d] -> ", exec_tmp->order, exec_tmp->paranthesis, exec_tmp->exec_both);
+		exec_tmp = exec_tmp->next;
+	}
+	printf("null\n");
 	while (files && files->token == SPACES)
 		files = files->next;
 	if (files && files->token == PARANTHESIS)

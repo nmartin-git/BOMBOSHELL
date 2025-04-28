@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 14:25:03 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/28 14:55:57 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/28 17:05:52 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	execute_builtin(t_env **env, char *cmd, t_exec *exec, t_input *arg_lst)
 		g_exit_status = ft_unset(command);
 	free_t_shell(command);
 	free_env(*env);
-	free_exec_lst(exec);
+	free_exec_lst(exec->first);
 	lsts_free(arg_lst);
 	exit(g_exit_status);
 }
