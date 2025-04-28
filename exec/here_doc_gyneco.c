@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 19:39:36 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/27 19:49:16 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/28 15:07:31 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	suicide_squad(t_exec *exec, t_input **files, t_input *arg, t_input *tmp)
 		check = check->next;
 	if (check && check->token != CMD)
 	{
-		exec->empty = 1;	
+		exec->empty = 1;
 		*files = check;
 	}
 	if (!exec)
@@ -30,6 +30,7 @@ int	suicide_squad(t_exec *exec, t_input **files, t_input *arg, t_input *tmp)
 	if (*files && *files != arg)
 		*files = (*files)->next;
 	tmp->first = arg;
+	(*files)->first = arg;
 	return (1);
 }
 
@@ -95,11 +96,9 @@ int	ppx_here_doc(t_input *arg, t_env *env, int quotes, t_exec *exec)
 	ppx_exit(pid = fork(), "Fork failed", fd_pipe, 1);
 	if (pid == 0)
 	{
-		close (fd_pipe[0]);
+		close(fd_pipe[0]);
 		(default_sig(), setup_heredoc(), free_exec_lst(exec), ft_printf("> "));
 		str = get_next_line(0);
-		// if (quotes && !ppx_cmp(arg->arg, str))
-		// 	str = expand_env_vars_in_str(str, env);
 		while (str != NULL && !ppx_cmp(arg->arg, str))
 		{
 			if (quotes)
@@ -111,7 +110,7 @@ int	ppx_here_doc(t_input *arg, t_env *env, int quotes, t_exec *exec)
 			exit(130);
 		else
 			free(str);
-		(close(fd_pipe[1]), free_env(env), exit(0));
+		(close(fd_pipe[1]), free_env(env), lsts_free(arg), exit(0));
 	}
 	return (restore_signals(), here_doc_exit(pid, fd_pipe));
 }

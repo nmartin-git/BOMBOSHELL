@@ -42,5 +42,6 @@ char					**list_to_array(t_wildcard_list *head);
 int						list_size(t_wildcard_list *head);
 t_wildcard_list			*add_match(t_wildcard_list *matches, char *pattern,
 							int i);
+void					sort_wildcards(t_wildcard_list **rass);
 
 #endif

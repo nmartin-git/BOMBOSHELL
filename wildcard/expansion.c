@@ -12,20 +12,11 @@
 
 #include "wildcard.h"
 
-static void	process_match(t_wildcard_list **matches, char *entry_name, int *i)
-{
-	char	*full_path;
-
-	full_path = ft_strjoin(" ", entry_name);
-	list_add_back_wildcard(matches, full_path);
-	free(full_path);
-	(*i)++;
-}
-
 static void	handle_dir_entry(DIR *dir, t_wildcard_list **matches, char *pattern,
 		int *i)
 {
 	struct dirent	*entry;
+	char			*path;
 
 	entry = readdir(dir);
 	while (entry != NULL)
@@ -36,7 +27,12 @@ static void	handle_dir_entry(DIR *dir, t_wildcard_list **matches, char *pattern,
 			continue ;
 		}
 		if (match_pattern(pattern, entry->d_name))
-			process_match(matches, entry->d_name, i);
+		{
+			path = ft_strjoin(" ", entry->d_name);
+			list_add_back_wildcard(matches, path);
+			free(path);
+			(*i)++;
+		}
 		entry = readdir(dir);
 	}
 }
@@ -54,11 +50,7 @@ t_wildcard_list	*expand_wildcards(char *pattern)
 		return (NULL);
 	handle_dir_entry(dir, &matches, pattern, &i);
 	closedir(dir);
-	return (add_match(matches, pattern, i));
-}
-
-t_wildcard_list	*add_match(t_wildcard_list *matches, char *pattern, int i)
-{
+	sort_wildcards(&matches);
 	if (i == 0)
 		list_add_back_wildcard(&matches, pattern);
 	return (matches);

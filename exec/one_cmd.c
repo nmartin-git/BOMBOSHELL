@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 15:20:42 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/27 15:00:24 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/28 14:26:52 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	one_cmd_fds(t_exec *exec)
 	return (dup_stdout);
 }
 
-int	exec_one_cmd(t_env **env, char *cmd, t_exec *exec)
+int	exec_one_cmd(t_env **env, char *cmd, t_exec *exec, t_input *arg_lst)
 {
 	t_shell	*command;
 	int		exit_code;
@@ -54,7 +54,7 @@ int	exec_one_cmd(t_env **env, char *cmd, t_exec *exec)
 	else if (ft_strncmp(command->command[0], "env", 3) == 0)
 		exit_code = ft_env(*env);
 	else if (ft_strncmp(command->command[0], "exit", 4) == 0)
-		exit_code = ft_exit(command, *env);
+		exit_code = ft_exit(command, *env, arg_lst, exec);
 	else if (ft_strncmp(command->command[0], "export", 6) == 0)
 		exit_code = ft_export(command, cmd);
 	else if (ft_strncmp(command->command[0], "pwd", 3) == 0)
@@ -86,7 +86,7 @@ int	one_cmd(t_input *arg_lst, t_env **env, t_exec *exec_lst)
 			g_exit_status = 1;
 			return (close_fds(exec_lst), 1);
 		}
-		g_exit_status = exec_one_cmd(env, cmd->arg, exec_lst);
+		g_exit_status = exec_one_cmd(env, cmd->arg, exec_lst, arg_lst);
 		free_exec_lst(exec_lst);
 		return (1);
 	}

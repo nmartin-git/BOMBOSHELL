@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 18:57:14 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/27 17:56:43 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/28 15:08:07 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define BUILTINS_H
 
 # include "bombosignal.h"
+# include "parsing.h"
 # include "libft.h"
 # include <limits.h>
 # include <stdio.h>
@@ -57,13 +58,13 @@ void				free_exec_lst(t_exec *exec_lst);
 void				free_t_shell(t_shell *command);
 void				fd_builtin(t_exec *exec);
 t_shell				*set_t_shell(t_env *env, char *cmd);
-void				execute_builtin(t_env **env, char *cmd, t_exec *exec);
+void				execute_builtin(t_env **e, char *c, t_exec *x, t_input *a);
 t_env				*init_env(char **envp);
 
 // builtin
 int					ft_cd(t_shell *shell);
 int					ft_pwd(t_shell *shell);
-int					ft_exit(t_shell *shell, t_env *env);
+int					ft_exit(t_shell *s, t_env *env, t_input *arg, t_exec *exe);
 int					ft_env(t_env *list);
 int					ft_unset(t_shell *shell);
 int					ft_export(t_shell *shell, char *str);

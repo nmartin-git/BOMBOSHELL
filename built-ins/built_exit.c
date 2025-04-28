@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 19:37:32 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/27 14:10:36 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/28 15:07:13 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,12 @@ static int	is_overflow(const char *arg, long value)
 	return (0);
 }
 
-static void	exit_numeric_error(char *arg)
+static void	exit_numeric_error(char *arg, t_shell *cmd)
 {
 	ft_printf_fd(2, "bomboshell: exit: %s: numeric argument required\n", arg);
-	exit(2);
+	free_t_shell(cmd);
+	g_exit_status = 2;
+	exit (2);
 }
 
 static int	too_many_args(char **args)
@@ -58,27 +60,24 @@ static int	too_many_args(char **args)
 	return (0);
 }
 
-int	ft_exit(t_shell *cmd, t_env *env)
+int	ft_exit(t_shell *cmd, t_env *env, t_input *arg_lst, t_exec *exec)
 {
 	long	exit_status;
 	char	*arg;
 
-	ft_printf_fd(1, "exit\n");
-	free_env(env);
-	arg = cmd->command[1];
-	if (!arg)
-	{
-		free_t_shell(cmd);
-		exit(g_exit_status);
-	}
-	if (!ft_is_number(arg))
-		exit_numeric_error(arg);
-	exit_status = ft_atol(arg);
-	if (is_overflow(arg, exit_status))
-		exit_numeric_error(arg);
+	printf("exit\n");
 	if (too_many_args(cmd->command))
 		return (1);
+	arg = cmd->command[1];
+	if (!arg)
+		return (g_exit_status);
+	exit_status = ft_atol(arg);
 	g_exit_status = (unsigned char)exit_status;
+	free_env(env);
+	free_exec_lst(exec);
+	lsts_free(arg_lst);
+	if (is_overflow(arg, exit_status) || !ft_is_number(arg))
+		exit_numeric_error(arg, cmd);
 	free_t_shell(cmd);
-	exit(g_exit_status);
+	exit (g_exit_status);
 }

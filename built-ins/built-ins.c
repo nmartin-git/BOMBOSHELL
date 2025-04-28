@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 14:25:03 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/27 18:45:49 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/28 14:55:57 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ t_shell	*set_t_shell(t_env *env, char *cmd)
 	return (command);
 }
 
-void	execute_builtin(t_env **env, char *cmd, t_exec *exec)
+void	execute_builtin(t_env **env, char *cmd, t_exec *exec, t_input *arg_lst)
 {
 	t_shell	*command;
 	int		exit_code;
@@ -69,7 +69,7 @@ void	execute_builtin(t_env **env, char *cmd, t_exec *exec)
 	else if (ft_strncmp(command->command[0], "env", 3) == 0)
 		g_exit_status = ft_env(*env);
 	else if (ft_strncmp(command->command[0], "exit", 4) == 0)
-		g_exit_status = ft_exit(command, *env);
+		g_exit_status = ft_exit(command, *env, arg_lst, exec->first);
 	else if (ft_strncmp(command->command[0], "export", 6) == 0)
 		g_exit_status = ft_export(command, cmd);
 	else if (ft_strncmp(command->command[0], "pwd", 3) == 0)
@@ -77,5 +77,8 @@ void	execute_builtin(t_env **env, char *cmd, t_exec *exec)
 	else if (ft_strncmp(command->command[0], "unset", 5) == 0)
 		g_exit_status = ft_unset(command);
 	free_t_shell(command);
+	free_env(*env);
+	free_exec_lst(exec);
+	lsts_free(arg_lst);
 	exit(g_exit_status);
 }

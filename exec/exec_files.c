@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:35:53 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/27 18:07:48 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/28 15:07:44 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ void	set_fds(t_input *file, t_exec *exec, t_env *env, int *fd_pipe)
 		if (!file->next || file->token == BOOL || file->token == PIPE)
 		{
 			if (exec->input == 0 && ((exec->prev && exec->prev->input == -1)
-				|| exec->empty))
+					|| exec->empty))
 			{
 				ppx_exit(pipe(fd_pipe), "Failed opening the pipe", NULL, 1);
 				(close(fd_pipe[1]), exec->input = fd_pipe[0]);

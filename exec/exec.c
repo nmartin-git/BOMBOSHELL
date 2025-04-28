@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 18:07:27 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/27 18:08:54 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/28 14:58:35 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	handle_exec(t_input *cmd, t_input *file, t_exec *exec_lst, t_env **env)
 		if (exec_lst->close_bool > 2)
 			close(exec_lst->close_bool);
 		if (is_built_in(cmd->arg, 0))
-			execute_builtin(env, cmd->arg, exec_lst);
+			execute_builtin(env, cmd->arg, exec_lst, cmd->first);
 		else
 			exec_cmd_part1(cmd, *env, exec_lst);
 	}
@@ -67,13 +67,13 @@ void	replace_env_var(t_input *arg_lst, t_env *env, int i)
 	arg_lst->arg = result;
 }
 
-void	expand_env_var(t_input *arg_lst, t_env *env)
+void	expand_env_var(t_input *arg_lst, t_env *env, int i)
 {
-	int	i;
-
 	while (arg_lst)
 	{
-		if (arg_lst->token == WORD || arg_lst->token == WORD_D_QUOTE)
+		if (arg_lst->token == WORD || arg_lst->token == WORD_D_QUOTE
+			|| arg_lst->token == INFILE || arg_lst->token == APPEND
+			|| arg_lst->token == OUTFILE)
 		{
 			i = 0;
 			while (arg_lst->arg[i])
@@ -96,18 +96,25 @@ void	expand_env_var(t_input *arg_lst, t_env *env)
 	}
 }
 
-int	exec_preliminaires(t_input **arg, t_env **env, t_exec **exec, t_input **tp)
+int	exec_preliminaires(t_input **arg, t_env **env, t_exec **exec, int *order)
 {
-	expand_env_var(*arg, *env);
-	expand_wildcards_in_tokens(*arg);
 	files_tokenisation(arg, NULL);
+	expand_env_var(*arg, *env, 0);
+	expand_wildcards_in_tokens(*arg);
 	cmd_tokenisation(*arg);
 	if (!paranthesis_parsing(arg, *arg, NULL))
+	{
+		*order = 2;
 		return (2);
+	}
 	*exec = exec_init(*arg, NULL, NULL);
 	if (one_cmd(*arg, env, *exec))
+	{
+		*order = 0;
 		return (0);
-	*tp = *arg;
+	}
+	*order = 0;
+	(*arg)->first = *arg;
 	return (1);
 }
 
@@ -117,11 +124,10 @@ int	exec(t_input **arg_lst, t_env **env, t_exec *exec_lst, t_input *files)
 	t_exec	*exec_tmp;
 	int		order;
 
-	order = exec_preliminaires(arg_lst, env, &exec_lst, &tmp);
-	files = *arg_lst;
-	if (order != 1)
+	if (exec_preliminaires(arg_lst, env, &exec_lst, &order) != 1)
 		return (order);
-	order = 0;
+	files = *arg_lst;
+	tmp = *arg_lst;
 	exec_tmp = exec_lst;
 	while (tmp)
 	{

@@ -30,7 +30,7 @@ int	match_pattern(const char *pattern, const char *str)
 		}
 		return (match_pattern(pattern + 1, str));
 	}
-	if (*pattern == *str || (*pattern == '?' && *str != '\0'))
+	if (*pattern == *str && (*str != '\0'))
 		return (match_pattern(pattern + 1, str + 1));
 	return (0);
 }

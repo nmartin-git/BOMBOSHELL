@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 20:57:56 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/27 15:00:43 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/28 14:29:44 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	handle_bool_exec(t_input *cmd, t_input *file, t_exec *exec, t_env **env)
 			close (exec->close_bool);
 		restore_signals();
 		if (is_built_in(cmd->arg, 0))
-			execute_builtin(env, cmd->arg, exec);
+			execute_builtin(env, cmd->arg, exec, cmd->first);
 		else
 			exec_cmd_part1(cmd, *env, exec);
 	}
@@ -120,6 +120,9 @@ void	bool_util(t_exec **exec, t_input **files, t_env **env, t_input **tmp)
 
 void	exec_bool(t_exec *exec_lst, t_input *files, t_env **env, t_input *tmp)
 {
+	t_input	*first;
+
+	first = files;
 	while (files && files->token == SPACES)
 		files = files->next;
 	if (files && files->token == PARANTHESIS)
@@ -132,6 +135,7 @@ void	exec_bool(t_exec *exec_lst, t_input *files, t_env **env, t_input *tmp)
 	}
 	while (tmp && exec_lst)
 	{
+		tmp->first = first;
 		if (tmp->token == CMD_BOOL)
 			bool_util(&exec_lst, &files, env, &tmp);
 		else if (tmp->token == CMD)
