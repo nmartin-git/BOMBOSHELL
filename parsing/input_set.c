@@ -6,21 +6,28 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 17:05:39 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/15 18:20:04 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/27 19:22:51 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
+t_input	*unclosed_utils(int quotes, t_input *check)
+{
+	(void)quotes;
+	return (check);
+}
+
 void	double_spaces(t_input *arg_lst)
 {
 	t_input	*del;
+
 	while (arg_lst)
 	{
 		if (arg_lst->token == SPACES
 			&& arg_lst->next && arg_lst->next->token == SPACES)
 		{
-			arg_lst->arg = ft_strjoin_free(arg_lst->arg, arg_lst->next->arg);//TODO gerer l'erreur de malloc
+			arg_lst->arg = ft_strjoin_free(arg_lst->arg, arg_lst->next->arg);
 			del = arg_lst->next;
 			arg_lst->next = arg_lst->next->next;
 			free(del);

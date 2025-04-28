@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 19:39:25 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/14 19:02:01 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/26 15:32:05 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,28 +28,57 @@ int	ft_env(t_env *list)
 	return (0);
 }
 
+static int	split_env_line(char *env_line, char **key, char **value)
+{
+	int	j;
+
+	j = 0;
+	while (env_line[j] && env_line[j] != '=')
+		j++;
+	*key = ft_substr(env_line, 0, j);
+	if (!*key)
+		return (0);
+	if (env_line[j] == '=')
+		*value = ft_strdup(env_line + j + 1);
+	else
+		*value = NULL;
+	return (1);
+}
+
+static int	add_env_entry(t_env **env_list, char *key, char *value)
+{
+	t_env	*new;
+
+	new = new_env(key, value);
+	if (!new)
+	{
+		free(key);
+		if (value)
+			free(value);
+		return (0);
+	}
+	add_env(env_list, new);
+	free(key);
+	if (value)
+		free(value);
+	return (1);
+}
+
 t_env	*init_env(char **envp)
 {
 	t_env	*env_list;
-	t_env	*new;
-	char	**split;
+	char	*key;
+	char	*value;
 	int		i;
 
 	env_list = NULL;
 	i = 0;
 	while (envp[i])
 	{
-		split = ft_split(envp[i], '=');
-		if (!split)
+		if (!split_env_line(envp[i], &key, &value))
 			return (NULL);
-		new = new_env(split[0], split[1]);
-		if (!new)
-		{
-			ft_free_tab(split);
+		if (!add_env_entry(&env_list, key, value))
 			return (NULL);
-		}
-		add_env(&env_list, new);
-		ft_free_tab(split);
 		i++;
 	}
 	return (env_list);

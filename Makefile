@@ -6,7 +6,7 @@
 #    By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/05 15:41:03 by nmartin           #+#    #+#              #
-#    Updated: 2025/04/18 18:09:38 by nmartin          ###   ########.fr        #
+#    Updated: 2025/04/26 22:27:22 by nmartin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,26 +18,32 @@ RESET = \033[0m
 
 CC = cc
 CFLAGS = -g -Wall -Werror -Wextra -MMD -MP
-NAME = bomboshell
-MINISHELL_PATH = ./minishell/
-MINISHELL_FILES = bomboshell.c
+NAME = minishell
+MINISHELL_PATH = ./bomboshell/
+MINISHELL_FILES = bomboshell.c signal.c
 MINISHELL := $(addprefix $(MINISHELL_PATH), $(MINISHELL_FILES))
 PARSING_PATH = ./parsing/
 PARSING_FILES = parsing.c tokenisation.c input_set.c parsing_utils.c quotes_utils.c
 PARSING := $(addprefix $(PARSING_PATH), $(PARSING_FILES))
 EXEC_PATH = ./exec/
 EXEC_FILES = exec.c exec_tokenisation.c exec_utils.c exec_files.c ppx_utils.c \
-				one_cmd.c paranthesis_parsing.c
+				one_cmd.c paranthesis_parsing.c wildcard_exec.c exec_bool.c exec_tarantino.c \
+					here_doc_gyneco.c env_to_array.c fourre_tout.c passe_partout.c
 EXEC := $(addprefix $(EXEC_PATH), $(EXEC_FILES))
 BUILT_PATH = ./built-ins/
 BUILT_FILES = built-ins.c builtin_utils.c built_cd.c built_echo.c built_env.c \
-				built_exit.c built_export.c built_pwd.c built_unset.c export_parsing.c
+				built_exit.c built_export.c built_pwd.c built_unset.c export_parsing.c \
+					builtin_utils2.c builtin_utils3.c builtin_utils4.c built_export2.c is_builtins.c
 BUILT := $(addprefix $(BUILT_PATH), $(BUILT_FILES))
+WILDCARD_PATH = ./wildcard/
+WILDCARD_FILES = wildcard.c expansion.c utils.c expansion2.c
+WILDCARD := $(addprefix $(WILDCARD_PATH), $(WILDCARD_FILES))
 OBJ_PATH = ./objs/
 OBJ := $(addprefix $(OBJ_PATH), $(MINISHELL_FILES:.c=.o)) \
 		$(addprefix $(OBJ_PATH), $(PARSING_FILES:.c=.o)) \
 			$(addprefix $(OBJ_PATH), $(EXEC_FILES:.c=.o)) \
-				$(addprefix $(OBJ_PATH), $(BUILT_FILES:.c=.o))
+				$(addprefix $(OBJ_PATH), $(BUILT_FILES:.c=.o)) \
+					$(addprefix $(OBJ_PATH), $(WILDCARD_FILES:.c=.o))
 SRC_BNS_PATH = ./srcs_bonus/
 SRC_BNS_FILES = 
 SRC_BNS := $(addprefix $(SRC_BNS_PATH), $(SRC_BNS_FILES))
@@ -49,17 +55,26 @@ DEPS := $(OBJ:.o=.d)
 
 all : $(NAME)
 
-bonus : $(LIBFT) $(OBJ_BNS)
-	@printf "$(BLUE)Creating $(NAME) bonus...$(RESET)"
-	@$(CC) $(CFLAGS) $(OBJ_BNS) $(LIBFT) -o $(NAME)
-	@printf "\r\033[K"
-	@printf "$(GREEN)$(NAME) created successfully\n$(RESET)"
+bonus : all
+#	@printf "$(BLUE)Creating $(NAME) bonus...$(RESET)"
+#	@$(CC) $(CFLAGS) $(OBJ_BNS) $(LIBFT) -o $(NAME)
+#	@printf "\r\033[K"
+#	@printf "$(GREEN)$(NAME) created successfully\n$(RESET)"
 
 $(NAME) : $(LIBFT) $(OBJ)
 	@printf "$(PUPLE)Creating $(NAME)...$(RESET)"
 	@$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME) -lreadline
 	@printf "\r\033[K"
 	@printf "$(GREEN)$(NAME) created successfully\n$(RESET)"
+	@echo "$(PURPLE)▀█████████▄   ▄██████▄    ▄▄▄▄███▄▄▄▄   ▀█████████▄   ▄██████▄     ▄████████    ▄█    █▄       ▄████████  ▄█        ▄█       $(RESET)"
+	@echo "$(PURPLE)  ███    ███ ███    ███ ▄██▀▀▀███▀▀▀██▄   ███    ███ ███    ███   ███    ███   ███    ███     ███    ███ ███       ███       $(RESET)"
+	@echo "$(PURPLE)  ███    ███ ███    ███ ███   ███   ███   ███    ███ ███    ███   ███    █▀    ███    ███     ███    █▀  ███       ███       $(RESET)"
+	@echo "$(PURPLE) ▄███▄▄▄██▀  ███    ███ ███   ███   ███  ▄███▄▄▄██▀  ███    ███   ███         ▄███▄▄▄▄███▄▄  ▄███▄▄▄     ███       ███       $(RESET)"
+	@echo "$(PURPLE)▀▀███▀▀▀██▄  ███    ███ ███   ███   ███ ▀▀███▀▀▀██▄  ███    ███ ▀███████████ ▀▀███▀▀▀▀███▀  ▀▀███▀▀▀     ███       ███       $(RESET)"
+	@echo "$(PURPLE)  ███    ██▄ ███    ███ ███   ███   ███   ███    ██▄ ███    ███          ███   ███    ███     ███    █▄  ███       ███       $(RESET)"
+	@echo "$(PURPLE)  ███    ███ ███    ███ ███   ███   ███   ███    ███ ███    ███    ▄█    ███   ███    ███     ███    ███ ███▌    ▄ ███▌    ▄ $(RESET)"
+	@echo "$(PURPLE)▄█████████▀   ▀██████▀   ▀█   ███   █▀  ▄█████████▀   ▀██████▀   ▄████████▀    ███    █▀      ██████████ █████▄▄██ █████▄▄██ $(RESET)"
+	@echo "$(PURPLE)                                                                                                         ▀         ▀         $(RESET)"
 
 $(OBJ_PATH)%.o : $(MINISHELL_PATH)%.c
 	@printf "$(BLUE)Compiling $(NAME): [$<] $(RESET)"
@@ -81,6 +96,12 @@ $(OBJ_PATH)%.o : $(EXEC_PATH)%.c
 
 $(OBJ_PATH)%.o : $(BUILT_PATH)%.c
 	@printf "$(BLUE)Compiling $(NAME) built-ins: [$<] $(RESET)"
+	@mkdir -p $(OBJ_PATH) 
+	@$(CC) $(CFLAGS) $(HEADERS) -c $< -o $@
+	@printf "\r\033[K"
+
+$(OBJ_PATH)%.o : $(WILDCARD_PATH)%.c
+	@printf "$(BLUE)Compiling $(NAME) wildcard: [$<] $(RESET)"
 	@mkdir -p $(OBJ_PATH)
 	@$(CC) $(CFLAGS) $(HEADERS) -c $< -o $@
 	@printf "\r\033[K"
@@ -107,11 +128,10 @@ fclean :
 
 re : fclean all
 
-#commands perso
 
 exec : fclean all
 	@make clean --no-print-directory
 
-.PHONY : all clean fclean re
+.PHONY : all clean fclean re	
 
 -include $(DEPS)

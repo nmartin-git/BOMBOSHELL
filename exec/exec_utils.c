@@ -6,96 +6,107 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 17:24:54 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/18 18:09:12 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/27 17:57:03 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
-void	next_cmd(t_input **files, t_exec **exec_tmp)
+static char	*get_var_value(char *str, int *i, t_env *env)
 {
-	while (*files && (*files)->token != PIPE && (*files)->token != BOOL)
-		*files = (*files)->next;
-	if ((*exec_tmp)->next && *files && (*files)->token == BOOL)
-	{
-		(*exec_tmp)->next->pid_to_wait = (*exec_tmp)->pid;
-		if ((*files)->arg[0] == '&')
-			(*exec_tmp)->next->exec_both = 1;
-		else
-			(*exec_tmp)->next->exec_both = 0;
-	}
-	else if ((*exec_tmp)->next)
-		(*exec_tmp)->next->pid_to_wait = 0;
-	*exec_tmp = (*exec_tmp)->next;
+	char	*var_start;
+	char	*var_name;
+	char	*var_value;
+
+	var_start = &str[*i + 1];
+	while (ft_isalnum(str[*i + 1]) || str[*i + 1] == '_')
+		(*i)++;
+	var_name = ft_strndup(var_start, &str[*i] - var_start + 1);
+	var_value = get_env_value(env, var_name);
+	free(var_name);
+	if (!var_value)
+		return (ft_strdup(""));
+	return (ft_strdup(var_value));
 }
 
-char **env_to_array(t_env *env_list)
+static char	*append_char_to_result(char *result, char c)
 {
-	int 	count;
-	t_env	*current;
-	char	**env_array;
+	char	*single_char;
+	char	*new_result;
+
+	single_char = ft_strndup(&c, 1);
+	new_result = ft_strjoin_free(result, single_char);
+	return (new_result);
+}
+
+char	*expand_env_vars_in_str(char *str, t_env *env)
+{
+	char	*result;
 	int		i;
 
-	count = 0;
-	current = env_list;
-	while (current)
-	{
-		if (current->value)
-			count++;
-		current = current->next;
-	}
-	env_array = (char **)malloc(sizeof(char *) * (count + 1));
-	if (!env_array)
-		return (NULL);
-	current = env_list;
+	result = ft_strdup("");
 	i = 0;
-	while (current)
+	while (str[i])
 	{
-		if (current->value)
-		{
-			count = ft_strlen(current->key) + ft_strlen(current->value) + 2;
-			env_array[i] = (char *)malloc(sizeof(char) * count);
-			if (!env_array[i])
-			{
-				while (--i >= 0)
-					free(env_array[i]);
-				free(env_array);
-				return (NULL);
-			}
-			ft_strlcpy(env_array[i], current->key, ft_strlen(current->key) + 1);
-			ft_strlcat(env_array[i], "=", ft_strlen(env_array[i]) + 2);
-			ft_strlcat(env_array[i], current->value,
-				ft_strlen(env_array[i]) + ft_strlen(current->value)+ 1);
-			i++;
-		}
-		current = current->next;
+		if (str[i] == '$' && (ft_isalpha(str[i + 1]) || str[i + 1] == '_'))
+			result = ft_strjoin_free(result, get_var_value(str, &i, env));
+		else
+			result = append_char_to_result(result, str[i]);
+		i++;
 	}
-	env_array[i] = NULL;
-	return (env_array);
+	free(str);
+	return (result);
 }
 
-t_exec *exec_init(t_input *arg_lst, t_exec *exec_lst, t_exec *tmp)
+t_exec	*exec_utils(t_exec *exec_lst, t_exec *tmp)
+{
+	if (!exec_lst)
+	{
+		exec_lst = malloc(sizeof(t_exec));
+		if (!exec_lst)
+		{
+			ft_printf_fd(2, "bomboshell: memory allocation failed\n");
+			g_exit_status = 1;
+			return (NULL);
+		}
+		exec_lst->prev = NULL;
+		return (exec_lst);
+	}
+	else
+	{
+		tmp->next = malloc(sizeof(t_exec));
+		if (!tmp->next)
+		{
+			ft_printf_fd(2, "bomboshell: memory allocation failed\n");
+			g_exit_status = 1;
+			free_exec_lst(exec_lst);
+			return (NULL);
+		}
+		tmp->next->prev = tmp;
+		return (tmp->next);
+	}
+}
+
+t_exec	*exec_init(t_input *arg_lst, t_exec *exec_lst, t_exec *tmp)
 {
 	while (arg_lst)
 	{
 		if (arg_lst->token == CMD)
 		{
+			tmp = exec_utils(exec_lst, tmp);
+			if (!tmp)
+				return (NULL);
 			if (!exec_lst)
-			{
-				exec_lst = malloc(sizeof(t_exec));
-				if (!exec_lst)
-					exit(127); // TODO gerer l'erreur
-				tmp = exec_lst;
-			}
-			else
-			{
-				tmp->next = malloc(sizeof(t_exec));
-				if (!tmp->next)
-					exit(127); // TODO gerer l'erreur
-				tmp = tmp->next;
-			}
+				exec_lst = tmp;
+			tmp->first = exec_lst;
 			tmp->input = STDIN_FILENO;
 			tmp->output = STDOUT_FILENO;
+			tmp->paranthesis = 0;
+			tmp->order = 0;
+			tmp->pid = 0;
+			tmp->exec_both = 1;
+			tmp->close_bool = 0;
+			tmp->empty = 0;
 			tmp->next = NULL;
 		}
 		arg_lst = arg_lst->next;

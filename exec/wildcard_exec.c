@@ -1,0 +1,98 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   wildcard_exec.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/11 18:13:36 by atazzit           #+#    #+#             */
+/*   Updated: 2025/04/27 12:26:30 by nmartin          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "exec.h"
+
+static void	handle_wildcard_expansion(t_input *tmp)
+{
+	char	*original;
+	char	**expanded;
+	char	*args[2];
+
+	original = tmp->arg;
+	args[0] = tmp->arg;
+	args[1] = NULL;
+	expanded = expand_args_wildcards(args);
+	if (expanded && expanded[0])
+	{
+		tmp->arg = ft_strdup(expanded[0]);
+		if (!tmp->arg)
+			tmp->arg = original;
+		else
+		{
+			free(original);
+			tmp = add_remaining_tokens(tmp, expanded, tmp->token);
+		}
+		free_expanded_array(expanded);
+	}
+}
+
+void	expand_wildcards_in_tokens(t_input *arg_lst)
+{
+	t_input	*tmp;
+
+	tmp = arg_lst;
+	while (tmp)
+	{
+		if ((tmp->token == WORD)
+			&& has_wildcards(tmp->arg))
+			handle_wildcard_expansion(tmp);
+		tmp = tmp->next;
+	}
+}
+
+void	replace_token_arg(t_input *tmp, char **expanded)
+{
+	char	*new_arg;
+
+	new_arg = ft_strdup(expanded[0]);
+	if (!new_arg)
+		return ;
+	free(tmp->arg);
+	tmp->arg = new_arg;
+}
+
+void	free_expanded_array(char **expanded)
+{
+	int	j;
+
+	j = 0;
+	while (expanded[j])
+	{
+		free(expanded[j]);
+		j++;
+	}
+	free(expanded);
+}
+
+t_input	*add_remaining_tokens(t_input *tmp, char **expanded, int token)
+{
+	int		i;
+	t_input	*new_token;
+	t_input	*last_added;
+
+	i = 1;
+	last_added = tmp;
+	while (expanded[i])
+	{
+		new_token = malloc(sizeof(t_input));
+		if (!new_token)
+			break ;
+		new_token->arg = ft_strdup(expanded[i]);
+		new_token->token = token;
+		new_token->next = last_added->next;
+		last_added->next = new_token;
+		last_added = new_token;
+		i++;
+	}
+	return (last_added);
+}
