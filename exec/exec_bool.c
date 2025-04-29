@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 20:57:56 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/28 17:44:43 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/29 15:40:11 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,7 @@ int	wait_bool(t_exec *exec, int is_both)
 	}
 	if (!exec->prev || (exec->prev && exec->prev->pid < 1))
 	{
-		printf("?%d?\n", exec->prev->pid);
-		if (exec->prev->pid == 0)
+		if (exec->prev && exec->prev->pid == 0)
 			return (0);
 		else
 			return (1);
@@ -104,8 +103,11 @@ void	bool_util(t_exec **exec, t_input **files, t_env **env, t_input **tmp)
 
 	if (!exec || !*exec)
 		return ;
-	result = wait_bool(*exec, (*exec)->exec_both);
-	printf("%s : result = %d exec_both = %d\n", (*tmp)->arg, result, (*exec)->exec_both);
+	
+	if ((*exec)->prev)
+		result = wait_bool(*exec, (*exec)->exec_both);
+	else
+		result = 0;
 	if ((result && (*exec)->exec_both)
 		|| (!result && !(*exec)->exec_both))
 	{

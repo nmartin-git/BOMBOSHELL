@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 19:37:32 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/28 17:18:26 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/29 15:28:47 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,12 @@ int	ft_exit(t_shell *cmd, t_env *env, t_input *arg_lst, t_exec *exec)
 	printf("exit\n");
 	if (too_many_args(cmd->command))
 		return (1);
+	if (cmd->command && cmd->command[0] && !cmd->command[1])
+	{
+		(free_env(env), free_exec_lst(exec), lsts_free(arg_lst));
+		free_t_shell(cmd);
+		exit(g_exit_status);
+	}
 	arg = cmd->command[1];
 	if (!arg)
 		return (g_exit_status);
@@ -79,5 +85,5 @@ int	ft_exit(t_shell *cmd, t_env *env, t_input *arg_lst, t_exec *exec)
 	if (is_overflow(arg, exit_status) || !ft_is_number(arg))
 		exit_numeric_error(arg, cmd);
 	free_t_shell(cmd);
-	exit (g_exit_status);
+	exit(g_exit_status);
 }

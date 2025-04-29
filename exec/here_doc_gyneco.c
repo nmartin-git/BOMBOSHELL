@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 19:39:36 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/28 18:15:51 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/29 15:00:05 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,17 +20,18 @@ int	suicide_squad(t_exec *exec, t_input **files, t_input *arg, t_input *tmp)
 	while (check
 		&& check->token != CMD && check->token != PIPE && check->token != BOOL)
 		check = check->next;
-	if (check && check->token != CMD)
+	if (check && check->token != CMD && exec)
 	{
 		exec->empty = 1;
 		*files = check;
 	}
-	if (!exec)
+	if (!exec || !tmp)
 		return (0);
 	if (*files && *files != arg)
 		*files = (*files)->next;
 	tmp->first = arg;
-	(*files)->first = arg;
+	if (*files)
+		(*files)->first = arg;
 	return (1);
 }
 
@@ -73,14 +74,16 @@ int	here_doc_exit(int pid, int fd_pipe[2])
 	return (fd_pipe[0]);
 }
 
-int	heredoc_end(char *str, char *arg, int fd, t_env *env)
+int	heredoc_end(char *str, t_input *arg, int fd, t_env *env)
 {
 	if (str == NULL)
 	{
 		close (fd);
 		free_env(env);
 		printf("bomboshell: ");
-		printf("here-document delimited by end-of-file (wanted '%s')\n", arg);
+		printf("here-document delimited by end-of-file (wanted '%s')\n"
+			, arg->arg);
+		lsts_free(arg);
 		return (0);
 	}
 	return (1);
@@ -106,7 +109,7 @@ int	ppx_here_doc(t_input *arg, t_env *env, int quotes, t_exec *exec)
 			(ft_printf_fd(fd_pipe[1], "%s", str), free(str), ft_printf("> "));
 			str = get_next_line(0);
 		}
-		if (!heredoc_end(str, arg->arg, fd_pipe[1], env))
+		if (!heredoc_end(str, arg, fd_pipe[1], env))
 			exit(130);
 		else
 			free(str);

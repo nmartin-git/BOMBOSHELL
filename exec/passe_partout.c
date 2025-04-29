@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 21:49:19 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/28 18:12:44 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/29 14:07:59 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,9 @@ void	skip_paranthesis_utils(t_input **files, t_exec **exec_tmp, int p)
 	if ((*exec_tmp) && *files && (*files)->token == BOOL)
 	{
 		if ((*files)->arg[0] == '&')
-			(*exec_tmp)->exec_both = 1;
+			(*exec_tmp)->next->exec_both = 1;
 		else
-			(*exec_tmp)->exec_both = 0;
+			(*exec_tmp)->next->exec_both = 0;
 	}
 	if (*files && (*files)->token == PIPE && *exec_tmp && p > 0)
 	{
