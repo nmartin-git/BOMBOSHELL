@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 21:49:19 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/29 14:07:59 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/30 15:00:04 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,15 +85,18 @@ void	skip_paranthesis(t_input **files, t_exec **exec_tmp, int p, int order)
 			(*files)->token = CMD_BOOL;
 			(*exec_tmp)->order = order;
 			(*exec_tmp)->paranthesis = p;
+			while (*files && (*files)->token != BOOL && (*files)->token != 5)
+			*files = (*files)->next;
+			if ((*exec_tmp) && (*files)->token == BOOL)
+			{
+				if (*exec_tmp && (*exec_tmp)->next && (*files)->arg[0] == '&')
+					(*exec_tmp)->next->exec_both = 1;
+				else if (*exec_tmp && (*exec_tmp)->next)
+					(*exec_tmp)->next->exec_both = 0;
+			}
 			*exec_tmp = (*exec_tmp)->next;
 		}
-		else if ((*exec_tmp) && (*files)->token == BOOL)
-		{
-			if (*exec_tmp && (*exec_tmp)->next && (*files)->arg[0] == '&')
-				(*exec_tmp)->next->exec_both = 1;
-			else if (*exec_tmp && (*exec_tmp)->next)
-				(*exec_tmp)->next->exec_both = 0;
-		}
+		else 
 		*files = (*files)->next;
 		if ((*files)->token == PARANTHESIS && (*files)->arg[0] == '(')
 			skip_paranthesis(files, exec_tmp, p + 1, order);
