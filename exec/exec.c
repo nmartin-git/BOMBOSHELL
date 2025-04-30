@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 18:07:27 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/30 15:19:31 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/30 19:12:55 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,17 +116,6 @@ int	exec_preliminaires(t_input **arg, t_env **env, t_exec **exec, int *order)
 	*order = 0;
 	(*arg)->first = *arg;
 	return (1);
-}
-
-void	exec_nbr(t_exec *exec)//TODO supp
-{
-	int	i = 0;
-	while (exec)
-	{
-		i++;
-		exec = exec->next;
-	}
-	printf("?%d?\n", i);
 }
 
 int	exec(t_input **arg_lst, t_env **env, t_exec *exec_lst, t_input *files)

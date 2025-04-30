@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 11:45:55 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/29 15:37:56 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/30 19:11:33 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@ int	main(int ac, char **av, char **envp)
 		if (!input)
 		{
 			write(1, "exit\n", 5);
-			g_exit_status = 0;
 			break ;
 		}
 		parsing_exit = parsing(input, &arg_lst);

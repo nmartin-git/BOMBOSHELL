@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 20:57:56 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/30 16:18:04 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/30 19:15:24 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,10 @@ void	handle_bool_exec(t_input *cmd, t_input *file, t_exec *exec, t_env **env)
 	}
 }
 
-int	wait_bool(t_exec *exec, int is_both)
+int	wait_bool(t_exec *exec)
 {
 	int	status;
-	is_both = 0;
+
 	if (exec->prev && exec->prev->pid == -1)
 	{
 		while (exec->prev && exec->prev->pid == -1)
@@ -103,9 +103,8 @@ void	bool_util(t_exec **exec, t_input **files, t_env **env, t_input **tmp)
 
 	if (!exec || !*exec)
 		return ;
-	
 	if ((*exec)->prev)
-		result = wait_bool(*exec, (*exec)->exec_both);
+		result = wait_bool(*exec);
 	else
 		result = 0;
 	if ((result && (*exec)->exec_both)

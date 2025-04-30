@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 21:33:37 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/30 16:15:54 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/30 19:12:21 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ void	skip_bool(t_input **files, t_exec **exec_tmp, t_input **tmp, int *ordr)
 		while (check && check->token != CMD)
 			check = check->next;
 		if (check && check->token == CMD)
-			return ;			
+			return ;
 	}
 	while (*files)
 	{

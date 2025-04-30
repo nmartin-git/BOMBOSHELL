@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 19:39:36 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/29 15:00:05 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/30 19:12:43 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,8 @@ int	heredoc_end(char *str, t_input *arg, int fd, t_env *env)
 		close (fd);
 		free_env(env);
 		printf("bomboshell: ");
-		printf("here-document delimited by end-of-file (wanted '%s')\n"
-			, arg->arg);
+		printf("here-document delimited by end-of-file (wanted '%s')\n",
+			arg->arg);
 		lsts_free(arg);
 		return (0);
 	}
