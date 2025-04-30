@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 13:53:26 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/28 14:47:39 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/30 15:19:43 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@
 # define APPEND 12
 # define CMD 13
 # define CMD_BOOL 14
+
+void	exec_nbr(t_exec *exec);//TODO supp
 
 void	skip_bool(t_input **files, t_exec **exec_tmp, t_input **tmp, int *ord);
 void	free_cmd_fail(char **env, char **cmd, char *env_set, int error_exit);

@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 21:33:37 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/30 14:55:15 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/30 16:15:54 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,10 @@ void	skip_boolgauche(t_input **files, t_exec **exec_tmp)
 {
 	if ((*exec_tmp))
 	{
-		if (*exec_tmp && (*exec_tmp)->next && (*files)->arg[0] == '&')
-			(*exec_tmp)->next->exec_both = 1;
-		else if (*exec_tmp && (*exec_tmp)->next)
-			(*exec_tmp)->next->exec_both = 0;
+		if ((*files)->arg[0] == '&')
+			(*exec_tmp)->exec_both = 1;
+		else
+			(*exec_tmp)->exec_both = 0;
 	}
 	*files = (*files)->next;
 	while (*files && (*files)->token == SPACES)

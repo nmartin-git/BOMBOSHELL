@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 20:57:56 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/30 15:09:20 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/30 16:18:04 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,6 @@ int	wait_bool(t_exec *exec, int is_both)
 	}
 	if (!exec->prev || (exec->prev && exec->prev->pid < 1))
 	{
-		printf("333333333333333333333333333333\n");
 		if (exec->prev && exec->prev->pid == 0)
 			return (0);
 		else
@@ -95,7 +94,6 @@ int	wait_bool(t_exec *exec, int is_both)
 		exec->prev->pid = -2;
 	else
 		exec->prev->pid = 0;
-	printf("4444444444444444444444444444444444444\n");
 	return (WEXITSTATUS(status));
 }
 
@@ -110,7 +108,6 @@ void	bool_util(t_exec **exec, t_input **files, t_env **env, t_input **tmp)
 		result = wait_bool(*exec, (*exec)->exec_both);
 	else
 		result = 0;
-	printf("%s : result = %d exec_both = %d\n", (*tmp)->arg, result, (*exec)->exec_both);
 	if ((result && (*exec)->exec_both)
 		|| (!result && !(*exec)->exec_both))
 	{
@@ -120,6 +117,7 @@ void	bool_util(t_exec **exec, t_input **files, t_env **env, t_input **tmp)
 			next_bool(exec, files, 0, 0);
 		else
 			next_bool(exec, files, (*exec)->paranthesis, 0);
+		*tmp = *files;
 	}
 	else
 	{
@@ -133,23 +131,8 @@ void	exec_bool(t_exec *exec_lst, t_input *files, t_env **env, t_input *tmp)
 	t_input	*first;
 
 	first = files;
-	t_exec *exec_tmp= exec_lst;
-	while (exec_tmp)
-	{
-		printf("[order = %d paranthesis = %d exec_both = %d] -> ", exec_tmp->order, exec_tmp->paranthesis, exec_tmp->exec_both);
-		exec_tmp = exec_tmp->next;
-	}
-	printf("null\n");
 	while (files && files->token == SPACES)
 		files = files->next;
-	// if (files && files->token == PARANTHESIS)
-	// {
-	// 	while (tmp && tmp->token != CMD_BOOL)
-	// 		tmp = tmp->next;
-	// 	handle_bool_exec(tmp, files, exec_lst, env);
-	// 	tmp = tmp->next;
-	// 	next_bool(&exec_lst, &files, 0, 1);
-	// }
 	while (tmp && exec_lst)
 	{
 		tmp->first = first;
