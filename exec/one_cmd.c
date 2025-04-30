@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 15:20:42 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/28 14:26:52 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/30 21:22:02 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ int	one_cmd(t_input *arg_lst, t_env **env, t_exec *exec_lst)
 		if (exec_lst->input == -1 || exec_lst->output == -1)
 		{
 			g_exit_status = 1;
-			return (close_fds(exec_lst), 1);
+			return (close_fds(exec_lst), free_exec_lst(exec_lst), 1);
 		}
 		g_exit_status = exec_one_cmd(env, cmd->arg, exec_lst, arg_lst);
 		free_exec_lst(exec_lst);

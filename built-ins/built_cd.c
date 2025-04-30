@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 19:36:54 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/18 19:18:15 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/30 20:25:34 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ static int	cd_change_dir(t_shell *cmd, char *new_dir, char *old_pwd)
 		return (1);
 	}
 	set_env_value(cmd->env_vars, "OLDPWD", old_pwd);
+	if (cmd->current_dir)
+		free(cmd->current_dir);
 	cmd->current_dir = getcwd(NULL, 0);
 	if (!cmd->current_dir)
 	{
