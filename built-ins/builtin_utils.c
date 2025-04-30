@@ -25,6 +25,7 @@ t_env	*new_env(char *key, char *value)
 	env->next = NULL;
 	return (env);
 }
+
 void	add_env(t_env **env_list, t_env *new)
 {
 	t_env	*current;
@@ -56,6 +57,7 @@ void	free_env(t_env *env)
 		current = next;
 	}
 }
+
 char	*get_env_value(t_env *env, char *key)
 {
 	t_env	*current;

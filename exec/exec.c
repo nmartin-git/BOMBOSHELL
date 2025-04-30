@@ -6,114 +6,55 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 18:07:27 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/18 17:47:46 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/30 19:12:55 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "bomboshell.h"
 #include "exec.h"
-#include <stdio.h>//TODO supp
-
-void print_tokens(t_input *arg_lst) //TODO supp
-{
-	t_input *tmp;
-
-	tmp = arg_lst;
-	while (tmp)
-	{
-		if (tmp->token == HERE_DOC)
-			printf("HERE_DOC -> ");
-		else if (tmp->token == INFILE)
-			printf("INFILE -> ");
-		else if (tmp->token == OUTFILE)
-			printf("OUTFILE -> ");
-		else if (tmp->token == APPEND)
-			printf("APPEND -> ");
-		else if (tmp->token == CMD)
-			printf("CMD -> ");
-		else if (tmp->token == REDIR)
-			printf("REDIR -> ");
-		else if (tmp->token == PIPE)
-			printf("PIPE -> ");
-		else if (tmp->token == WORD)
-			printf("WORD -> ");
-		else if (tmp->token == WORD_D_QUOTE)
-			printf("WORD_D_QUOTE -> ");
-		else if (tmp->token == WORD_S_QUOTE)
-			printf("WORD_S_QUOTE -> ");
-		else if (tmp->token == SPACES)
-			printf("SPACES -> ");
-		else if (tmp->token == BOOL)
-			printf("BOOL -> ");
-		else if (tmp->token == PARANTHESIS)
-			printf("PARANTHESIS -> ");
-		else if (tmp->token == QUOTE)
-			printf("QUOTE -> ");
-		tmp = tmp->next;
-	}
-	printf("null\n");
-}//TODO supp ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 void	handle_exec(t_input *cmd, t_input *file, t_exec *exec_lst, t_env **env)
 {
-	int	status;
 	int	pid;
+	int	fd_pipe[2];
 
-	status = 0;
-	set_fds(file, exec_lst);
-	//TODO supp printf("%d %d\n", exec_lst->input, exec_lst->output);
+	set_fds(file, exec_lst, *env, fd_pipe);
 	if (exec_lst->input == -1 || exec_lst->output == -1)
 	{
-		if (exec_lst->input > 2)
-			close (exec_lst->input);
-		else if (exec_lst->output > 2)
-			close (exec_lst->output);
-		exec_lst->pid = -1;
-		return ;
+		g_exit_status = 1;
+		return (close_fds(exec_lst));
 	}
-	ppx_exit(pid = fork(), "Fork failed", NULL, 1);//TODO gerer l'erreur
+	ppx_exit(pid = fork(), "Fork failed", NULL, 1);
 	if (pid != 0)
 		exec_lst->pid = pid;
-	if (pid == 0 && is_built_in(cmd->arg, 0))
-		execute_builtin(env, cmd->arg, exec_lst);
-	else if (pid == 0)
-		exec_cmd(cmd, *env, exec_lst);
-	if (exec_lst->input > 2)
-		close (exec_lst->input);
-	if (exec_lst->output > 2)
-		close (exec_lst->output);
-}
-
-char    *get_env_var(char *arg, t_env *env, int *y)
-{
-    char    *var_name;
-    char    *var_value;
-
-    while (ft_isalnum(arg[*y]) || arg[*y] == '_')
-        *y += 1;
-    var_name = ft_strndup(arg, *y);
-    var_value = ft_strdup(get_env_value(env, var_name));
-    free(var_name);
-	if (!var_value)
-		var_value = ft_strdup("");
-    return (var_value);
+	if (pid == 0)
+	{
+		if (exec_lst->close_bool > 2)
+			close(exec_lst->close_bool);
+		if (is_built_in(cmd->arg, 0))
+			execute_builtin(env, cmd->arg, exec_lst, cmd->first);
+		else
+			exec_cmd_part1(cmd, *env, exec_lst);
+	}
+	close_fds(exec_lst);
 }
 
 void	replace_env_var(t_input *arg_lst, t_env *env, int i)
 {
 	char	*result;
-    char	*expand;
+	char	*expand;
 	int		y;
 
 	expand = NULL;
 	y = 0;
 	if (ft_isalpha(arg_lst->arg[i]) || arg_lst->arg[i] == '_')
-        expand = get_env_var(&arg_lst->arg[i], env, &y);
+		expand = get_env_var(&arg_lst->arg[i], env, &y);
 	else
 	{
-    	if (arg_lst->arg[i] == '?')
-    		expand = ft_itoa(/*TODO last_exit_status*/0);
+		if (arg_lst->arg[i] == '?')
+			expand = ft_itoa(g_exit_status);
 		else if (arg_lst->arg[i] == '$')
- 		   	expand = ft_itoa(/*TODO pid_parent*/0);
+			expand = ft_strdup("P.DIDDY");
 		y++;
 	}
 	if (i > 1)
@@ -126,14 +67,14 @@ void	replace_env_var(t_input *arg_lst, t_env *env, int i)
 	arg_lst->arg = result;
 }
 
-void    expand_env_var(t_input *arg_lst, t_env *env)
+void	expand_env_var(t_input *arg_lst, t_env *env, int i)
 {
-	int	i;
-
-    while (arg_lst)
-    {
-        if (arg_lst->token == WORD || arg_lst->token == WORD_D_QUOTE)
-        {
+	while (arg_lst)
+	{
+		if (arg_lst->token == WORD || arg_lst->token == WORD_D_QUOTE
+			|| arg_lst->token == INFILE || arg_lst->token == APPEND
+			|| arg_lst->token == OUTFILE)
+		{
 			i = 0;
 			while (arg_lst->arg[i])
 			{
@@ -142,52 +83,66 @@ void    expand_env_var(t_input *arg_lst, t_env *env)
 				if (arg_lst->arg[i] == '$')
 				{
 					if (ft_isalpha(arg_lst->arg[i + 1])
-						|| arg_lst->arg[i + 1] == '?' || arg_lst->arg[i + 1] == '_')
+						|| arg_lst->arg[i + 1] == '?'
+						|| arg_lst->arg[i + 1] == '_'
+						|| arg_lst->arg[i + 1] == '$')
 						replace_env_var(arg_lst, env, i + 1);
 					else
 						i++;
 				}
 			}
-        }
-        arg_lst = arg_lst->next;
-    }
+		}
+		arg_lst = arg_lst->next;
+	}
 }
 
-int exec(t_input **arg_lst, t_env **env, t_exec *exec_lst)
+int	exec_preliminaires(t_input **arg, t_env **env, t_exec **exec, int *order)
 {
-	t_input *tmp;
-	t_input *files;
-	t_exec	*exec_tmp;
-
-	expand_env_var(*arg_lst, *env);
-	files_tokenisation(arg_lst, NULL);
-	cmd_tokenisation(*arg_lst);
-	print_tokens(*arg_lst);
-	if (!paranthesis_parsing(arg_lst, *arg_lst, NULL))
+	files_tokenisation(arg, NULL);
+	expand_env_var(*arg, *env, 0);
+	expand_wildcards_in_tokens(*arg);
+	cmd_tokenisation(*arg);
+	if (!paranthesis_parsing(arg, *arg, NULL))
+	{
+		*order = 2;
 		return (2);
-	print_tokens(*arg_lst);
-	tmp = *arg_lst;
-	files = *arg_lst;
-	exec_lst = exec_init(*arg_lst, NULL, NULL);
-	if (one_cmd(*arg_lst, env, exec_lst))
+	}
+	*exec = exec_init(*arg, NULL, NULL);
+	if (one_cmd(*arg, env, *exec))
+	{
+		*order = 0;
 		return (0);
+	}
+	*order = 0;
+	(*arg)->first = *arg;
+	return (1);
+}
+
+int	exec(t_input **arg_lst, t_env **env, t_exec *exec_lst, t_input *files)
+{
+	t_input	*tmp;
+	t_exec	*exec_tmp;
+	int		order;
+
+	if (exec_preliminaires(arg_lst, env, &exec_lst, &order) != 1)
+		return (order);
+	files = *arg_lst;
+	tmp = *arg_lst;
 	exec_tmp = exec_lst;
-	// while (tmp)
-	// {
-	// 	printf("_%s_\n", tmp->arg);
-	// 	tmp = tmp->next;
-	// }
-	// tmp = *arg_lst;
 	while (tmp)
 	{
 		if (tmp->token == CMD)
 		{
-			if (files != *arg_lst)
-				files = files->next;
+			if (exec_tmp == exec_lst)
+				skip_bool(&files, &exec_tmp, &tmp, &order);
+			if (!suicide_squad(exec_tmp, &files, *arg_lst, tmp))
+				break ;
 			handle_exec(tmp, files, exec_tmp, env);
-			next_cmd(&files, &exec_tmp);
+			next_cmd(&files, &exec_tmp, &tmp, &order);
 		}
-		tmp = tmp->next;
+		if (tmp)
+			tmp = tmp->next;
 	}
-	return (exec_wait(exec_lst)); 
+	exec_bool(exec_lst, *arg_lst, env, *arg_lst);
+	return (restore_signals(), exec_wait(exec_lst, exec_lst));
 }

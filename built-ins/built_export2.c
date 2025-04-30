@@ -1,0 +1,60 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   built_export2.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: atazzit <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/26 17:51:40 by atazzit           #+#    #+#             */
+/*   Updated: 2025/04/26 17:51:52 by atazzit          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "builtins.h"
+
+int	handle_export_no_equals(t_env *env, char *cmd)
+{
+	if (!is_valid_identifier(cmd))
+		return (print_invalid_id_error("export", cmd), 1);
+	if (!get_env_value(env, cmd))
+		set_env_value(env, cmd, NULL);
+	return (0);
+}
+
+int	handle_export_with_value(t_env *env, char *cmd, char *equals)
+{
+	char	*key;
+	char	*value;
+	char	*trimmed_value;
+
+	*equals = '\0';
+	key = cmd;
+	value = equals + 1;
+	if (!is_valid_identifier(key))
+	{
+		*equals = '=';
+		return (print_invalid_id_error("export", key), 1);
+	}
+	trimmed_value = trim_quotes(value);
+	if (!trimmed_value)
+	{
+		*equals = '=';
+		return (print_invalid_id_error("export", value), 1);
+	}
+	set_env_value(env, key, trimmed_value);
+	free(trimmed_value);
+	*equals = '=';
+	return (0);
+}
+
+int	handle_export_arg(t_env *env, char *cmd)
+{
+	char	*equals;
+
+	equals = ft_strchr(cmd, '=');
+	if (!equals)
+		return (handle_export_no_equals(env, cmd));
+	if (equals == cmd)
+		return (print_invalid_id_error("export", cmd), 1);
+	return (handle_export_with_value(env, cmd, equals));
+}

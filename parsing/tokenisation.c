@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 16:04:10 by nmartin           #+#    #+#             */
-/*   Updated: 2025/04/14 18:02:37 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/26 18:53:05 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	get_prev_token(t_input *lst, t_input *arg)
 	prev = -1;
 	if (lst == arg)
 		return (-1);
-	while (lst/*->next*/ != arg)//TODO pose probleme ou pas ?
+	while (lst != arg)
 	{
 		if (lst->token != PARANTHESIS && lst->token != SPACES)
 			prev = lst->token;

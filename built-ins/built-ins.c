@@ -6,7 +6,7 @@
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 14:25:03 by atazzit           #+#    #+#             */
-/*   Updated: 2025/04/16 22:51:13 by nmartin          ###   ########.fr       */
+/*   Updated: 2025/04/28 17:05:52 by nmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	fd_builtin(t_exec *exec)
 	if (exec->next && exec->next->input > 2)
 		close(exec->next->input);
 	if (exec->input != STDIN_FILENO)
-		close (exec->input);
+		close(exec->input);
 	if (exec->output != STDOUT_FILENO)
 	{
 		dup2(exec->output, STDOUT_FILENO);
@@ -44,17 +44,17 @@ t_shell	*set_t_shell(t_env *env, char *cmd)
 
 	args = ft_split(cmd, ' ');
 	if (!args)
-		exit(127);//TODO mieux gerer l'erreur
+		return (NULL);
 	command = malloc(sizeof(t_shell));
 	if (!command)
-		exit(127);//TODO mieux gerer l'erreur
+		return (NULL);
 	command->env_vars = env;
 	command->current_dir = getcwd(NULL, PATH_MAX_ANANAS);
 	command->command = args;
 	return (command);
 }
 
-void	execute_builtin(t_env **env, char *cmd, t_exec *exec)
+void	execute_builtin(t_env **env, char *cmd, t_exec *exec, t_input *arg_lst)
 {
 	t_shell	*command;
 	int		exit_code;
@@ -63,47 +63,22 @@ void	execute_builtin(t_env **env, char *cmd, t_exec *exec)
 	command = set_t_shell(*env, cmd);
 	fd_builtin(exec);
 	if (ft_strncmp(command->command[0], "cd", 2) == 0)
-		exit_code = ft_cd(command);
+		g_exit_status = ft_cd(command);
 	else if (ft_strncmp(command->command[0], "echo", 4) == 0)
-		exit_code = ft_echo(command);
+		g_exit_status = ft_echo(command, cmd);
 	else if (ft_strncmp(command->command[0], "env", 3) == 0)
-		exit_code = ft_env(*env);
+		g_exit_status = ft_env(*env);
 	else if (ft_strncmp(command->command[0], "exit", 4) == 0)
-		exit_code = ft_exit(command);
+		g_exit_status = ft_exit(command, *env, arg_lst, exec->first);
 	else if (ft_strncmp(command->command[0], "export", 6) == 0)
-		exit_code = ft_export(command, cmd);
+		g_exit_status = ft_export(command, cmd);
 	else if (ft_strncmp(command->command[0], "pwd", 3) == 0)
-		exit_code = ft_pwd(command);
+		g_exit_status = ft_pwd(command);
 	else if (ft_strncmp(command->command[0], "unset", 5) == 0)
-		exit_code = ft_unset(command);
-	//TODO free t_sell *command
-	exit(exit_code);
-}
-
-int	is_built_in(char *cmd, int i)
-{
-	while (cmd[i] == ' ')
-		i++;
-	if (ft_strncmp(&cmd[i], "cd", 2) == 0
-			&& (!cmd[i + 2] || cmd[i + 2] == ' '))
-		return (1);
-	else if (ft_strncmp(&cmd[i], "echo", 4) == 0
-			&& (!cmd[i + 4] || cmd[i + 4] == ' '))
-		return (1);
-	else if (ft_strncmp(&cmd[i], "env", 3) == 0
-			&& (!cmd[i + 3] || cmd[i + 3] == ' '))
-		return (1);
-	else if (ft_strncmp(&cmd[i], "exit", 4) == 0
-			&& (!cmd[i + 4] || cmd[i + 4] == ' '))
-		return (1);
-	else if (ft_strncmp(&cmd[i], "export", 6) == 0
-			&& (!cmd[i + 6] || cmd[i + 6] == ' '))
-		return (1);
-	else if (ft_strncmp(&cmd[i], "pwd", 3) == 0
-			&& (!cmd[i + 3] || cmd[i + 3] == ' '))
-		return (1);
-	else if (ft_strncmp(&cmd[i], "unset", 5) == 0
-			&& (!cmd[i + 5] || cmd[i + 5] == ' '))
-		return (1);
-	return (0);
+		g_exit_status = ft_unset(command);
+	free_t_shell(command);
+	free_env(*env);
+	free_exec_lst(exec->first);
+	lsts_free(arg_lst);
+	exit(g_exit_status);
 }
