@@ -18,7 +18,7 @@ static int	handle_multiple_exports(t_env *env, char *command)
 	int		i;
 	int		exit_code;
 
-	pairs = split_sous_stero(&command);
+	pairs = split_boosted(&command);
 	if (!pairs)
 		return (1);
 	i = 0;

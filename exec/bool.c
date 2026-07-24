@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fourre_tout.c                                      :+:      :+:    :+:   */
+/*   bool.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,7 +12,7 @@
 
 #include "exec.h"
 
-t_input	*diddy_shortcut(t_input **arg_lst)
+t_input	*shortcut(t_input **arg_lst)
 {
 	t_input	*tmp;
 

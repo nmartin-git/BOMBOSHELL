@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "bomboshell.h"
+#include "minishell.h"
 #include "exec.h"
 
 void	handle_exec(t_input *cmd, t_input *file, t_exec *exec_lst, t_env **env)
@@ -135,7 +135,7 @@ int	exec(t_input **arg_lst, t_env **env, t_exec *exec_lst, t_input *files)
 		{
 			if (exec_tmp == exec_lst)
 				skip_bool(&files, &exec_tmp, &tmp, &order);
-			if (!suicide_squad(exec_tmp, &files, *arg_lst, tmp))
+			if (!next_arg(exec_tmp, &files, *arg_lst, tmp))
 				break ;
 			handle_exec(tmp, files, exec_tmp, env);
 			next_cmd(&files, &exec_tmp, &tmp, &order);

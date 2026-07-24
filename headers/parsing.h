@@ -13,7 +13,7 @@
 #ifndef PARSING_H
 # define PARSING_H
 
-# include "bombosignal.h"
+# include "minisignal.h"
 # include "libft.h"
 # include <stdio.h>
 # include <stdlib.h>

@@ -13,7 +13,7 @@
 #ifndef BUILTINS_H
 # define BUILTINS_H
 
-# include "bombosignal.h"
+# include "minisignal.h"
 # include "parsing.h"
 # include "libft.h"
 # include <limits.h>
@@ -69,7 +69,7 @@ int					ft_env(t_env *list);
 int					ft_unset(t_shell *shell);
 int					ft_export(t_shell *shell, char *str);
 int					ft_echo(t_shell *shell, char *s);
-void				shlvl_to_the_moon(t_env *env);
+void				shlvl(t_env *env);
 int					size_six(char *cmd, int i);
 
 // builtin utils
@@ -85,7 +85,7 @@ int					is_valid_identifier(char *str);
 char				*handle_shell_var(t_env *env, char *var, char *cmd);
 char				*trim_quotes(char *value);
 int					print_invalid_id_error(char *arg, char *var);
-char				**split_sous_stero(char **command);
+char				**split_boosted(char **command);
 long				ft_atol(const char *str);
 int					is_built_in(char *cmd, int i);
 int					handle_export_arg(t_env *env, char *cmd);

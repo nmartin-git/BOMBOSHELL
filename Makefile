@@ -18,9 +18,9 @@ RESET = \033[0m
 
 CC = cc
 CFLAGS = -g -Wall -Werror -Wextra -MMD -MP
-NAME = minishell
+NAME = bomboshell
 MINISHELL_PATH = ./bomboshell/
-MINISHELL_FILES = bomboshell.c signal.c
+MINISHELL_FILES = bomboshell.c bombosignal.c
 MINISHELL := $(addprefix $(MINISHELL_PATH), $(MINISHELL_FILES))
 PARSING_PATH = ./parsing/
 PARSING_FILES = parsing.c tokenisation.c input_set.c parsing_utils.c quotes_utils.c
@@ -28,7 +28,7 @@ PARSING := $(addprefix $(PARSING_PATH), $(PARSING_FILES))
 EXEC_PATH = ./exec/
 EXEC_FILES = exec.c exec_tokenisation.c exec_utils.c exec_files.c ppx_utils.c \
 				one_cmd.c paranthesis_parsing.c wildcard_exec.c exec_bool.c exec_tarantino.c \
-					here_doc_gyneco.c env_to_array.c fourre_tout.c passe_partout.c
+					here_doc.c env_to_array.c bool.c parse.c
 EXEC := $(addprefix $(EXEC_PATH), $(EXEC_FILES))
 BUILT_PATH = ./built-ins/
 BUILT_FILES = built-ins.c builtin_utils.c built_cd.c built_echo.c built_env.c \
@@ -66,15 +66,6 @@ $(NAME) : $(LIBFT) $(OBJ)
 	@$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME) -lreadline
 	@printf "\r\033[K"
 	@printf "$(GREEN)$(NAME) created successfully\n$(RESET)"
-	@echo "$(PURPLE)▀█████████▄   ▄██████▄    ▄▄▄▄███▄▄▄▄   ▀█████████▄   ▄██████▄     ▄████████    ▄█    █▄       ▄████████  ▄█        ▄█       $(RESET)"
-	@echo "$(PURPLE)  ███    ███ ███    ███ ▄██▀▀▀███▀▀▀██▄   ███    ███ ███    ███   ███    ███   ███    ███     ███    ███ ███       ███       $(RESET)"
-	@echo "$(PURPLE)  ███    ███ ███    ███ ███   ███   ███   ███    ███ ███    ███   ███    █▀    ███    ███     ███    █▀  ███       ███       $(RESET)"
-	@echo "$(PURPLE) ▄███▄▄▄██▀  ███    ███ ███   ███   ███  ▄███▄▄▄██▀  ███    ███   ███         ▄███▄▄▄▄███▄▄  ▄███▄▄▄     ███       ███       $(RESET)"
-	@echo "$(PURPLE)▀▀███▀▀▀██▄  ███    ███ ███   ███   ███ ▀▀███▀▀▀██▄  ███    ███ ▀███████████ ▀▀███▀▀▀▀███▀  ▀▀███▀▀▀     ███       ███       $(RESET)"
-	@echo "$(PURPLE)  ███    ██▄ ███    ███ ███   ███   ███   ███    ██▄ ███    ███          ███   ███    ███     ███    █▄  ███       ███       $(RESET)"
-	@echo "$(PURPLE)  ███    ███ ███    ███ ███   ███   ███   ███    ███ ███    ███    ▄█    ███   ███    ███     ███    ███ ███▌    ▄ ███▌    ▄ $(RESET)"
-	@echo "$(PURPLE)▄█████████▀   ▀██████▀   ▀█   ███   █▀  ▄█████████▀   ▀██████▀   ▄████████▀    ███    █▀      ██████████ █████▄▄██ █████▄▄██ $(RESET)"
-	@echo "$(PURPLE)                                                                                                         ▀         ▀         $(RESET)"
 
 $(OBJ_PATH)%.o : $(MINISHELL_PATH)%.c
 	@printf "$(BLUE)Compiling $(NAME): [$<] $(RESET)"

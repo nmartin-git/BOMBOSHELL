@@ -13,7 +13,7 @@
 #ifndef EXEC_H
 
 # define EXEC_H
-# include "bombosignal.h"
+# include "minisignal.h"
 # include "builtins.h"
 # include "parsing.h"
 # include "wildcard.h"
@@ -90,8 +90,8 @@ char	*create_env_string(char *key, char *value);
 void	free_env_array(char **env_array, int count);
 
 char	*expand_env_vars_in_str(char *str, t_env *env);
-t_input	*diddy_shortcut(t_input **arg_lst);
-int		suicide_squad(t_exec *exec, t_input **files, t_input *arg, t_input *t);
+t_input	*shortcut(t_input **arg_lst);
+int		next_arg(t_exec *exec, t_input **files, t_input *arg, t_input *t);
 
 void	skip_paranthesis(t_input **files, t_exec **exec_tmp, int p, int order);
 

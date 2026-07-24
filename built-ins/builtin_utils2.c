@@ -46,7 +46,7 @@ static int	malloc_t_muscle(char ***result, char **command)
 	return (1);
 }
 
-char	**split_sous_stero(char **command)
+char	**split_boosted(char **command)
 {
 	char	**result;
 	char	*start;

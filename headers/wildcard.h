@@ -13,7 +13,7 @@
 #ifndef WILDCARD_H
 # define WILDCARD_H
 
-# include "bombosignal.h"
+# include "minisignal.h"
 # include "libft.h"
 # include <dirent.h>
 # include <stdio.h>

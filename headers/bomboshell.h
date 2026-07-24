@@ -13,7 +13,7 @@
 #ifndef BOMBOSHELL_H
 # define BOMBOSHELL_H
 
-# include "bombosignal.h"
+# include "minisignal.h"
 # include "builtins.h"
 # include "exec.h"
 # include "libft.h"

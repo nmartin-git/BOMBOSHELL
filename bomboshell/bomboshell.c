@@ -18,7 +18,7 @@ void	prompt_sig(void)
 	signal(SIGQUIT, SIG_IGN);
 }
 
-void	shlvl_to_the_moon(t_env *env)
+void	shlvl(t_env *env)
 {
 	char	*current;
 	int		lvl;
@@ -52,14 +52,14 @@ int	only_space(char *str)
 	return (1);
 }
 
-t_env	*bombostart(int ac, char **av, char **envp)
+t_env	*start(int ac, char **av, char **envp)
 {
 	t_env	*env;
 
 	if (isatty(STDIN_FILENO) == 0 || isatty(STDERR_FILENO) == 0
 		|| isatty(STDOUT_FILENO) == 0)
 	{
-		write(2, "\033[31m\033[1mbomboshell: MI BOMBOCLAT ERROR\n\033[0m", 44);
+		write(2, "\033[31m\033[1mbomboshell: Fatal error\n\033[0m", 39);
 		exit(1);
 	}
 	if (ac > 1 && av)
@@ -68,7 +68,7 @@ t_env	*bombostart(int ac, char **av, char **envp)
 		exit(2);
 	}
 	env = init_env(envp);
-	shlvl_to_the_moon(env);
+	shlvl(env);
 	prompt_sig();
 	return (env);
 }
@@ -80,10 +80,10 @@ int	main(int ac, char **av, char **envp)
 	t_env	*env;
 	int		parsing_exit;
 
-	env = bombostart(ac, av, envp);
+	env = start(ac, av, envp);
 	while (1)
 	{
-		input = readline("🚀🍑😱💣> ");
+		input = readline("bomboshell> ");
 		if (!input)
 		{
 			write(1, "exit\n", 5);

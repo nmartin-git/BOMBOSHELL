@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   here_doc_gyneco.c                                  :+:      :+:    :+:   */
+/*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nmartin <nmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,7 +12,7 @@
 
 #include "exec.h"
 
-int	suicide_squad(t_exec *exec, t_input **files, t_input *arg, t_input *tmp)
+int	next_arg(t_exec *exec, t_input **files, t_input *arg, t_input *tmp)
 {
 	t_input	*check;
 
